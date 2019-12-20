@@ -8,20 +8,34 @@ public class User {
 	private String surname;
 	private Organization organization;
 	private Role role;
+	private String password;
 	
-	
-	public User() {
-		super();
-	}
 
 
-	public User(String email, String name, String surname, Organization organization, Role role) {
+
+	public User(String email, String name, String surname, Organization organization, Role role, String password) {
 		super();
 		this.email = email;
 		this.name = name;
 		this.surname = surname;
 		this.organization = organization;
 		this.role = role;
+		this.password = password;
+	}
+
+
+	public User() {
+		super();
+	}
+
+
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 
