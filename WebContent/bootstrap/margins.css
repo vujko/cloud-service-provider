@@ -1,0 +1,10 @@
+
+.vertical-offset-100{
+    padding-top:70px;
+}
+
+#relative {
+    position: relative;
+    width: 300px;
+    height: 400px;
+  }
