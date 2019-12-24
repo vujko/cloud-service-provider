@@ -35,4 +35,7 @@ public class UserService {
         }
         return null;
     }
+    public Set<User> getUsers(){
+        return users;
+    }
 }
