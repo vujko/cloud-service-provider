@@ -1,12 +1,16 @@
+
 const LoginPage = {template : "<log-in></log-in>"}
 const HomePage = {template : "<home-page></home-page>"}
-
+const Users = {template: 'users'}
 
 const router = new VueRouter({
     mode : 'hash',
     routes : [
+
         {path : "/", component : LoginPage},
         {path : "/homepage", component : HomePage}
+        {path : '/users',component : Users}
+
     ]
 });
 
