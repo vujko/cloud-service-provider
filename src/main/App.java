@@ -36,5 +36,6 @@ public class App {
 		});
 
 		get("/getUsers", UserController.getUsers);
+		post("/logout", LoginController.handleLogout);
 	}	
 }

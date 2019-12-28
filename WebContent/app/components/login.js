@@ -9,7 +9,7 @@ Vue.component("log-in", {
             
         }
     },
-    //TODO required ne radi kako treba
+
     template :
     `
     <div id="relative">
@@ -29,7 +29,7 @@ Vue.component("log-in", {
                             <div class="form-group">
                                 <input class="form-control" placeholder="Password" name="password" type="password" value=""  v-model="input.password" required>
                             </div>
-                            <button class="btn btn-lg btn-success btn-block" v-on:click="login()" type="submit" value="Login">Login</button>
+                            <button class="btn btn-lg btn-success btn-block" v-on:click="login()" type="button" value="Login">Login</button>
                         </fieldset>
                         </form>
                     </div>

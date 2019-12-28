@@ -4,6 +4,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 import main.App;
+import model.User;
 
 
 public class LoginController {
@@ -26,7 +27,7 @@ public class LoginController {
 	
 	public static Route loadLoginPage = (Request req, Response res) ->{
 			
-        if (req.session().attribute("user") == null){
+        if (req.session().attribute("user_role") == null){
             res.redirect("/");
             return null;
         }
@@ -37,20 +38,34 @@ public class LoginController {
     public static Route handleLogin = (Request req, Response res) ->{
         Input in = getInputFromReq(req);
         if(UserController.verify(in.email, in.password)){
-            req.session().attribute("user", in.email);
+            User.Role role = getUserRole(in.email);
+            req.session().attribute("user_role", role.name());
             res.redirect("/success");
             return null;
         }
-        res.redirect("/");
-        //displayMessage("invalid email or password.Please try again");
-        
+        res.redirect("/");        
         return "Invalid email or password";
 
+    };
+
+    public static Route handleLogout = (Request req, Response res) ->{
+        req.session().attribute("user_role", null);
+        return "200 OK";
+        
     };
 
     private static Input getInputFromReq(Request req){
         String payload = req.body();
         return App.g.fromJson(payload, Input.class);
 
+    }
+
+    private static User.Role getUserRole(String email){
+        for (User u : App.userService.getUsers()) {
+            if(u.getEmail().equalsIgnoreCase(email)){
+                return u.getRole();
+            }
+        }
+        return null;
     }
 }
