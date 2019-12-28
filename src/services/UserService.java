@@ -8,7 +8,7 @@ import model.User.Role;
 
 public class UserService {
     private static Set<User> users = loadUsers("users.json");
-    
+    //TODO required ne radi kako treba
     //TODO ucitavanje iz fajla
     public static Set<User> loadUsers(String path){
 

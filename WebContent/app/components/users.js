@@ -1,4 +1,4 @@
-Vue.component("home-page", {
+Vue.component("users", {
 	data: function () {
 		    return {
 		      users : null
