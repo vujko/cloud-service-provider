@@ -12,7 +12,8 @@ import java.io.IOException;
 import com.google.gson.Gson;
 
 import controllers.LoginController;
-import services.UserService;
+import controllers.OrganizationControlller;
+import services.*;
 import controllers.UserController;
 
 
@@ -20,10 +21,12 @@ import controllers.UserController;
 public class App {
 	
 	public static UserService userService;
+	public static OrganizationService orgService;
 	public static Gson g = new Gson();
 	
 	public static void main(String[] args) throws IOException {
 		userService = new UserService();
+		orgService = new OrganizationService();
 		port(8080);		
 		staticFiles.externalLocation(new File("./WebContent").getCanonicalPath()); 
 		
@@ -36,6 +39,7 @@ public class App {
 		});
 
 		get("/getUsers", UserController.getUsers);
+		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/logout", LoginController.handleLogout);
 	}	
 }

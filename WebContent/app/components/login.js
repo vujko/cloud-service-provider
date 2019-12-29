@@ -53,7 +53,7 @@ Vue.component("log-in", {
                     self.$router.replace("/homepage");
                 }
                 else{
-                    alert("Wrong email or password.Please try again.");
+                    toast("Wrong email or password.Please try again.");
                 }
                 
             })

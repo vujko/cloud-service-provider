@@ -6,20 +6,22 @@ Vue.component("users", {
 	},
 	template: ` 
     <div>
-    <table border="1">
-        <tr>
-            <th>Ime</th><th>Prezime</th><th>Email</th></tr>
-            <tr v-for="u in users">
-                <td>{{u.name}}</td>
-                <td>{{u.surname}}</td>
-                <td>{{u.email}}</td>
-            </tr>
-    </table>
-</div>	  
+        <nav-bar></nav-bar>
+        <table border="1">
+            <tr>
+                <th>Ime</th><th>Prezime</th><th>Email</th></tr>
+                <tr v-for="u in users">
+                    <td>{{u.name}}</td>
+                    <td>{{u.surname}}</td>
+                    <td>{{u.email}}</td>
+                </tr>
+        </table>
+    </div>	  
 `
 	, 
 	methods : {
-		
+
+        
 	},
 	mounted () {
         axios
