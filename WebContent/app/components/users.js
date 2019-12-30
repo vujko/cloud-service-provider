@@ -16,18 +16,26 @@ Vue.component("users", {
                     <td>{{u.email}}</td>
                 </tr>
         </table>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#userModal">
+            Add User
+        </button>
+
+         <!-- Modal -->
+        <user-form></user-form>
     </div>	  
 `
 	, 
 	methods : {
-
-        
-	},
-	mounted () {
-        axios
+        getUsers : function(){
+            axios
             .get('/getUsers')
             .then(response => {
                 this.users = response.data
-            });             
+            });
+        }
+        
+	},
+	mounted () {
+        this.getUsers();       
     }
 });

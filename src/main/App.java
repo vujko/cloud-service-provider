@@ -42,5 +42,6 @@ public class App {
 		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/logout", LoginController.handleLogout);
 		post("/addOrganization", OrganizationControlller.addOrganization);
+		post("/addUser",UserController.addUser);
 	}	
 }

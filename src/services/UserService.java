@@ -38,4 +38,21 @@ public class UserService {
     public Set<User> getUsers(){
         return users;
     }
+
+    public boolean addUser(User user){
+        if(userExsists(user.getEmail())){
+            return false;
+        }
+        users.add(user);
+        return true;
+    }
+
+    public boolean userExsists(String email){
+        for (User user : users){
+            if(user.getEmail().equalsIgnoreCase(email)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

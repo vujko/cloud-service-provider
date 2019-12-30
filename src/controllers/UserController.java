@@ -20,4 +20,15 @@ public class UserController {
     	 res.type("aplication/json");
     	 return App.g.toJson(App.userService.getUsers());
     };
+
+    public static Route addUser = (Request req, Response res) ->{
+        User user = App.g.fromJson(req.body(), User.class);
+        res.type("aplication/json");
+
+        if(App.userService.addUser(user)){
+            res.status(200);
+            return "OK";
+        }
+        return "User with that email already exsist.";
+    };
 }
