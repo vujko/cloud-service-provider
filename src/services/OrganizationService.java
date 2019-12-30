@@ -19,4 +19,21 @@ public class OrganizationService {
     public Set<Organization> getOrganizations(){
         return organizations;
     }
+
+    public boolean addOrganization(Organization org){
+        if(organizationExsists(org.getName())){
+            return false;
+        }
+        organizations.add(org);
+        return true;
+    }
+
+    public boolean organizationExsists(String name){
+        for (Organization org : organizations) {
+            if(org.getName().equalsIgnoreCase(name)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
