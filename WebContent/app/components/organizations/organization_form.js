@@ -20,16 +20,16 @@ Vue.component("organization-form", {
         </div>
         <div class="modal-body">
                             
-            <form class="form-signin" role="form">
+            <form id="orgForm" class="form-signin" role="form">
             <fieldset>  
                 <div class="form-group">
-                    <input class="form-control" placeholder="Organization name" name="name" type="text" v-model="org_input.name" required>
+                    <input class="form-control" id="org_name" placeholder="Organization name" name="name" type="text" v-model="org_input.name" required><p id="name_err"></p>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" placeholder="Description" name="description" type="text" v-model="org_input.description" required>
+                    <input class="form-control" id="org_desc" placeholder="Description" name="description" type="text" v-model="org_input.description" required>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" placeholder="Organization logo" name="name" type="text" v-model="org_input.logo" required>
+                    <input class="form-control" id="org_logo" placeholder="Organization logo" name="name" type="text" v-model="org_input.logo" required>
                 </div>
             </fieldset>
             </form>
@@ -43,17 +43,34 @@ Vue.component("organization-form", {
     </div>`,
 
     methods : {
+
+        highlightNameField : function(){
+            document.getElementById('org_name').style.borderColor = "red";
+            document.getElementById('name_err').innerHTML = "Organization with that name already exsists.Please enter another.";
+        },
         addOrganization : function(){
             var self = this;
-            axios
-            .post("/addOrganization", {"name" : '' + this.org_input.name, "description" : '' + this.org_input.description, "logo" : '' + this.org_input.logo, "users" : [], "resources" : []})
-            .then(response =>{
-                self.$parent.getOrganizations();
-                self.org_input.name = "";
-                self.org_input.description = "";
-                self.org_input.logo = "";  
-                $('#orgModal').modal('hide');
-            })
+            var $orgForm = $("#orgForm");
+            if( ! $orgForm[0].checkValidity()){
+                $('<input type="submit">').hide().appendTo($orgForm).click().remove();
+            }
+            else{
+                axios
+                .post("/addOrganization", {"name" : '' + this.org_input.name, "description" : '' + this.org_input.description, "logo" : '' + this.org_input.logo, "users" : [], "resources" : []})
+                .then(response =>{
+                    self.$parent.getOrganizations();
+                    self.org_input.name = "";
+                    self.org_input.description = "";
+                    self.org_input.logo = "";  
+                    $('#orgModal').modal('hide');  
+                    document.getElementById('org_name').style.borderColor = "";
+                    document.getElementById('name_err').innerHTML = "";           
+                })
+                .catch(error =>{
+                    self.highlightNameField();
+                })
+            }
+            
         }
     }
 })

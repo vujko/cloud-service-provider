@@ -19,11 +19,11 @@ public class OrganizationControlller {
 
         if(App.orgService.addOrganization(org)){
             res.status(200);
-            return "OK";
+            return true;
         }
         res.status(400);
 
-        return "Organization with that name already exsists"; 
+        return false; 
     };
 
 }
