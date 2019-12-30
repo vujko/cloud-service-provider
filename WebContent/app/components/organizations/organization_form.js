@@ -62,7 +62,9 @@ Vue.component("organization-form", {
                     self.org_input.name = "";
                     self.org_input.description = "";
                     self.org_input.logo = "";  
-                    $('#orgModal').modal('hide');             
+                    $('#orgModal').modal('hide');  
+                    document.getElementById('org_name').style.borderColor = "";
+                    document.getElementById('name_err').innerHTML = "";           
                 })
                 .catch(error =>{
                     self.highlightNameField();
