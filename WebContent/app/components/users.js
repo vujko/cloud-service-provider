@@ -7,14 +7,17 @@ Vue.component("users", {
 	template: ` 
     <div>
         <nav-bar></nav-bar>
-        <table border="1">
+        <table class="table table-striped">
+            <thread>
             <tr>
-                <th>Ime</th><th>Prezime</th><th>Email</th></tr>
+                <th>Ime</th><th scope="col">Prezime</th><th scope="col">Email</th></tr></thread>
+                <tbody>
                 <tr v-for="u in users">
                     <td>{{u.name}}</td>
                     <td>{{u.surname}}</td>
                     <td>{{u.email}}</td>
                 </tr>
+            </tbody>
         </table>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#userModal">
             Add User
