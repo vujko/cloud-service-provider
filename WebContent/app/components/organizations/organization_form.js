@@ -35,7 +35,7 @@ Vue.component("organization-form", {
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-secondary" v-on:click="clearFields()" >Cancel</button>
             <button type="button" class="btn btn-primary" v-on:click="addOrganization()" >Add organization</button>
         </div>
         </div>
@@ -43,7 +43,14 @@ Vue.component("organization-form", {
     </div>`,
 
     methods : {
-
+        clearFields : function(){
+            this.org_input.name = "";
+            this.org_input.description = "";
+            this.org_input.logo = "";  
+            $('#orgModal').modal('hide');  
+            document.getElementById('org_name').style.borderColor = "";
+            document.getElementById('name_err').innerHTML = ""; 
+        },
         highlightNameField : function(){
             document.getElementById('org_name').style.borderColor = "red";
             document.getElementById('name_err').innerHTML = "Organization with that name already exsists.Please enter another.";
@@ -59,12 +66,7 @@ Vue.component("organization-form", {
                 .post("/addOrganization", {"name" : '' + this.org_input.name, "description" : '' + this.org_input.description, "logo" : '' + this.org_input.logo, "users" : [], "resources" : []})
                 .then(response =>{
                     self.$parent.getOrganizations();
-                    self.org_input.name = "";
-                    self.org_input.description = "";
-                    self.org_input.logo = "";  
-                    $('#orgModal').modal('hide');  
-                    document.getElementById('org_name').style.borderColor = "";
-                    document.getElementById('name_err').innerHTML = "";           
+                    self.clearFields();          
                 })
                 .catch(error =>{
                     self.highlightNameField();

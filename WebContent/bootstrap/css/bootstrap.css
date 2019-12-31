@@ -5669,7 +5669,7 @@ a.close.disabled {
   pointer-events: none;
 }
 
-.toast {
+/* .toast {
   max-width: 350px;
   overflow: hidden;
   font-size: 0.875rem;
@@ -5714,7 +5714,7 @@ a.close.disabled {
 
 .toast-body {
   padding: 0.75rem;
-}
+} */
 
 .modal-open {
   overflow: hidden;
