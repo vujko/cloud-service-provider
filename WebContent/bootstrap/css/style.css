@@ -1,9 +1,7 @@
 html,
-body {
-  height: 100%;
-}
 
-#relative {
+
+.divpos {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: center;
