@@ -8,6 +8,13 @@ import spark.Route;
 
 public class OrganizationControlller {
 
+    public class OrganizationToUpdate{
+        public String oldName;
+        public String newName;
+        public String description;
+        public String logo;
+    }
+
     public static Route getOrganizations = (Request req, Response res) -> {
         res.type("application/json");
         return App.g.toJson(App.orgService.getOrganizations());
@@ -25,5 +32,22 @@ public class OrganizationControlller {
 
         return false; 
     };
+
+   public static Route updateOrganization = (Request req, Response res)->{
+       OrganizationToUpdate updateOrg = App.g.fromJson(req.body(), OrganizationToUpdate.class);
+       res.type("application/json");
+       Organization newOrg = new Organization();
+       newOrg.setName(updateOrg.newName);
+       newOrg.setDescription(updateOrg.description);
+       newOrg.setLogo(updateOrg.logo);
+       if(App.orgService.updateOrganization(updateOrg.oldName, newOrg)){
+           res.status(200);
+           return true;
+       }
+       res.status(400);
+       return false;
+
+
+   };
 
 }

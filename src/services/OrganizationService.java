@@ -28,6 +28,19 @@ public class OrganizationService {
         return true;
     }
 
+    public boolean updateOrganization(String oldName, Organization newOrg){
+        Organization org = getOrganization(oldName);
+        if(!oldName.equalsIgnoreCase(newOrg.getName())){
+            if(organizationExsists(newOrg.getName())){
+                return false;
+            }
+        }
+        org.setName(newOrg.getName());
+        org.setDescription(newOrg.getDescription());
+        org.setLogo(newOrg.getLogo());
+        return true;
+    }
+
     public boolean organizationExsists(String name){
         for (Organization org : organizations) {
             if(org.getName().equalsIgnoreCase(name)){
@@ -35,5 +48,14 @@ public class OrganizationService {
             }
         }
         return false;
+    }
+
+    public Organization getOrganization(String name){
+        for (Organization org : organizations) {
+            if(org.getName().equalsIgnoreCase(name)){
+                return org;
+            }
+        }
+        return null;
     }
 }
