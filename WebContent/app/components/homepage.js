@@ -17,8 +17,11 @@ Vue.component("home-page", {
 	</div>
 `
 	, 
-	
-	mounted () {
+	methods : {
+
+	},
+	beforeCreate () {
+		EventBus.$emit("ensureLogin");
     }
 });
 

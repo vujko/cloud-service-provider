@@ -30,6 +30,7 @@ public class App {
 		port(8080);		
 		staticFiles.externalLocation(new File("./WebContent").getCanonicalPath()); 
 		
+
 		get("/login", LoginController.loadLoginPage);
 		post("/login", LoginController.handleLogin);
 		post("/verify", LoginController.verifyLogin);
@@ -44,5 +45,8 @@ public class App {
 		post("/addOrganization", OrganizationControlller.addOrganization);
 		post("/addUser",UserController.addUser);
 		post("/updateOrganization", OrganizationControlller.updateOrganization);
+		get("/ensureLogin", LoginController.ensureLogin);
+
+		
 	}	
 }

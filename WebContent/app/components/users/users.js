@@ -37,7 +37,10 @@ Vue.component("users", {
             });
         }
         
-	},
+    },
+    beforeCreate () {
+		EventBus.$emit("ensureLogin");
+    },
 	mounted () {
         this.getUsers();       
     }

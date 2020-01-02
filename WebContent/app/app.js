@@ -1,4 +1,6 @@
 
+window.EventBus = new Vue();
+
 const LoginPage = {template : "<log-in></log-in>"}
 const HomePage = {template : "<home-page></home-page>"}
 const Users = {template: '<users></users>'}
@@ -20,8 +22,26 @@ var app = new Vue({
     router,
     el : '#app',
     methods :{
-        someMethod(){
-            
+        ensureLogin(){
+            var loggedIn;
+            axios
+            .get("/ensureLogin")
+            .then(response => {
+                loggedIn = response.data;
+                if(!loggedIn){
+                    router.replace("/");
+                }
+            })
         }
+    },
+
+    created() {
+        EventBus.$on("ensureLogin", this.ensureLogin);
     }
 }).$mount('#app');
+
+
+// router.beforeEach((to, from, next) => {
+//     if (!app.isAuthenticated()) next({path : "/"})
+//     else next()
+// })

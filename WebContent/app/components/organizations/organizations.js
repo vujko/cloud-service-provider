@@ -49,6 +49,9 @@ Vue.component("organizations",{
             });
         }
     },
+    beforeCreate () {
+		EventBus.$emit("ensureLogin");
+    },
     mounted () {
         this.getOrganizations();
     }

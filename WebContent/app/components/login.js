@@ -43,6 +43,7 @@ Vue.component("log-in", {
                     if(this.verified){
                         axios
                         .post("/login",userinput);
+                        //mozda ovo treba u then-u
                         self.$router.replace("/homepage");
                     }
                     else{

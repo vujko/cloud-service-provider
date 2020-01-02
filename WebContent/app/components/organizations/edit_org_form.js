@@ -77,17 +77,24 @@ Vue.component("edit-org-form",{
         },
         changeOrganization : function(){
             var self = this;
-            axios
-            .post("/updateOrganization", {"oldName" : self.oldName, "newName" : ''+ self.editedOrg.name, "description" : '' + self.editedOrg.description, "logo": '' + self.editedOrg.logo})
-            .then(response => {
-                if(response.data){
-                    $('#editOrgModal').modal('hide');
-                    self.resetNameField();
-                }
-            })
-            .catch(error => {
-                self.highlightNameField();
-            })
+            var $editOrgForm = $("#editOrgForm");
+            if( !$editOrgForm[0].checkValidity()){
+                $('<input type="submit">').hide().appendTo($editOrgForm).click().remove();
+            }
+            else{
+                axios
+                .post("/updateOrganization", {"oldName" : self.oldName, "newName" : ''+ self.editedOrg.name, "description" : '' + self.editedOrg.description, "logo": '' + self.editedOrg.logo})
+                .then(response => {
+                    if(response.data){
+                        $('#editOrgModal').modal('hide');
+                        self.resetNameField();
+                    }
+                })
+                .catch(error => {
+                    self.highlightNameField();
+                })
+                
+            }
             
         }
     }

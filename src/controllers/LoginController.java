@@ -3,6 +3,7 @@ package controllers;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+import spark.Session;
 import main.App;
 import model.User;
 
@@ -40,6 +41,7 @@ public class LoginController {
         if(UserController.verify(in.email, in.password)){
             User.Role role = getUserRole(in.email);
             req.session().attribute("user_role", role.name());
+            req.session().attribute("email", in.email);
             res.redirect("/success");
             return null;
         }
@@ -48,8 +50,22 @@ public class LoginController {
 
     };
 
+    public static Route ensureLogin = (Request req, Response res) ->{
+        Session s = req.session(false);
+        if(s == null){
+            return false;
+        }
+        if(req.session(false).attribute("user_role") == null){
+            res.status(200);
+            return false;
+        }
+        res.status(200);
+        return true;
+    };
+
     public static Route handleLogout = (Request req, Response res) ->{
         req.session().attribute("user_role", null);
+        req.session().attribute("email", null);
         return "200 OK";
         
     };
