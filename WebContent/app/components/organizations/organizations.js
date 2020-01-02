@@ -8,14 +8,17 @@ Vue.component("organizations",{
     template : `
     <div>
         <nav-bar></nav-bar>
-        <table border="1">
+        <table class="table table-striped table-responsive">
+            <thead>
             <tr>
-                <th>Ime</th><th>Opis</th><th>Logo</th></tr>
+                <th scope="col">Ime</th><th scope="col">Opis</th><th scope="col">Logo</th></tr></thead>
+                <tbody>
                 <tr v-for="o in organizations" :key="o.name" v-on:click="selectOrganization(o)" v-bind:class="{selected : selectedOrg != null && selectedOrg.name===o.name}">
                     <td>{{ o.name }}</td>
                     <td>{{ o.description }}</td>
                     <td>{{ o.logo }}</td>
                 </tr>
+                </tbody>
         </table>
         <span>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orgModal">

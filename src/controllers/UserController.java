@@ -29,6 +29,7 @@ public class UserController {
             res.status(200);
             return "OK";
         }
-        return "User with that email already exsist.";
+        res.status(400);
+        return false;
     };
 }
