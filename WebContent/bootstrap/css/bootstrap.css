@@ -1559,9 +1559,9 @@ pre code {
   border: 0;
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
+/* .table-striped tbody tr:nth-of-type(odd) {
   background-color: rgba(0, 0, 0, 0.05);
-}
+} */
 
 .table-hover tbody tr:hover {
   color: #212529;
@@ -9958,7 +9958,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 tr.selected {
-  background-color: #aaaaaa;
+  background-color: rgba(0, 0, 0, 0.075);
 }
 @media print {
   *,
