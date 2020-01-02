@@ -24,7 +24,7 @@ Vue.component("user-form", {
                 <form id="userForm" class="form-signin" role="form">
                 <fieldset>  
                     <div class="form-group">
-                        <input class="form-control" id="us_email" placeholder="Email" name="email" type="text" v-model="user_input.email" required><p id="name_err"></p>
+                        <input class="form-control" id="us_email" placeholder="Email" name="email" type="email" v-model="user_input.email" required><p id="name_err"></p>
                     </div>
                     <div class="form-group">
                         <input class="form-control" id="us_name" placeholder="Name" name="name" type="text" v-model="user_input.name" required>
@@ -33,7 +33,7 @@ Vue.component("user-form", {
                         <input class="form-control" id="us_surname" placeholder="Surname" name="surname" type="text" v-model="user_input.surname" required>
                     </div>
                     <div class="form-group">
-                    <input class="form-control" id="us_password" placeholder="Password" name="password" type="text" v-model="user_input.password" required>
+                    <input class="form-control" id="us_password" placeholder="Password" name="password" type="password" v-model="user_input.password" required>
                     </div>
                 </fieldset>
                 </form>
