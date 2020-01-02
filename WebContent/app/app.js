@@ -3,7 +3,7 @@ window.EventBus = new Vue();
 
 const LoginPage = {template : "<log-in></log-in>"}
 const HomePage = {template : "<home-page></home-page>"}
-const Users = {template: '<users></users>'}
+const Users = {template: "<users></users>"}
 const Organizations = { template : "<organizations></organizations>"}
 
 const router = new VueRouter({
@@ -12,7 +12,7 @@ const router = new VueRouter({
 
         {path : "/", component : LoginPage},
         {path : "/homepage", component : HomePage},
-        {path : '/users',component : Users},
+        {path : "/users",component : Users},
         {path : "/organizations", component : Organizations}
 
     ]

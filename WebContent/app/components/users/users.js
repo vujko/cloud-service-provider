@@ -7,10 +7,10 @@ Vue.component("users", {
 	template: ` 
     <div>
         <nav-bar></nav-bar>
-        <table class="table table-striped">
-            <thread>
+        <table class="table table-striped table-responsive" >
+            <thead>
             <tr>
-                <th>Ime</th><th scope="col">Prezime</th><th scope="col">Email</th></tr></thread>
+                <th scope="col">Ime</th><th scope="col" >Prezime</th><th scope="col">Email</th></tr></thead>
                 <tbody>
                 <tr v-for="u in users">
                     <td>{{u.name}}</td>
