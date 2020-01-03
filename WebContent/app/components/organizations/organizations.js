@@ -8,7 +8,7 @@ Vue.component("organizations",{
     template : `
     <div>
         <nav-bar></nav-bar>
-        <table class="table table-striped table-responsive">
+        <table class="table table-striped table-responsive col px-md-2">
             <thead>
             <tr>
                 <th scope="col">Ime</th><th scope="col">Opis</th><th scope="col">Logo</th></tr></thead>

@@ -6,7 +6,14 @@ Vue.component("user-form", {
                     password : "",
                     surname : "",
                     name : ""
-            }
+                },
+                modal : null,
+                backup : {
+                    email : "",
+                    password : "",
+                    surname : "",
+                    name : ""
+                }
         }
     },
     template : `
@@ -14,7 +21,8 @@ Vue.component("user-form", {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">Add a new User</h5>
+                <h5 class="modal-title" id="userModalLabel" v-if="modal=='add'">Add a new User</h5>
+                <h5 class="modal-title" id="userModalLabel" v-if="modal=='edit'">Edit a User</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -24,7 +32,7 @@ Vue.component("user-form", {
                 <form id="userForm" class="form-signin" role="form">
                 <fieldset>  
                     <div class="form-group">
-                        <input class="form-control" id="us_email" placeholder="Email" name="email" type="email" v-model="user_input.email" required><p id="name_err"></p>
+                        <input class="form-control" v-if="modal=='add'" id="us_email" placeholder="Email" name="email" type="email" v-model="user_input.email" required><p id="name_err"></p>
                     </div>
                     <div class="form-group">
                         <input class="form-control" id="us_name" placeholder="Name" name="name" type="text" v-model="user_input.name" required>
@@ -39,8 +47,10 @@ Vue.component("user-form", {
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" v-on:click="clearFields()">Cancel</button>
-                <button type="button" class="btn btn-primary" v-on:click="addUser()" >Add user</button>
+                <button type="button" class="btn btn-secondary" v-on:click="clearFields()" v-if="modal == 'add'" > Cancel</button>
+                <button type="button" class="btn btn-primary" v-on:click="addUser()" v-if="modal == 'add'">Add user</button>
+                <button type="button" class="bnt btn-primary" v-on:click="updateUser()" v-if="modal == 'edit'">Save changes</button>
+                <button type="button" class="bnt btn-primary" v-on:click="cancelUpdate()" v-if="modal =='edit'">Cancel</button>
             </div>
             </div>
         </div>
@@ -54,6 +64,18 @@ Vue.component("user-form", {
             this.user_input.email = "";
             this.user_input.password = "";
             $('#userModal').modal('hide');
+            this.resetNameField();
+        },
+        cancelUpdate : function(){
+            this.user_input.name = this.backup.name;
+            this.user_input.surname = this.backup.surname;
+            this.user_input.password = this.backup.password;
+            this.user_input.email = this.backup.email;
+            $('#userModal').modal('hide');
+            //this.$parent.selectedUser = null;
+            
+        },
+        resetNameField : function(){
             document.getElementById('us_email').style.borderColor = "";
             document.getElementById('name_err').innerHTML = "";
         },
@@ -62,6 +84,7 @@ Vue.component("user-form", {
             document.getElementById('name_err').innerHTML = "User with that email already exsists.Please enter another.";
         },
         addUser : function(){
+            //this.clearFields();
             var self = this;
             var $userForm = $("#userForm");
             if( ! $userForm[0].checkValidity()){
@@ -78,6 +101,25 @@ Vue.component("user-form", {
                 .catch(error =>{
                     self.highlightNameField();
                 })
+            }
+        },
+        updateUser : function(){
+            var self = this;
+            var $userForm = $("#userForm");
+            if( ! $userForm[0].checkValidity()){
+                $('<input type="submit">').hide().appendTo($userForm).click().remove();
+            }
+            else {
+                axios
+                .post("/updateUser",{"oldEmail" : '' +this.backup.email, "name" : '' + this.user_input.name, "surname" : '' + this.user_input.surname, 
+                 "pass" : '' + this.user_input.password})
+                .then(response =>{
+                    if(response.data){
+                        $('#userModal').modal('hide');
+                        self.$parent.getUsers();
+                    }
+                })
+                
             }
         }
     }
