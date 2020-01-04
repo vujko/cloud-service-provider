@@ -43,6 +43,7 @@ public class UserService {
         if(userExsists(user.getEmail())){
             return false;
         }
+        user.setRole(User.Role.USER);
         users.add(user);
         return true;
     }
@@ -54,5 +55,13 @@ public class UserService {
             }
         }
         return false;
+    }
+    public boolean updateUser(User newUser) {
+    	User user1 = getUser(newUser.getEmail());
+    	
+    	user1.setName(newUser.getName());
+    	user1.setSurname(newUser.getSurname());
+    	user1.setPassword(newUser.getPassword());
+    	return true;
     }
 }

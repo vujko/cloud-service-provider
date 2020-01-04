@@ -8,6 +8,14 @@ import spark.Route;
 import spark.Response;
 
 public class UserController {
+	
+	private class UserToUpdate{
+		private String oldEmail;
+		private String surname;
+		private String name;
+		private String pass;
+	}
+	
     public static boolean verify(String email, String password){
         //korisnik ne moze da prosledi null.Ovo pokriva 1. slucaj ucitavanja stranice
         // if(email == null){
@@ -30,6 +38,22 @@ public class UserController {
             return "OK";
         }
         res.status(400);
+        return false;
+    };
+    public static Route updateUser = (Request req, Response res) ->{
+    	UserToUpdate user = App.g.fromJson(req.body(),UserToUpdate.class);
+    	res.type("aplication/json");
+    	User newUser = new User();
+    	newUser.setEmail(user.oldEmail);
+    	newUser.setName(user.name);
+    	newUser.setSurname(user.surname);
+    	newUser.setPassword(user.pass);
+    	
+    	if(App.userService.updateUser(newUser)) {
+    		res.status(200);
+    		return "OK";
+    	}
+    	res.status(400);
         return false;
     };
 }
