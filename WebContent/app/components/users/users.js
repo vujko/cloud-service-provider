@@ -2,13 +2,9 @@ Vue.component("users", {
 	data: function () {
 		    return {
               users : null,
-<<<<<<< HEAD
-              selectedUser : null,
-              verified : false
-=======
-              role : null
+              verified : false,
+              role : null,
               selectedUser : null
->>>>>>> 6fc86e10da9cb0c7fda027c7dd6776570e314652
 		    }
 	},
 	template: ` 
