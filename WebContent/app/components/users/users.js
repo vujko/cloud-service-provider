@@ -2,7 +2,7 @@ Vue.component("users", {
 	data: function () {
 		    return {
               users : null,
-              role : null
+              role : null,
               selectedUser : null
 		    }
 	},

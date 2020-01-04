@@ -3,7 +3,8 @@ Vue.component("organizations",{
         return{
             selectedOrg : null,
             organizations : null,
-            role : null
+            role : null,
+            logos : null
         }
     },
     template : `
@@ -17,7 +18,7 @@ Vue.component("organizations",{
                 <tr v-for="o in organizations" :key="o.name" v-on:click="selectOrganization(o)" v-bind:class="{selected : selectedOrg != null && selectedOrg.name===o.name}">
                     <td>{{ o.name }}</td>
                     <td>{{ o.description }}</td>
-                    <td>{{ o.logo }}</td>
+                    <td><img :src="o.logo" style="width:50px;height:60px;"></td>
                 </tr>
                 </tbody>
         </table>
@@ -25,7 +26,7 @@ Vue.component("organizations",{
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orgModal">
                 Add organization
             </button>
-            <button type="button" class="btn btn-primary" v-on:click="editOrganization()" v-bind:disabled="selectedOrg==null">
+            <button type="button" class="btn btn-primary" v-on:click="editOrganization()" v-if="role == 'SUPER_ADMIN'" v-bind:disabled="selectedOrg==null">
                 Edit organization
             </button>
         </span>

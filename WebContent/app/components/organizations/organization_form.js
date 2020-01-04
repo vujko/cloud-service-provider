@@ -5,7 +5,9 @@ Vue.component("organization-form", {
                 name : "",
                 description : "",
                 logo : ""
-            }
+            },
+
+            logo : null
         }
     },
     template : `
@@ -28,8 +30,22 @@ Vue.component("organization-form", {
                 <div class="form-group">
                     <input class="form-control" id="org_desc" placeholder="Description" name="description" type="text" v-model="org_input.description" required>
                 </div>
-                <div class="form-group">
-                    <input class="form-control" id="org_logo" placeholder="Organization logo" name="name" type="text" v-model="org_input.logo" required>
+
+                <div class="border">
+                    <label class="form-group form-control" >Logo</label>
+                    <div class="form-group text-center">
+                        
+                        <div v-if="!logo">
+                            <input id="org_logo" placeholder="Organization logo" name="logo" @change="onFileChange" type="file" required>
+                        </div>
+                        <div v-else>
+                            <img :src="logo" style="width:100px;height:120px;">
+                            <div>
+                                <button type="button" @click="removeLogo">Remove logo</button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </fieldset>
             </form>
@@ -43,10 +59,34 @@ Vue.component("organization-form", {
     </div>`,
 
     methods : {
+        onFileChange(e){
+            var files = e.target.files || e.dataTransfer.files;
+            if(!files.length)
+                return 
+            this.createLogo(files[0]);
+        },
+
+        createLogo(file){
+            var logo = new Image();
+            var reader = new FileReader();
+            var self = this;
+
+            reader.onload = (e) => {
+                self.logo = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        },
+
+        removeLogo : function(e){
+            this.logo = null;
+        },
+
+
+
         clearFields : function(){
             this.org_input.name = "";
             this.org_input.description = "";
-            this.org_input.logo = "";  
+            this.logo = null;  
             $('#orgModal').modal('hide');  
             document.getElementById('org_name').style.borderColor = "";
             document.getElementById('name_err').innerHTML = ""; 
@@ -58,6 +98,8 @@ Vue.component("organization-form", {
         addOrganization : function(){
             var self = this;
             var $orgForm = $("#orgForm");
+            this.org_input.logo = this.logo;
+
             if( ! $orgForm[0].checkValidity()){
                 $('<input type="submit">').hide().appendTo($orgForm).click().remove();
             }
