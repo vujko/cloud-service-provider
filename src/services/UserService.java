@@ -64,4 +64,12 @@ public class UserService {
     	user1.setPassword(newUser.getPassword());
     	return true;
     }
+    public boolean deleteUser(String email) {
+    	if(userExsists(email)) {
+    		User u = getUser(email);
+    		users.remove(u);
+    		return true;
+    	}
+    	return false;
+    }
 }

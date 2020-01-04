@@ -47,10 +47,10 @@ Vue.component("user-form", {
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" v-on:click="clearFields()" v-if="modal == 'add'" > Cancel</button>
                 <button type="button" class="btn btn-primary" v-on:click="addUser()" v-if="modal == 'add'">Add user</button>
+                <button type="button" class="btn btn-secondary" v-on:click="clearFields()" v-if="modal == 'add'" > Cancel</button>
                 <button type="button" class="bnt btn-primary" v-on:click="updateUser()" v-if="modal == 'edit'">Save changes</button>
-                <button type="button" class="bnt btn-primary" v-on:click="cancelUpdate()" v-if="modal =='edit'">Cancel</button>
+                <button type="button" class="bnt btn-secondary" v-on:click="cancelUpdate()" v-if="modal =='edit'">Cancel</button>
             </div>
             </div>
         </div>

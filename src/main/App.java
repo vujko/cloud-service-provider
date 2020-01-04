@@ -47,6 +47,6 @@ public class App {
 		post("/updateOrganization", OrganizationControlller.updateOrganization);
 		get("/ensureLogin", LoginController.ensureLogin);
 		post("/updateUser", UserController.updateUser);
-		
+		post("/deleteUser", UserController.deleteUser);
 	}	
 }

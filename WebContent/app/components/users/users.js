@@ -2,7 +2,8 @@ Vue.component("users", {
 	data: function () {
 		    return {
               users : null,
-              selectedUser : null
+              selectedUser : null,
+              verified : false
 		    }
 	},
 	template: ` 
@@ -20,11 +21,14 @@ Vue.component("users", {
                 </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-primary " data-toggle="modal" v-on:click="userAdd">
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" v-on:click="userAdd">
             Add User
         </button>
-        <button type="button" class="btn btn-primary" v-on:click="editUser" v-bind:disabled="selectedUser==null">
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="editUser" v-bind:disabled="selectedUser==null">
             Edit User
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="deleteUser" v-bind:disabled="selectedUser==null">
+            Delete User 
         </button>
          <!-- Modal -->
         <user-form ref="userForm"></user-form>
@@ -56,6 +60,20 @@ Vue.component("users", {
             this.$refs.userForm.user_input.email = "";
             this.$refs.userForm.modal = 'add';
             $('#userModal').modal('show');
+        },
+        deleteUser : function(){
+            var self = this;
+            axios
+            .post('/deleteUser',{"email" : '' + this.selectedUser.email})
+            .then(function(response){
+                this.verified = response.data;
+                if(this.verified){
+                    this.selectedUser = null;
+                    self.getUsers();
+                }else{
+                    alert("This user is already logged in.");
+                }        
+            })
         }
     },
     beforeCreate () {
