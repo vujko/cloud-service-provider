@@ -22,11 +22,14 @@ Vue.component("organizations",{
                 </tbody>
         </table>
         <span>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orgModal">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#orgModal">
                 Add organization
             </button>
-            <button type="button" class="btn btn-primary" v-on:click="editOrganization()" v-bind:disabled="selectedOrg==null">
+            <button type="button" class="btn btn-primary btn-sm" v-on:click="editOrganization()" v-bind:disabled="selectedOrg==null">
                 Edit organization
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" v-on:click="deleteOrganization" v-bind:disabled="selectedOrg==null">
+            Delete organization 
             </button>
         </span>
         <!-- Modals -->
@@ -51,6 +54,21 @@ Vue.component("organizations",{
             .then(response => {
                 this.organizations = response.data
             });
+        },
+        deleteOrganization : function(){
+            var self = this;
+            axios
+            .post('/deleteOrganization',{"name" : '' + this.selectedOrg.name})
+            .then(function(response){
+                if(response.data){
+                    self.selectedOrg = null;
+                    toast("Successfully deleted.");
+                    self.getOrganizations();
+                }
+            })
+            .catch(error =>{
+                alert("Something wrong");
+            })
         }
     },
     mounted () {

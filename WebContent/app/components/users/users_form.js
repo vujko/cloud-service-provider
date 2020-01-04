@@ -32,7 +32,7 @@ Vue.component("user-form", {
                 <form id="userForm" class="form-signin" role="form">
                 <fieldset>  
                     <div class="form-group">
-                        <input class="form-control" v-if="modal=='add'" id="us_email" placeholder="Email" name="email" type="email" v-model="user_input.email" required><p id="name_err"></p>
+                        <input class="form-control" v-bind:disabled="modal=='edit'" id="us_email" placeholder="Email" name="email" type="email" v-model="user_input.email" required><p id="name_err"></p>
                     </div>
                     <div class="form-group">
                         <input class="form-control" id="us_name" placeholder="Name" name="name" type="text" v-model="user_input.name" required>

@@ -62,13 +62,13 @@ public class UserController {
     public static Route deleteUser = (Request req, Response res) ->{
     	UserToDelete user = App.g.fromJson(req.body(),UserToDelete.class);
     	res.type("aplication/json");
-    	if(req.session().attribute("email").equals(user.email)) {
-    		res.status(200);
+    	if(req.session(false).attribute("email").equals(user.email)) {
+    		res.status(400);
         	return false;
     	}
     	if(App.userService.deleteUser(user.email)) {
     		res.status(200);
-    		return "OK";
+    		return true;
     	}
     	res.status(400);
     	return false;

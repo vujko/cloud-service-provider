@@ -49,5 +49,6 @@ public class App {
 		get("/getRole", LoginController.getRole);
 		post("/updateUser", UserController.updateUser);
 		post("/deleteUser", UserController.deleteUser);
+		post("/deleteOrganization", OrganizationControlller.deleteOrganization);
 	}	
 }

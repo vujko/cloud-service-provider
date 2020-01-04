@@ -67,14 +67,16 @@ Vue.component("users", {
             axios
             .post('/deleteUser',{"email" : '' + this.selectedUser.email})
             .then(function(response){
-                this.verified = response.data;
-                if(this.verified){
-                    this.selectedUser = null;
+                self.verified = response.data;
+                if(self.verified){
+                    self.selectedUser = null;
+                    toast("Successfully deleted.")
                     self.getUsers();
-                }else{
-                    alert("This user is already logged in.");
-                }        
+                }      
             })
+            .catch(error =>{
+                alert("You can't delete yourself.")
+            })           
         }
     },
 	mounted () {
