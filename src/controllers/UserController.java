@@ -15,6 +15,9 @@ public class UserController {
 		private String name;
 		private String pass;
 	}
+	private class UserToDelete{
+		private String email;
+	}
 	
     public static boolean verify(String email, String password){
         //korisnik ne moze da prosledi null.Ovo pokriva 1. slucaj ucitavanja stranice
@@ -55,5 +58,19 @@ public class UserController {
     	}
     	res.status(400);
         return false;
+    };
+    public static Route deleteUser = (Request req, Response res) ->{
+    	UserToDelete user = App.g.fromJson(req.body(),UserToDelete.class);
+    	res.type("aplication/json");
+    	if(req.session(false).attribute("email").equals(user.email)) {
+    		res.status(400);
+        	return false;
+    	}
+    	if(App.userService.deleteUser(user.email)) {
+    		res.status(200);
+    		return true;
+    	}
+    	res.status(400);
+    	return false;
     };
 }

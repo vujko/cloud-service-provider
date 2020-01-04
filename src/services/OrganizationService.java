@@ -40,6 +40,15 @@ public class OrganizationService {
         org.setLogo(newOrg.getLogo());
         return true;
     }
+    
+    public boolean deleteOrganization(String name) { 	
+    	if(organizationExsists(name)) {
+    		Organization forDelete = getOrganization(name);
+    		organizations.remove(forDelete);
+        	return true;
+    	}
+    	return false;
+    }
 
     public boolean organizationExsists(String name){
         for (Organization org : organizations) {

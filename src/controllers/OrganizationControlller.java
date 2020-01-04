@@ -14,6 +14,9 @@ public class OrganizationControlller {
         public String description;
         public String logo;
     }
+    public class OrganizationToDelete{
+    	public String name;
+    }
 
     public static Route getOrganizations = (Request req, Response res) -> {
         res.type("application/json");
@@ -50,4 +53,14 @@ public class OrganizationControlller {
 
    };
 
+   public static Route deleteOrganization = (Request req, Response res)->{
+	   OrganizationToDelete org = App.g.fromJson(req.body(), OrganizationToDelete.class);
+	   res.type("application/json");
+	   if(App.orgService.deleteOrganization(org.name)) {
+		   res.status(200);
+		   return true;
+	   }
+	   res.status(400);
+	   return false;
+   };
 }

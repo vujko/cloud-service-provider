@@ -2,6 +2,7 @@ Vue.component("users", {
 	data: function () {
 		    return {
               users : null,
+              verified : false,
               role : null,
               selectedUser : null
 		    }
@@ -21,11 +22,14 @@ Vue.component("users", {
                 </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-primary " data-toggle="modal" v-on:click="userAdd">
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" v-on:click="userAdd">
             Add User
         </button>
-        <button type="button" class="btn btn-primary" v-on:click="editUser" v-bind:disabled="selectedUser==null">
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="editUser" v-bind:disabled="selectedUser==null">
             Edit User
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="deleteUser" v-bind:disabled="selectedUser==null">
+            Delete User 
         </button>
          <!-- Modal -->
         <user-form ref="userForm"></user-form>
@@ -57,6 +61,22 @@ Vue.component("users", {
             this.$refs.userForm.user_input.email = "";
             this.$refs.userForm.modal = 'add';
             $('#userModal').modal('show');
+        },
+        deleteUser : function(){
+            var self = this;
+            axios
+            .post('/deleteUser',{"email" : '' + this.selectedUser.email})
+            .then(function(response){
+                self.verified = response.data;
+                if(self.verified){
+                    self.selectedUser = null;
+                    toast("Successfully deleted.")
+                    self.getUsers();
+                }      
+            })
+            .catch(error =>{
+                alert("You can't delete yourself.")
+            })           
         }
     },
 	mounted () {
