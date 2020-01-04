@@ -1,9 +1,8 @@
 Vue.component("home-page", {
-
 	data: function () {
-		    return {
-		      data : null
-		    }
+		return {
+			role : null
+		}
 	},
 	template: ` 
 	<div>
@@ -11,17 +10,14 @@ Vue.component("home-page", {
 		
 		
 		<div class="container">
-		<h3>VM</h3>
+		<h3>{{role}}</h3>
 		<p>Prikaz VM</p>
 		</div>
 	</div>
 `
 	, 
-	methods : {
-
-	},
-	beforeCreate () {
-		EventBus.$emit("ensureLogin");
-    }
+	mounted(){
+		this.role = localStorage.getItem("role");
+	}
 });
 

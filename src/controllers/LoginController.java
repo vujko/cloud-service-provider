@@ -15,6 +15,10 @@ public class LoginController {
         public String password;
     }
 
+    static class LoggInfo{
+        public boolean isLoggedIn = false;
+        public String role = "";
+    }
     public static Route verifyLogin = (Request req, Response res) ->{
         res.type("application/json");
         Input in = getInputFromReq(req);
@@ -52,15 +56,18 @@ public class LoginController {
 
     public static Route ensureLogin = (Request req, Response res) ->{
         Session s = req.session(false);
+        LoggInfo li = new LoggInfo();
         if(s == null){
-            return false;
+            return App.g.toJson(li);
         }
         if(req.session(false).attribute("user_role") == null){
             res.status(200);
-            return false;
+            return  App.g.toJson(li);
         }
         res.status(200);
-        return true;
+        li.isLoggedIn = true;
+        li.role = req.session(false).attribute("user_role");
+        return App.g.toJson(li);
     };
 
     public static Route handleLogout = (Request req, Response res) ->{
@@ -68,6 +75,11 @@ public class LoginController {
         req.session().attribute("email", null);
         return "200 OK";
         
+    };
+
+    public static Route getRole = (Request req, Response res) ->{
+        res.type("application/json");
+        return req.session(false).attribute("user_role");
     };
 
     private static Input getInputFromReq(Request req){

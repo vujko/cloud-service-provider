@@ -2,7 +2,8 @@ Vue.component("organizations",{
     data : function(){
         return{
             selectedOrg : null,
-            organizations : null
+            organizations : null,
+            role : null
         }
     },
     template : `
@@ -52,10 +53,9 @@ Vue.component("organizations",{
             });
         }
     },
-    beforeCreate () {
-		EventBus.$emit("ensureLogin");
-    },
     mounted () {
         this.getOrganizations();
+        this.role = localStorage.getItem("role");
+
     }
 })

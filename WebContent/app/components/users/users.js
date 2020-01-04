@@ -1,7 +1,8 @@
 Vue.component("users", {
 	data: function () {
 		    return {
-		      users : null
+              users : null,
+              role : null
 		    }
 	},
 	template: ` 
@@ -38,10 +39,9 @@ Vue.component("users", {
         }
         
     },
-    beforeCreate () {
-		EventBus.$emit("ensureLogin");
-    },
 	mounted () {
-        this.getUsers();       
+        this.getUsers();         
+        this.role = localStorage.getItem("role");
+             
     }
 });
