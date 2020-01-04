@@ -72,8 +72,7 @@ Vue.component("user-form", {
             this.user_input.password = this.backup.password;
             this.user_input.email = this.backup.email;
             $('#userModal').modal('hide');
-            //this.$parent.selectedUser = null;
-            
+            //this.$parent.selectedUser = null;        
         },
         resetNameField : function(){
             document.getElementById('us_email').style.borderColor = "";
