@@ -1,8 +1,9 @@
 package services;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
+import model.Organization;
 import model.User;
 import model.User.Role;
 
@@ -13,8 +14,8 @@ public class UserService {
     public static Set<User> loadUsers(String path){
 
         Set<User> users = new HashSet<User>();
-        users.add(new User("vukasin@gmail.com", "Vukasin", "Jokic", null, Role.SUPER_ADMIN, "123" ));
-        users.add(new User("nikola@gmail.com", "Nikola", "Stojanovic", null, Role.ADMIN, "123"));
+        users.add(new User("vukasin@gmail.com", "Vukasin", "Jokic", new Organization(), Role.SUPER_ADMIN, "123" ));
+        users.add(new User("nikola@gmail.com", "Nikola", "Stojanovic", new Organization(), Role.ADMIN, "123"));
         return users;
     }
 

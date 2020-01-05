@@ -10,6 +10,7 @@ public class Organization {
 	private Collection<VirtualMachine> resources;
 	
 	
+	
 	public Organization(String name, String description, String logo, Collection<User> users,
 			Collection<VirtualMachine> resources) {
 		super();
@@ -23,6 +24,7 @@ public class Organization {
 
 	public Organization() {
 		super();
+		this.name = "";
 	}
 
 
