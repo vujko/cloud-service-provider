@@ -13,12 +13,13 @@ Vue.component("users", {
         <table class="table table-striped table-responsive col px-md-2">
             <thead> 
             <tr>
-                <th scope="col">Ime</th><th scope="col" >Prezime</th><th scope="col">Email</th></tr></thead>
+                <th scope="col">Ime</th><th scope="col" >Prezime</th><th scope="col">Email</th><th scope="col">Organization</th></tr></thead>
                 <tbody>
                 <tr v-for="u in users" :key="u.email" v-on:click="selectUser(u)" v-bind:class="{selected : selectedUser != null && selectedUser.email===u.email}">
                     <td>{{u.name}}</td>
                     <td>{{u.surname}}</td>
                     <td>{{u.email}}</td>
+                    <td>{{u.organization.name}}</td>
                 </tr>
             </tbody>
         </table>
@@ -59,6 +60,7 @@ Vue.component("users", {
             this.$refs.userForm.user_input.surname = "";
             this.$refs.userForm.user_input.password = "";
             this.$refs.userForm.user_input.email = "";
+            this.$refs.userForm.user_input.organization.name = "";
             this.$refs.userForm.modal = 'add';
             $('#userModal').modal('show');
         },

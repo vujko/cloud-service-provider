@@ -5,7 +5,8 @@ Vue.component("user-form", {
                     email : "",
                     password : "",
                     surname : "",
-                    name : ""
+                    name : "",
+                    organization : {name : ""}
                 },
                 modal : null,
                 backup : {
@@ -41,7 +42,10 @@ Vue.component("user-form", {
                         <input class="form-control" id="us_surname" placeholder="Surname" name="surname" type="text" v-model="user_input.surname" required>
                     </div>
                     <div class="form-group">
-                    <input class="form-control" id="us_password" placeholder="Password" name="password" type="password" v-model="user_input.password" required>
+                        <input class="form-control" id="us_password" placeholder="Password" name="password" type="text" v-model="user_input.password" required>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-contol" id="us_organization" placeholder="Organization" name="organization" type="text" v-bind:disabled="modal=='edit'" v-model="user_input.organization.name" >
                     </div>
                 </fieldset>
                 </form>
@@ -63,6 +67,7 @@ Vue.component("user-form", {
             this.user_input.surname = "";
             this.user_input.email = "";
             this.user_input.password = "";
+            this.user_input.organization.name = "";
             $('#userModal').modal('hide');
             this.resetNameField();
         },
@@ -91,7 +96,7 @@ Vue.component("user-form", {
             }
             else{
                 axios
-                .post("/addUser",{"email" : '' + this.user_input.email, "name" : '' + this.user_input.name, "surname" : '' + this.user_input.surname, "organization" : null,
+                .post("/addUser",{"email" : '' + this.user_input.email, "name" : '' + this.user_input.name, "surname" : '' + this.user_input.surname, "organization" : { "name" : ""},
                             "role" : null, "password" : '' + this.user_input.password})
                 .then(response => {
                     self.$parent.getUsers();
