@@ -29,27 +29,17 @@ public class LoginController {
         return App.g.toJson(false);
     };
 
-	
-	public static Route loadLoginPage = (Request req, Response res) ->{
-			
-        if (req.session().attribute("user_role") == null){
-            res.redirect("/");
-            return null;
-        }
-        res.redirect("/success");
-        return null;
-    };
-
     public static Route handleLogin = (Request req, Response res) ->{
         Input in = getInputFromReq(req);
         if(UserController.verify(in.email, in.password)){
             User.Role role = getUserRole(in.email);
             req.session().attribute("user_role", role.name());
             req.session().attribute("email", in.email);
-            res.redirect("/success");
-            return null;
+            res.status(200);
+            return "OK";
         }
-        res.redirect("/");        
+
+        res.status(400);
         return "Invalid email or password";
 
     };
