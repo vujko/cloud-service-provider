@@ -16,13 +16,6 @@ const router = new VueRouter({
     ]
 });
 
-var app = new Vue({
-    router,
-    el : '#app'
-
-}).$mount('#app');
-
-
 router.beforeEach((to, from , next) => {
     //ensuring login and setting role
     var self = this;
@@ -41,3 +34,11 @@ router.beforeEach((to, from , next) => {
         }
     })
 })
+
+var app = new Vue({
+    router,
+    el : '#app'
+
+}).$mount('#app');
+
+

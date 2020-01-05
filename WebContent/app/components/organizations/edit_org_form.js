@@ -35,9 +35,27 @@ Vue.component("edit-org-form",{
                 <div class="form-group">
                     <input class="form-control" id="edit_org_desc" placeholder="Description" name="description" type="text" v-model="editedOrg.description" required>
                 </div>
-                <div class="form-group">
-                    <input class="form-control" id="edit_org_logo"  placeholder="Logo" name="logo" type="text" v-model="editedOrg.logo" required>
+
+
+
+
+                <div class="border">
+                <label id="label" class="form-group form-control" >Logo</label>
+                <div class="form-group text-center">
+                    
+                    <div>
+                        <input id="edit_org_logo" v-bind:hidden="editedOrg.logo" @change="onFileChange" type="file" required>
+                    </div>
+                    <div v-bind:hidden="!editedOrg.logo">
+                        <img :src="editedOrg.logo" style="width:100px;height:120px;">
+                        <div>
+                            <button type="button" @click="removeLogo">Remove logo</button>
+                        </div>
+                    </div>
+
                 </div>
+                </div>
+
             </fieldset>
             </form>
         </div>
@@ -50,6 +68,29 @@ Vue.component("edit-org-form",{
     </div>`,
 
     methods : {
+        onFileChange(e){
+            var files = e.target.files || e.dataTransfer.files;
+            if(!files.length)
+                return 
+            this.createLogo(files[0]);
+        },
+
+        createLogo(file){
+            var logo = new Image();
+            var reader = new FileReader();
+            var self = this;
+
+            reader.onload = (e) => {
+                self.editedOrg.logo = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        },
+
+        removeLogo : function(e){
+            this.editedOrg.logo = null;
+        },
+
+
         cancelUpdate : function(){
             this.editedOrg.name = this.backup.name;
             this.editedOrg.description = this.backup.description;

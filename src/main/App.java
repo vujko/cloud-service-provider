@@ -31,24 +31,20 @@ public class App {
 		staticFiles.externalLocation(new File("./WebContent").getCanonicalPath()); 
 		
 
-		get("/login", LoginController.loadLoginPage);
 		post("/login", LoginController.handleLogin);
 		post("/verify", LoginController.verifyLogin);
-		get("/success", (req, res) -> {
-			res.redirect("/");
-			return null;
-		});
-
-		get("/getUsers", UserController.getUsers);
-		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/logout", LoginController.handleLogout);
-		post("/addOrganization", OrganizationControlller.addOrganization);
-		post("/addUser",UserController.addUser);
-		post("/updateOrganization", OrganizationControlller.updateOrganization);
 		get("/ensureLogin", LoginController.ensureLogin);
 		get("/getRole", LoginController.getRole);
+
+		get("/getUsers", UserController.getUsers);
+		post("/addUser",UserController.addUser);
 		post("/updateUser", UserController.updateUser);
 		post("/deleteUser", UserController.deleteUser);
+
+		get("/getOrganizations", OrganizationControlller.getOrganizations);
+		post("/addOrganization", OrganizationControlller.addOrganization);
+		post("/updateOrganization", OrganizationControlller.updateOrganization);
 		post("/deleteOrganization", OrganizationControlller.deleteOrganization);
 	}	
 }

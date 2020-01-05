@@ -42,9 +42,11 @@ Vue.component("log-in", {
                     this.verified = response.data;
                     if(this.verified){
                         axios
-                        .post("/login",userinput);
+                        .post("/login",userinput)
                         //mozda ovo treba u then-u
-                        self.$router.replace("/homepage");
+                        .then(response => {
+                            self.$router.replace("/homepage");
+                        });
                     }
                     else{
                         toast("Wrong email or password.Please try again.");
