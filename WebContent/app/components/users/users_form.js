@@ -45,7 +45,7 @@ Vue.component("user-form", {
                         <input class="form-control" id="us_password" placeholder="Password" name="password" type="text" v-model="user_input.password" required>
                     </div>
                     <div class="form-group">
-                        <input class="form-contol" id="us_organization" placeholder="Organization" name="organization" type="text" v-bind:disabled="modal=='edit'" v-model="user_input.organization.name" >
+                        <input class="form-control" id="us_organization" placeholder="Organization" name="organization" type="text" v-bind:disabled="modal=='edit'" v-model="user_input.organization.name" >
                     </div>
                 </fieldset>
                 </form>

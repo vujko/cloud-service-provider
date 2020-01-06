@@ -13,7 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-import model.Organization;
 import model.User;
 
 public class UserService {
@@ -30,10 +29,6 @@ public class UserService {
             Type usersType = new TypeToken<Set<User>>(){}.getType();
             JsonReader reader = new JsonReader(new FileReader(path));
             users = g.fromJson(reader, usersType);
-            // for (User user : users) {
-            //     user.setOrganization(new Organization());
-
-            // }
             return users;
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +48,6 @@ public class UserService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//TODO u json dodati org
     }
 
     public static User getUser(String email){

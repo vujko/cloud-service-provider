@@ -30,7 +30,12 @@ public class UserController {
     public static Route getUsers = (Request req, Response res) ->{
     	 res.type("aplication/json");
     	 return App.g.toJson(App.userService.getUsers());
-    };
+	};
+	
+	public static Route getUser = (Request req, Response res) ->{
+		res.type("application/json");
+		return App.g.toJson(UserService.getUser(req.params("email")));
+	};
 
     public static Route addUser = (Request req, Response res) ->{
         User user = App.g.fromJson(req.body(), User.class);

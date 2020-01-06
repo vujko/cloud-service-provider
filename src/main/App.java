@@ -37,6 +37,7 @@ public class App {
 		get("/ensureLogin", LoginController.ensureLogin);
 		get("/getRole", LoginController.getRole);
 
+		get("/getUser/:email", UserController.getUser);
 		get("/getUsers", UserController.getUsers);
 		post("/addUser",UserController.addUser);
 		post("/updateUser", UserController.updateUser);
