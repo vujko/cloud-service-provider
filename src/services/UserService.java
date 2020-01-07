@@ -32,12 +32,23 @@ public class UserService {
             Type usersType = new TypeToken<Set<User>>(){}.getType();
             JsonReader reader = new JsonReader(new FileReader(path));
             users = g.fromJson(reader, usersType);
+            connectUsersWithOrganizations(users);
             return users;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new HashSet<User>();
        
+    }
+    private static void connectUsersWithOrganizations(Set<User> users){
+        for (User user : users) {
+            for(Organization org : App.orgService.getOrganizations()){
+                if(user.getOrganization().getName().equalsIgnoreCase(org.getName())){
+                    user.setOrganization(org);
+                    org.addUser(user);
+                }
+            }
+        }
     }
 
     public static void saveUsers(String path) {

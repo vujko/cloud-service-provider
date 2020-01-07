@@ -1,6 +1,5 @@
 package services;
 
-import java.util.Collection;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,7 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import model.Organization;
-import model.User;
+
 
 public class OrganizationService {
 

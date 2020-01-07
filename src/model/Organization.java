@@ -111,4 +111,8 @@ public class Organization {
 	public String toString() {
 		return "name : " +this.name;
 	}
+
+	public void addUser(User u){
+		this.users.add(u);
+	}
 }

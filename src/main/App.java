@@ -19,14 +19,14 @@ import controllers.UserController;
 
 
 public class App {
-	
-	public static UserService userService;
 	public static OrganizationService orgService;
+	public static UserService userService;
 	public static Gson g = new Gson();
 	
 	public static void main(String[] args) throws IOException {
-		userService = new UserService();
 		orgService = new OrganizationService();
+		userService = new UserService();
+		
 		port(8080);		
 		staticFiles.externalLocation(new File("./WebContent").getCanonicalPath()); 
 		
