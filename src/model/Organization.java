@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 public class Organization {
 	private String name;
@@ -25,6 +26,8 @@ public class Organization {
 	public Organization() {
 		super();
 		this.name = "";
+		this.users = new HashSet<User>();
+		this.resources = new HashSet<VirtualMachine>();
 	}
 
 
