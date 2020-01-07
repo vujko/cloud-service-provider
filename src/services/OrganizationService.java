@@ -24,21 +24,16 @@ public class OrganizationService {
 
     public static Set<Organization> loadOrganizations(String path){
 
-        Set<Organization> org = new HashSet<Organization>();
-        org.add(new Organization("Organizacija1", "Jako dobra organizacija", "Logo1", new HashSet<User>() , null));
-        org.add(new Organization("Organizacija2", "Jos bolja organizacija", "Logo2", new HashSet<User>(), null));
-
-        return org;
-        // try{
-        //     Set<Organization> organizations = new HashSet<Organization>();
-        //     Type orgsType = new TypeToken<Set<Organization>>(){}.getType();
-        //     JsonReader reader = new JsonReader(new FileReader(path));
-        //     organizations = g.fromJson(reader, orgsType);
-        //     return organizations;
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
-        // return new HashSet<Organization>();
+        try{
+            Set<Organization> organizations = new HashSet<Organization>();
+            Type orgsType = new TypeToken<Set<Organization>>(){}.getType();
+            JsonReader reader = new JsonReader(new FileReader(path));
+            organizations = g.fromJson(reader, orgsType);
+            return organizations;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new HashSet<Organization>();
     }
 
     public static void saveOrganizations(String path) {
@@ -52,7 +47,6 @@ public class OrganizationService {
         } catch (IOException e) {
             e.printStackTrace();
         }
->>>>>>> 2153abc68b85bd912ae7580f0a625823a7040a31
     }
 
     public Set<Organization> getOrganizations(){

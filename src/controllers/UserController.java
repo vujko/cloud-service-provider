@@ -37,15 +37,12 @@ public class UserController {
     	 res.type("aplication/json");
     	 String jsdo = App.g.toJson(App.userService.getUsers());
     	 return App.g.toJson(App.userService.getUsers());
-<<<<<<< HEAD
     };
     public static Route getUsersAdmin = (Request req, Response res) ->{
    	 res.type("aplication/json");
    	 String email = req.session(false).attribute("email");
    	 return App.g.toJson(App.userService.getUsersAdmin(email));
    };
-
-	};
 	
 	public static Route getUser = (Request req, Response res) ->{
 		res.type("application/json");
@@ -56,8 +53,9 @@ public class UserController {
     public static Route addUser = (Request req, Response res) ->{
         User user = App.g.fromJson(req.body(), User.class);
         res.type("aplication/json");
-
-        if(App.userService.addUser(user)){
+        String email = req.session(false).attribute("email");
+        //User.Role role = (Role)req.session(false).attribute("user_role");
+        if(App.userService.addUser(user,email)){
             res.status(200);
             return "OK";
         }

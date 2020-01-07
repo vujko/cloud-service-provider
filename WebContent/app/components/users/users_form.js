@@ -47,17 +47,13 @@ Vue.component("user-form", {
                         <input class="form-control" id="us_password" placeholder="Password" name="password" type="text" v-model="user_input.password" required>
                     </div>
                     <div class="form-group">
-<<<<<<< HEAD
                         <input class="form-control" v-if="role=='SUPER_ADMIN'" v-bind:disabled="modal=='edit'" id="us_organization" placeholder="Organization" name="organization" type="text"  v-model="user_input.organization.name" required><p id="org_err"></p>
                     </div>
                     <div class="form-check">
                         <input type="radio" name="role" id="user" value="USER" v-model="picked" required>
                         <label for="user">User</label>
                         <input type="radio" name="role" id="adm" value="ADMIN" v-model="picked">
-                        <label for="adm">Admin</label>
-=======
-                        <input class="form-control" id="us_organization" placeholder="Organization" name="organization" type="text" v-bind:disabled="modal=='edit'" v-model="user_input.organization.name" >
->>>>>>> 2153abc68b85bd912ae7580f0a625823a7040a31
+                        <label for="adm">Admin</label>               
                     </div>
                 </fieldset>
                 </form>

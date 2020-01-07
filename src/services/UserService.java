@@ -78,7 +78,7 @@ public class UserService {
         return users;
     }
 
-    public boolean addUser(User user){
+    public boolean addUser(User user,String email){
         if(userExsists(user.getEmail())){
             return false;
         }
@@ -90,6 +90,14 @@ public class UserService {
             saveUsers(path);
             return true;
         }
+        User u = getUser(email);
+        if(u.getRole().equals("ADMIN")) {	
+        	Organization or = App.orgService.getOrganization(u.getOrganization().getName());
+        	user.setOrganization(or);
+        	users.add(user);
+        	return true;
+        }
+        
         return false;
     }
 
