@@ -45,6 +45,12 @@ public class LoginController {
 
     };
 
+    public static Route updateLoggedUser = (Request req, Response res) ->{
+        req.session().attribute("email", req.body());
+        res.status(200);
+        return "OK";
+    };
+
     public static Route ensureLogin = (Request req, Response res) ->{
         Session s = req.session(false);
         LoggInfo li = new LoggInfo();

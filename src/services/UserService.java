@@ -89,9 +89,14 @@ public class UserService {
         }
         return false;
     }
-    public boolean updateUser(User newUser) {
-    	User user1 = getUser(newUser.getEmail());
-    	
+    public boolean updateUser(User newUser, String oldEmail) {
+    	User user1 = getUser(oldEmail);
+    	if(!oldEmail.equalsIgnoreCase(newUser.getEmail())){
+            if(userExsists(newUser.getEmail())){
+                return false;
+            }
+        }
+        user1.setEmail(newUser.getEmail());
     	user1.setName(newUser.getName());
     	user1.setSurname(newUser.getSurname());
         user1.setPassword(newUser.getPassword());

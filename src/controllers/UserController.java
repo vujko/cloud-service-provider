@@ -11,6 +11,7 @@ public class UserController {
 	
 	private class UserToUpdate{
 		private String oldEmail;
+		private String newEmail;
 		private String surname;
 		private String name;
 		private String pass;
@@ -52,14 +53,14 @@ public class UserController {
     	UserToUpdate user = App.g.fromJson(req.body(),UserToUpdate.class);
     	res.type("aplication/json");
     	User newUser = new User();
-    	newUser.setEmail(user.oldEmail);
+    	newUser.setEmail(user.newEmail);
     	newUser.setName(user.name);
     	newUser.setSurname(user.surname);
     	newUser.setPassword(user.pass);
     	
-    	if(App.userService.updateUser(newUser)) {
+    	if(App.userService.updateUser(newUser, user.oldEmail)) {
     		res.status(200);
-    		return "OK";
+    		return true;
     	}
     	res.status(400);
         return false;
