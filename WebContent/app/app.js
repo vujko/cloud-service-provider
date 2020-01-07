@@ -2,7 +2,7 @@ const LoginPage = {template : "<log-in></log-in>"}
 const HomePage = { template : "<home-page></home-page>"}
 const Users = {template: "<users></users>"}
 const Organizations = { template : "<organizations></organizations>"}
-
+const ProfilePage = { template : "<profile></profile>"}
 
 const router = new VueRouter({
     mode : 'hash',
@@ -11,7 +11,8 @@ const router = new VueRouter({
         {path : "/", component : LoginPage},
         {path : "/homepage", component : HomePage}, 
         {path : "/users",component : Users},
-        {path : "/organizations", component : Organizations}
+        {path : "/organizations", component : Organizations},
+        {path : "/profile", component : ProfilePage}
 
     ]
 });
@@ -30,6 +31,7 @@ router.beforeEach((to, from , next) => {
         }
         else{
             localStorage.setItem("role", response.data.role);
+            localStorage.setItem("email", response.data.email);
             next();
         }
     })

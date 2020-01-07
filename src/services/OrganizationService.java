@@ -1,21 +1,58 @@
 package services;
 
 import java.util.Collection;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import model.Organization;
 import model.User;
 
 public class OrganizationService {
 
-    private static Set<Organization> organizations = loadOrganizations("organizations.json");
+    private static Gson g = new Gson();
+    private static final String path = "./data/organizations.json";
+    private static Set<Organization> organizations = loadOrganizations(path);
 
     public static Set<Organization> loadOrganizations(String path){
+
         Set<Organization> org = new HashSet<Organization>();
         org.add(new Organization("Organizacija1", "Jako dobra organizacija", "Logo1", new HashSet<User>() , null));
         org.add(new Organization("Organizacija2", "Jos bolja organizacija", "Logo2", new HashSet<User>(), null));
+
         return org;
+        // try{
+        //     Set<Organization> organizations = new HashSet<Organization>();
+        //     Type orgsType = new TypeToken<Set<Organization>>(){}.getType();
+        //     JsonReader reader = new JsonReader(new FileReader(path));
+        //     organizations = g.fromJson(reader, orgsType);
+        //     return organizations;
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
+        // return new HashSet<Organization>();
+    }
+
+    public static void saveOrganizations(String path) {
+        try {
+            FileWriter writer = new FileWriter(path);
+            String json = g.toJson(organizations);
+            writer.write(json);
+            writer.close();
+        } catch (JsonIOException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+>>>>>>> 2153abc68b85bd912ae7580f0a625823a7040a31
     }
 
     public Set<Organization> getOrganizations(){
@@ -27,6 +64,7 @@ public class OrganizationService {
             return false;
         }
         organizations.add(org);
+        saveOrganizations(path);
         return true;
     }
 
@@ -40,13 +78,15 @@ public class OrganizationService {
         org.setName(newOrg.getName());
         org.setDescription(newOrg.getDescription());
         org.setLogo(newOrg.getLogo());
+        saveOrganizations(path);
         return true;
     }
     
     public boolean deleteOrganization(String name) { 	
     	if(organizationExsists(name)) {
     		Organization forDelete = getOrganization(name);
-    		organizations.remove(forDelete);
+            organizations.remove(forDelete);
+            saveOrganizations(path);
         	return true;
     	}
     	return false;

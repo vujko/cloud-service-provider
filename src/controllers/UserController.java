@@ -13,6 +13,7 @@ public class UserController {
 	
 	private class UserToUpdate{
 		private String oldEmail;
+		private String newEmail;
 		private String surname;
 		private String name;
 		private String pass;
@@ -36,12 +37,21 @@ public class UserController {
     	 res.type("aplication/json");
     	 String jsdo = App.g.toJson(App.userService.getUsers());
     	 return App.g.toJson(App.userService.getUsers());
+<<<<<<< HEAD
     };
     public static Route getUsersAdmin = (Request req, Response res) ->{
    	 res.type("aplication/json");
    	 String email = req.session(false).attribute("email");
    	 return App.g.toJson(App.userService.getUsersAdmin(email));
    };
+
+	};
+	
+	public static Route getUser = (Request req, Response res) ->{
+		res.type("application/json");
+		return App.g.toJson(UserService.getUser(req.params("email")));
+	};
+
 
     public static Route addUser = (Request req, Response res) ->{
         User user = App.g.fromJson(req.body(), User.class);
@@ -67,14 +77,14 @@ public class UserController {
     	UserToUpdate user = App.g.fromJson(req.body(),UserToUpdate.class);
     	res.type("aplication/json");
     	User newUser = new User();
-    	newUser.setEmail(user.oldEmail);
+    	newUser.setEmail(user.newEmail);
     	newUser.setName(user.name);
     	newUser.setSurname(user.surname);
     	newUser.setPassword(user.pass);
     	
-    	if(App.userService.updateUser(newUser)) {
+    	if(App.userService.updateUser(newUser, user.oldEmail)) {
     		res.status(200);
-    		return "OK";
+    		return true;
     	}
     	res.status(400);
         return false;

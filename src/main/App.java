@@ -36,9 +36,11 @@ public class App {
 		post("/logout", LoginController.handleLogout);
 		get("/ensureLogin", LoginController.ensureLogin);
 		get("/getRole", LoginController.getRole);
+		post("/updateLoggedUser", LoginController.updateLoggedUser);
 
 		get("/getUsers/SUPER_ADMIN", UserController.getUsersSuper);
 		get("/getUsers/ADMIN", UserController.getUsersAdmin);
+		get("/getUser/:email", UserController.getUser);
 		post("/addUser",UserController.addUser);
 		post("/updateUser", UserController.updateUser);
 		post("/deleteUser", UserController.deleteUser);

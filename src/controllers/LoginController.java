@@ -18,6 +18,7 @@ public class LoginController {
     static class LoggInfo{
         public boolean isLoggedIn = false;
         public String role = "";
+        public String email = "";
     }
     public static Route verifyLogin = (Request req, Response res) ->{
         res.type("application/json");
@@ -44,6 +45,12 @@ public class LoginController {
 
     };
 
+    public static Route updateLoggedUser = (Request req, Response res) ->{
+        req.session().attribute("email", req.body());
+        res.status(200);
+        return "OK";
+    };
+
     public static Route ensureLogin = (Request req, Response res) ->{
         Session s = req.session(false);
         LoggInfo li = new LoggInfo();
@@ -57,6 +64,7 @@ public class LoginController {
         res.status(200);
         li.isLoggedIn = true;
         li.role = req.session(false).attribute("user_role");
+        li.email = req.session(false).attribute("email");
         return App.g.toJson(li);
     };
 

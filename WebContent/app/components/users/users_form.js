@@ -47,6 +47,7 @@ Vue.component("user-form", {
                         <input class="form-control" id="us_password" placeholder="Password" name="password" type="text" v-model="user_input.password" required>
                     </div>
                     <div class="form-group">
+<<<<<<< HEAD
                         <input class="form-control" v-if="role=='SUPER_ADMIN'" v-bind:disabled="modal=='edit'" id="us_organization" placeholder="Organization" name="organization" type="text"  v-model="user_input.organization.name" required><p id="org_err"></p>
                     </div>
                     <div class="form-check">
@@ -54,6 +55,9 @@ Vue.component("user-form", {
                         <label for="user">User</label>
                         <input type="radio" name="role" id="adm" value="ADMIN" v-model="picked">
                         <label for="adm">Admin</label>
+=======
+                        <input class="form-control" id="us_organization" placeholder="Organization" name="organization" type="text" v-bind:disabled="modal=='edit'" v-model="user_input.organization.name" >
+>>>>>>> 2153abc68b85bd912ae7580f0a625823a7040a31
                     </div>
                 </fieldset>
                 </form>
@@ -124,6 +128,7 @@ Vue.component("user-form", {
                 axios
                 .post("/addUser",{"email" : '' + this.user_input.email, "name" : '' + this.user_input.name, "surname" : '' + this.user_input.surname, "organization" : this.user_input.organization,
                             "role" : this.picked, "password" : '' + this.user_input.password})
+
                 .then(response => {
                     self.$parent.getUsers();
                     if(self.role == "SUPER_ADMIN"){
@@ -154,7 +159,7 @@ Vue.component("user-form", {
             }
             else {
                 axios
-                .post("/updateUser",{"oldEmail" : '' +this.backup.email, "name" : '' + this.user_input.name, "surname" : '' + this.user_input.surname, 
+                .post("/updateUser",{"oldEmail" : '' +this.backup.email, "newEmail" : '' + this.user_input.email,  "name" : '' + this.user_input.name, "surname" : '' + this.user_input.surname, 
                  "pass" : '' + this.user_input.password})
                 .then(response =>{
                     if(response.data){
