@@ -3,6 +3,7 @@ package services;
 import java.util.HashSet;
 import java.util.Set;
 
+import main.App;
 import model.Organization;
 import model.User;
 import model.User.Role;
@@ -36,7 +37,11 @@ public class UserService {
         }
         return null;
     }
-    public Set<User> getUsers(){
+    public Set<User> getUsersAdmin(String email){
+    	User user = getUser(email);
+    			return (Set<User>)user.getOrganization().getUsers();
+    }
+    public Set<User> getUsers(){	
         return users;
     }
 
@@ -44,9 +49,15 @@ public class UserService {
         if(userExsists(user.getEmail())){
             return false;
         }
-        user.setRole(User.Role.USER);
-        users.add(user);
-        return true;
+        if(App.orgService.organizationExsists(user.getOrganization().getName())) {
+        	//user.setRole(user.getRole());
+        	Organization o = App.orgService.getOrganization(user.getOrganization().getName());
+        	o.getUsers().add(user);
+        	user.setOrganization(o);
+            users.add(user);
+            return true;
+        }
+        return false;
     }
 
     public boolean userExsists(String email){

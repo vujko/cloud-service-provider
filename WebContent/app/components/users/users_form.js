@@ -14,7 +14,9 @@ Vue.component("user-form", {
                     password : "",
                     surname : "",
                     name : ""
-                }
+                },
+                role : null,
+                picked : ""
         }
     },
     template : `
@@ -45,14 +47,21 @@ Vue.component("user-form", {
                         <input class="form-control" id="us_password" placeholder="Password" name="password" type="text" v-model="user_input.password" required>
                     </div>
                     <div class="form-group">
-                        <input class="form-contol" id="us_organization" placeholder="Organization" name="organization" type="text" v-bind:disabled="modal=='edit'" v-model="user_input.organization.name" >
+                        <input class="form-control" v-if="role=='SUPER_ADMIN'" v-bind:disabled="modal=='edit'" id="us_organization" placeholder="Organization" name="organization" type="text"  v-model="user_input.organization.name" required><p id="org_err"></p>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" name="role" id="user" value="USER" v-model="picked" required>
+                        <label for="user">User</label>
+                        <input type="radio" name="role" id="adm" value="ADMIN" v-model="picked">
+                        <label for="adm">Admin</label>
                     </div>
                 </fieldset>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" v-on:click="addUser()" v-if="modal == 'add'">Add user</button>
-                <button type="button" class="btn btn-secondary" v-on:click="clearFields()" v-if="modal == 'add'" > Cancel</button>
+                <button type="button" class="btn btn-secondary" v-if="role=='SUPER_ADMIN' && modal=='add'" v-on:click="clearFieldsSuperAdmin()" > Cancel </button>
+                <button type="button" class="btn btn-secondary" v-if="role=='ADMIN' && modal == 'add'" v-on:click="clearFieldsAdmin()" > Cancel </button>
                 <button type="button" class="bnt btn-primary" v-on:click="updateUser()" v-if="modal == 'edit'">Save changes</button>
                 <button type="button" class="bnt btn-secondary" v-on:click="cancelUpdate()" v-if="modal =='edit'">Cancel</button>
             </div>
@@ -68,8 +77,17 @@ Vue.component("user-form", {
             this.user_input.email = "";
             this.user_input.password = "";
             this.user_input.organization.name = "";
+        },
+        clearFieldsAdmin : function(){
+            this.clearFields();
             $('#userModal').modal('hide');
             this.resetNameField();
+        },
+        clearFieldsSuperAdmin : function(){
+            this.clearFields();
+            $('#userModal').modal('hide');
+            this.resetNameField();
+            this.resetOrgField();
         },
         cancelUpdate : function(){
             this.user_input.name = this.backup.name;
@@ -80,12 +98,20 @@ Vue.component("user-form", {
             //this.$parent.selectedUser = null;        
         },
         resetNameField : function(){
-            document.getElementById('us_email').style.borderColor = "";
+            document.getElementById('us_email').style.borderColor = ""; 
             document.getElementById('name_err').innerHTML = "";
+        },
+        resetOrgField : function(){
+            document.getElementById('us_organization').style.borderColor ="";
+            document.getElementById('org_err').innerHTML = "";
         },
         highlightNameField : function(){
             document.getElementById('us_email').style.borderColor = "red";
             document.getElementById('name_err').innerHTML = "User with that email already exsists.Please enter another.";
+        },
+        highlightOrgField : function(){
+            document.getElementById('us_organization').style.borderColor ="red";
+            document.getElementById('org_err').innerHTML = "Organization doesn't exsists.Please enter another.";
         },
         addUser : function(){
             //this.clearFields();
@@ -96,14 +122,27 @@ Vue.component("user-form", {
             }
             else{
                 axios
-                .post("/addUser",{"email" : '' + this.user_input.email, "name" : '' + this.user_input.name, "surname" : '' + this.user_input.surname, "organization" : null,
-                            "role" : null, "password" : '' + this.user_input.password})
+                .post("/addUser",{"email" : '' + this.user_input.email, "name" : '' + this.user_input.name, "surname" : '' + this.user_input.surname, "organization" : this.user_input.organization,
+                            "role" : this.picked, "password" : '' + this.user_input.password})
                 .then(response => {
                     self.$parent.getUsers();
-                    self.clearFields();
+                    if(self.role == "SUPER_ADMIN"){
+                        self.clearFieldsSuperAdmin();
+                    }else{
+                        self.clearFieldsAdmin();
+                    }
+                   
                 })
                 .catch(error =>{
-                    self.highlightNameField();
+                    axios
+                    .post("/checkEmail",{"email" : '' + this.user_input.email})
+                    .then(response =>{
+                        if(response.data){
+                            self.highlightOrgField();
+                        }else{
+                            self.highlightNameField();
+                        }
+                    })        
                 })
             }
         },
@@ -125,6 +164,9 @@ Vue.component("user-form", {
                 })
                 
             }
+        },
+        validationRadio : function(){
+
         }
     }
 })

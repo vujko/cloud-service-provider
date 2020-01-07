@@ -114,11 +114,10 @@ public class User {
 			return false;
 		return true;
 	}
-
-
-
-	
-	
-	
+	@Override
+	public String toString() {
+		return "email : " + this.email + ",name : "+ this.name + ",surname : "+this.surname + ",password :"+this.password
+				+ ",role : " +this.role + ",organization : " + this.organization.getName();	
+	}	
 	
 }

@@ -1,9 +1,11 @@
 package services;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import model.Organization;
+import model.User;
 
 public class OrganizationService {
 
@@ -11,8 +13,8 @@ public class OrganizationService {
 
     public static Set<Organization> loadOrganizations(String path){
         Set<Organization> org = new HashSet<Organization>();
-        org.add(new Organization("Organizacija1", "Jako dobra organizacija", "Logo1", null, null));
-        org.add(new Organization("Organizacija2", "Jos bolja organizacija", "Logo2", null, null));
+        org.add(new Organization("Organizacija1", "Jako dobra organizacija", "Logo1", new HashSet<User>() , null));
+        org.add(new Organization("Organizacija2", "Jos bolja organizacija", "Logo2", new HashSet<User>(), null));
         return org;
     }
 

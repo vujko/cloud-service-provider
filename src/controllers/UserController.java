@@ -1,7 +1,9 @@
 package controllers;
 
 import main.App;
+import model.Organization;
 import model.User;
+import model.User.Role;
 import services.UserService;
 import spark.Request;
 import spark.Route;
@@ -15,8 +17,11 @@ public class UserController {
 		private String name;
 		private String pass;
 	}
-	private class UserToDelete{
+	private class UserEmail{
 		private String email;
+	}
+	private class UserGet{
+		private Role role;
 	}
 	
     public static boolean verify(String email, String password){
@@ -27,10 +32,16 @@ public class UserController {
         User user = UserService.getUser(email, password);
         return user == null ? false : true;
     }
-    public static Route getUsers = (Request req, Response res) ->{
+    public static Route getUsersSuper = (Request req, Response res) ->{
     	 res.type("aplication/json");
+    	 String jsdo = App.g.toJson(App.userService.getUsers());
     	 return App.g.toJson(App.userService.getUsers());
     };
+    public static Route getUsersAdmin = (Request req, Response res) ->{
+   	 res.type("aplication/json");
+   	 String email = req.session(false).attribute("email");
+   	 return App.g.toJson(App.userService.getUsersAdmin(email));
+   };
 
     public static Route addUser = (Request req, Response res) ->{
         User user = App.g.fromJson(req.body(), User.class);
@@ -42,6 +53,15 @@ public class UserController {
         }
         res.status(400);
         return false;
+    };
+    public static Route checkEmail = (Request req, Response res) ->{
+    	UserEmail us = App.g.fromJson(req.body(), UserEmail.class);
+    	if(App.userService.userExsists(us.email)) {
+    		res.status(200);
+    		return false;
+    	}
+    	res.status(200);
+    	return true;
     };
     public static Route updateUser = (Request req, Response res) ->{
     	UserToUpdate user = App.g.fromJson(req.body(),UserToUpdate.class);
@@ -60,7 +80,7 @@ public class UserController {
         return false;
     };
     public static Route deleteUser = (Request req, Response res) ->{
-    	UserToDelete user = App.g.fromJson(req.body(),UserToDelete.class);
+    	UserEmail user = App.g.fromJson(req.body(),UserEmail.class);
     	res.type("aplication/json");
     	if(req.session(false).attribute("email").equals(user.email)) {
     		res.status(400);

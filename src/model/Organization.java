@@ -6,7 +6,7 @@ public class Organization {
 	private String name;
 	private String description;
 	private String logo;
-	private Collection<User> users;
+	private transient Collection<User> users;
 	private Collection<VirtualMachine> resources;
 	
 	
@@ -104,5 +104,8 @@ public class Organization {
 		return true;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "name : " +this.name;
+	}
 }

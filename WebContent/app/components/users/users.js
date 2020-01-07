@@ -11,15 +11,15 @@ Vue.component("users", {
     <div>
         <nav-bar></nav-bar>
         <table class="table table-striped table-responsive col px-md-2">
-            <thead> 
+            <thead class="thead-dark"> 
             <tr>
-                <th scope="col">Ime</th><th scope="col" >Prezime</th><th scope="col">Email</th><th scope="col">Organization</th></tr></thead>
+                <th scope="col">Ime</th><th scope="col" >Prezime</th><th scope="col">Email</th><th v-if="role=='SUPER_ADMIN' " scope="col">Organization</th></tr></thead>
                 <tbody>
                 <tr v-for="u in users" :key="u.email" v-on:click="selectUser(u)" v-bind:class="{selected : selectedUser != null && selectedUser.email===u.email}">
                     <td>{{u.name}}</td>
                     <td>{{u.surname}}</td>
                     <td>{{u.email}}</td>
-                    <td>{{u.organization.name}}</td>
+                    <td v-if="role=='SUPER_ADMIN' ">{{u.organization.name}}</td>
                 </tr>
             </tbody>
         </table>
@@ -40,7 +40,7 @@ Vue.component("users", {
 	methods : {
         getUsers : function(){
             axios
-            .get('/getUsers')
+            .get('/getUsers/' + this.role)
             .then(response => {
                 this.users = response.data
             });
@@ -82,8 +82,8 @@ Vue.component("users", {
         }
     },
 	mounted () {
-        this.getUsers();         
         this.role = localStorage.getItem("role");
-             
+        this.getUsers();           
+        this.$refs.userForm.role = this.role;
     }
 });

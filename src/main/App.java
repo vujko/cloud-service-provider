@@ -37,14 +37,17 @@ public class App {
 		get("/ensureLogin", LoginController.ensureLogin);
 		get("/getRole", LoginController.getRole);
 
-		get("/getUsers", UserController.getUsers);
+		get("/getUsers/SUPER_ADMIN", UserController.getUsersSuper);
+		get("/getUsers/ADMIN", UserController.getUsersAdmin);
 		post("/addUser",UserController.addUser);
 		post("/updateUser", UserController.updateUser);
 		post("/deleteUser", UserController.deleteUser);
+		post("/checkEmail", UserController.checkEmail);
 
 		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/addOrganization", OrganizationControlller.addOrganization);
 		post("/updateOrganization", OrganizationControlller.updateOrganization);
 		post("/deleteOrganization", OrganizationControlller.deleteOrganization);
+		
 	}	
 }
