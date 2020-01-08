@@ -102,7 +102,7 @@ public class UserService {
             return true;
         }
         User u = getUser(email);
-        if(u.getRole().equals("ADMIN")) {	
+        if(u.getRole().name().equals("ADMIN")) {	
         	Organization or = App.orgService.getOrganization(u.getOrganization().getName());
         	user.setOrganization(or);
         	users.add(user);
