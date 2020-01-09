@@ -143,21 +143,28 @@ Vue.component("profile", {
                 axios
                 .post("/updateLoggedUser", this.user.email);
             }
+            var $userForm = $("#userForm");
 
-            axios
-            .post("/updateUser", {"oldEmail" : '' +this.backup.email, "newEmail" : '' + this.user.email,  "name" : '' + this.user.name, "surname" : '' + this.user.surname, "pass" : '' + this.user.password})
-            .then(response => {
-                document.getElementById("user_email").style.borderColor = "";
-                document.getElementById("name_err").innerHTML = "";
-                self.backup = {...this.user};
-                toast("Successfully updated your profile.");
+            if( !$userForm[0].checkValidity()){
+                $('<input type="submit">').hide().appendTo($userForm).click().remove();
+            }
+            else{
 
-            })
-            .catch( error => {
-                document.getElementById("user_email").style.borderColor = "red";
-                document.getElementById("name_err").innerHTML = "Email taken.Try again."
+                axios
+                .post("/updateUser", {"oldEmail" : '' +this.backup.email, "newEmail" : '' + this.user.email,  "name" : '' + this.user.name, "surname" : '' + this.user.surname, "pass" : '' + this.user.password})
+                .then(response => {
+                    document.getElementById("user_email").style.borderColor = "";
+                    document.getElementById("name_err").innerHTML = "";
+                    self.backup = {...this.user};
+                    toast("Successfully updated your profile.");
 
-            })
+                })
+                .catch( error => {
+                    document.getElementById("user_email").style.borderColor = "red";
+                    document.getElementById("name_err").innerHTML = "Email taken.Try again."
+
+                })
+            }
         },
 
         cancel : function(){
