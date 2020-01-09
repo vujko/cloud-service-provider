@@ -116,6 +116,7 @@ Vue.component("user-form", {
         addUser : function(){
             //this.clearFields();
             var self = this;
+            
             var $userForm = $("#userForm");
             if( ! $userForm[0].checkValidity()){
                 $('<input type="submit">').hide().appendTo($userForm).click().remove();
@@ -160,14 +161,12 @@ Vue.component("user-form", {
                 .then(response =>{
                     if(response.data){
                         $('#userModal').modal('hide');
+                        toast("Successfully updated.");
                         self.$parent.getUsers();
                     }
                 })
                 
             }
         },
-        validationRadio : function(){
-
-        }
     }
 })
