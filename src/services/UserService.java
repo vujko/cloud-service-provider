@@ -104,6 +104,7 @@ public class UserService {
         User u = getUser(email);
         if(u.getRole().name().equals("ADMIN")) {	
         	Organization or = App.orgService.getOrganization(u.getOrganization().getName());
+        	or.addUser(user);
         	user.setOrganization(or);
         	users.add(user);
         	return true;
@@ -137,6 +138,8 @@ public class UserService {
     public boolean deleteUser(String email) {
     	if(userExsists(email)) {
     		User u = getUser(email);
+    		Organization organization = App.orgService.getOrganization(u.getOrganization().getName());
+    		organization.getUsers().remove(u);
             users.remove(u);
             saveUsers(path);
     		return true;
