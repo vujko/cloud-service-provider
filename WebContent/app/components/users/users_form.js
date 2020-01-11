@@ -77,6 +77,8 @@ Vue.component("user-form", {
             this.user_input.email = "";
             this.user_input.password = "";
             this.user_input.organization.name = "";
+          // document.getElementById('adm') = false;
+            this.picked = false;
         },
         clearFieldsAdmin : function(){
             this.clearFields();
@@ -128,6 +130,7 @@ Vue.component("user-form", {
 
                 .then(response => {
                     self.$parent.getUsers();
+                    toast("Succesfully added");
                     if(self.role == "SUPER_ADMIN"){
                         self.clearFieldsSuperAdmin();
                     }else{

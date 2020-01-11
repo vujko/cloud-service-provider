@@ -34,7 +34,7 @@ Vue.component("profile", {
             <fieldset>  
                 <div class="form-group form-inline">
                     <label class="control-label col-sm-4" for="email">Email:</label>
-                    <input class="form-control" id="user_email" placeholder="Email" name="email" type="email" v-model="user.email" required><p id="name_err" style="margin-left: 4rem;"></p>
+                    <input class="form-control" id="user_email" placeholder="Email" name="email" type="email" v-model="user.email" required><p id="name_err" style="margin-left: 4rem;">                                                       </p>
                 </div>
                 <div class="form-group  form-inline">
                     <label class="control-label col-sm-4" for="email">Name:</label>

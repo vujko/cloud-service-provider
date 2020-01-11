@@ -10,10 +10,10 @@ Vue.component("users", {
 	template: ` 
     <div>
         <nav-bar></nav-bar>
-        <table class="table table-striped table-responsive col px-md-2">
+        <table class="table table-striped">
             <thead class="thead-dark"> 
             <tr>
-                <th scope="col">Ime</th><th scope="col" >Prezime</th><th scope="col">Email</th><th v-if="role=='SUPER_ADMIN' " scope="col">Organization</th></tr></thead>
+                <th>Ime</th><th >Prezime</th><th>Email</th><th v-if="role=='SUPER_ADMIN' ">Organization</th></tr></thead>
                 <tbody>
                 <tr v-for="u in users" :key="u.email" v-on:click="selectUser(u)" v-bind:class="{selected : selectedUser != null && selectedUser.email===u.email}">
                     <td>{{u.name}}</td>
@@ -52,6 +52,11 @@ Vue.component("users", {
             this.$refs.userForm.modal = 'edit';
             this.$refs.userForm.user_input = {...this.selectedUser};   //kad odemo u addUser samo clearFields
             this.$refs.userForm.backup = {...this.selectedUser};      //postavimo bekap zbog cancela
+            if(this.selectedUser.role === "ADMIN"){    //ovo mozda i nece trebati
+                this.$refs.userForm.picked = "ADMIN";
+            }else if(this.selectedUser.role === "USER"){
+                this.$refs.userForm.picked = "USER";
+            }
             $('#userModal').modal('show');
             
         },
