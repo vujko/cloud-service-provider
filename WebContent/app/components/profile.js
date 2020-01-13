@@ -139,10 +139,7 @@ Vue.component("profile", {
         editProfile : function(){
             var self = this;
 
-            if(this.backup.email != this.user.email){
-                axios
-                .post("/updateLoggedUser", this.user.email);
-            }
+          
             var $userForm = $("#userForm");
 
             if( !$userForm[0].checkValidity()){
@@ -153,6 +150,12 @@ Vue.component("profile", {
                 axios
                 .post("/updateUser", {"oldEmail" : '' +this.backup.email, "newEmail" : '' + this.user.email,  "name" : '' + this.user.name, "surname" : '' + this.user.surname, "pass" : '' + this.user.password})
                 .then(response => {
+
+                    if(self.backup.email != self.user.email){
+                        axios
+                        .post("/updateLoggedUser", self.user.email);
+                    }
+
                     document.getElementById("user_email").style.borderColor = "";
                     document.getElementById("name_err").innerHTML = "";
                     self.backup = {...this.user};
