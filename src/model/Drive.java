@@ -6,6 +6,7 @@ public class Drive {
 	private DriveType type;
 	private int capacity;
 	private VirtualMachine vm;
+	
 	public Drive(String name, DriveType type, int capacity, VirtualMachine vm) {
 		super();
 		this.name = name;
