@@ -129,7 +129,8 @@ Vue.component("user-form", {
                             "role" : this.picked, "password" : '' + this.user_input.password})
 
                 .then(response => {
-                    self.$parent.getUsers();
+                    //self.$parent.getUsers();
+                    this.$emit("userAdded",response.data);
                     toast("Succesfully added");
                     if(self.role == "SUPER_ADMIN"){
                         self.clearFieldsSuperAdmin();
