@@ -18,7 +18,12 @@ Vue.component("nav-bar",{
             <a class="nav-link" href="#/organizations">Organizations</a>
           </li>
           <li class="nav-item">
-          <a class="nav-link" href="#/categories">Categories</a>
+            <a class="nav-link" href="#/categories">Categories</a>
+            
+          </li>
+          <li class="nav-item">
+            
+            <a class="nav-link" href="#/drives">Drives</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#/profile">Edit Profile</a>

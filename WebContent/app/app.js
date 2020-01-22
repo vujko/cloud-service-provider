@@ -4,6 +4,7 @@ const Users = {template: "<users></users>"}
 const Organizations = { template : "<organizations></organizations>"}
 const ProfilePage = { template : "<profile></profile>"}
 const Categories = {template : "<categories></categories>"}
+const Drives = {template : "<drives></drives>"}
 
 const router = new VueRouter({
     mode : 'hash',
@@ -14,7 +15,8 @@ const router = new VueRouter({
         {path : "/users",component : Users},
         {path : "/organizations", component : Organizations},
         {path : "/profile", component : ProfilePage},
-        {path : "/categories", component : Categories}
+        {path : "/categories", component : Categories},
+        {path : "/drives", component : Drives}
 
     ]
 });

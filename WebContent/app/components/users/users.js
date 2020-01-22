@@ -33,7 +33,7 @@ Vue.component("users", {
             Delete User 
         </button>
          <!-- Modal -->
-        <user-form ref="userForm"></user-form>
+        <user-form @userAdded="addUser($event)" ref="userForm"></user-form>
     </div>	  
 `
 	, 
@@ -67,8 +67,12 @@ Vue.component("users", {
             this.$refs.userForm.user_input.email = "";
             this.$refs.userForm.user_input.organization.name = "";
             this.$refs.userForm.modal = 'add';
-            $('#userModal').modal('show');
+            $('#userModal').modal('show');       
         },
+        addUser : function(user){
+            this.users.push(user);
+        } 
+        ,
         deleteUser : function(){
             var self = this;
             axios

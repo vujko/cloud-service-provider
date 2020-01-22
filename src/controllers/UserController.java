@@ -51,7 +51,7 @@ public class UserController {
         //User.Role role = (Role)req.session(false).attribute("user_role");
         if(App.userService.addUser(user,email)){
             res.status(200);
-            return "OK";
+            return App.g.toJson(user);
         }
         res.status(400);
         return false;

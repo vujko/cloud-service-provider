@@ -1,6 +1,7 @@
 package main;
 
 import static spark.Spark.*;
+
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
@@ -12,10 +13,15 @@ import java.io.IOException;
 import com.google.gson.Gson;
 
 import controllers.CategoryController;
+import controllers.DriveController;
 import controllers.LoginController;
+import controllers.MachineController;
 import controllers.OrganizationControlller;
-import services.*;
 import controllers.UserController;
+import services.CategoryService;
+import services.DriveService;
+import services.OrganizationService;
+import services.UserService;
 
 
 
@@ -23,12 +29,16 @@ public class App {
 	public static OrganizationService orgService;
 	public static UserService userService;
 	public static CategoryService categoryService;
+
+	public static DriveService driveService;
 	public static Gson g = new Gson();
 	
 	public static void main(String[] args) throws IOException {
 		orgService = new OrganizationService();
 		userService = new UserService();
 		categoryService = new CategoryService();
+		
+		driveService = new DriveService();
 		
 		port(8080);		
 		staticFiles.externalLocation(new File("./WebContent").getCanonicalPath()); 
@@ -48,6 +58,9 @@ public class App {
 		post("/updateUser", UserController.updateUser);
 		post("/deleteUser", UserController.deleteUser);
 		post("/checkEmail", UserController.checkEmail);
+
+		get("/getDrives", DriveController.getDrives);
+		get("/getVirtual", MachineController.getMachines);
 
 		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/addOrganization", OrganizationControlller.addOrganization);
