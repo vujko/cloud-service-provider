@@ -27,7 +27,7 @@ Vue.component("edit-org-form",{
         </div>
         <div class="modal-body">
                             
-            <form id="editOrgForm" class="form-signin" role="form">
+            <form id="editOrgForm" class="form-signin" role="form" name="forma">
             <fieldset>  
                 <div class="form-group">
                     <input class="form-control" id="edit_org_name" placeholder="Organization name" name="name" type="text" v-model="editedOrg.name" required><p id="edit_name_err"></p>
@@ -44,7 +44,7 @@ Vue.component("edit-org-form",{
                 <div class="form-group text-center">
                     
                     <div>
-                        <input id="edit_org_logo" v-bind:hidden="editedOrg.logo" @change="onFileChange" type="file" required>
+                        <input id="edit_org_logo" v-bind:hidden="editedOrg.logo" @change="onFileChange" type="file">
                     </div>
                     <div v-bind:hidden="!editedOrg.logo">
                         <img :src="editedOrg.logo" style="width:100px;height:120px;">
@@ -129,6 +129,7 @@ Vue.component("edit-org-form",{
                     if(response.data){
                         $('#editOrgModal').modal('hide');
                         self.resetNameField();
+                        toast("Successfully updated organization"); 
                     }
                 })
                 .catch(error => {

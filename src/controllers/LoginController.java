@@ -39,9 +39,9 @@ public class LoginController {
             res.status(200);
             return "OK";
         }
-
         res.status(400);
         return "Invalid email or password";
+        
 
     };
 
