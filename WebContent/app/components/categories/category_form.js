@@ -76,10 +76,10 @@ Vue.component("category-form",{
             this.backup = {...selectedCategory};
             this.dict.edit = selectedCategory;
             this.oldName = selectedCategory.name;
-            document.getElementById('cat_name').setAttribute("value", selectedCategory.name);
-            document.getElementById('cat_cores').setAttribute("value", selectedCategory.cores);
-            document.getElementById('cat_ram').setAttribute("value", selectedCategory.ram);
-            document.getElementById('cat_gpus').setAttribute("value", selectedCategory.gpus);
+            // document.getElementById('cat_name').setAttribute("value", selectedCategory.name);
+            // document.getElementById('cat_cores').setAttribute("value", selectedCategory.cores);
+            // document.getElementById('cat_ram').setAttribute("value", selectedCategory.ram);
+            // document.getElementById('cat_gpus').setAttribute("value", selectedCategory.gpus);
 
 
         },

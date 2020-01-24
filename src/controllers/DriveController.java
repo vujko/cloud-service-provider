@@ -1,16 +1,65 @@
 package controllers;
 
 import main.App;
+import model.Drive;
+import model.Drive.DriveType;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 public class DriveController {
-
+	
+	private class Adding{
+		private String name;
+		private DriveType type;
+		private int capacity;
+		private String vm;
+	}
+	public class Update{
+		public String oldName;
+		public String newName;
+		public DriveType type;
+		public int capacity;
+		public String vm;
+	}
 	
 	public static Route getDrives = (Request request, Response response) -> {
 		response.type("application/json");
 		return App.g.toJson(App.driveService.getDrives());
 	};
 	
+	public static Route addDrive = (Request request, Response response)->{
+		response.type("application/json");
+		Adding drive = App.g.fromJson(request.body(), Adding.class);
+		Drive d = App.driveService.addDrive(drive.name,drive.type,drive.capacity,drive.vm);
+		if(d != null) {
+			response.status(200);
+			
+			return App.g.toJson(d);
+		}
+		response.status(400);
+		return App.g.toJson(null);
+	};
+	public static Route deleteDrive = (Request request, Response res)->{
+		String name = App.g.fromJson(request.body(), String.class);
+		res.type("application/json");
+		if(App.driveService.deleteDrive(name)) {
+			res.status(200);
+			return true;
+		}
+		res.status(400);
+		return false;
+	};
+	public static Route updateDrive = (Request req, Response res)->{
+		res.type("application/json");
+		Update update = App.g.fromJson(req.body(), Update.class);
+		if(App.driveService.updateDrive(update)) {
+			res.status(200);
+			return true;
+		}
+		res.status(400);
+		return false;
+	};
+	
 }
+

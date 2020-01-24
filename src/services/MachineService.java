@@ -22,4 +22,11 @@ public class MachineService {
 	public static Set<VirtualMachine> getMachines(){
 		return machines;
 	}
+	
+	public VirtualMachine getMachine(String name) {
+		for(VirtualMachine v : machines)
+			if(v.getName().equals(name))
+				return v;
+		return null;
+	}
 }

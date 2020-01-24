@@ -14,6 +14,11 @@ public class Drive {
 		this.capacity = capacity;
 		this.vm = vm;
 	}
+	public Drive(String name,DriveType type, int capacity) {
+		this.name = name;
+		this.type = type;
+		this.capacity = capacity;
+	}
 	public Drive() {
 		super();
 	}

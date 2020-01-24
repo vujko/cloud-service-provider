@@ -3,7 +3,8 @@ Vue.component("drives",{
         return{
             drives : null,
             selectedDrive : null,
-            virtualMachines : null
+            virtualMachines : null,
+            role : null
         }
     },
     template : 
@@ -20,21 +21,22 @@ Vue.component("drives",{
                 v-on:click="selectDrive(drive)" v-bind:class="{selected : selectedDrive != null && selectedDrive.name===drive.name}">
                     <td>{{drive.name}}</td>
                     <td>{{drive.capacity}}</td>
-                    <td>drive.vm.name</td>
+                    <td>{{drive.vm.name}}</td>
                 </tr>
                 </tbody>
         </table>
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" v-on:click="driveAdd">
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" v-on:click="driveAdd" v-if="role!='USER'">
             Add drive
         </button>
         <button type="button" class="btn btn-primary btn-sm" v-on:click="editDrive" v-bind:disabled="selectedDrive==null">
             Edit Drive
         </button>
-        <button type="button" class="btn btn-primary btn-sm" v-on:click="deleteDrive" v-bind:disabled="selectedDrive==null">
+        <button type="button" v-if="role!='USER'"
+         class="btn btn-primary btn-sm" v-on:click="deleteDrive" v-bind:disabled="selectedDrive==null">
             Delete
             </button>
         <!-- Modal -->
-        <add-drive-form ref="addDriveForm"></add-drive-form>
+        <add-drive-form @driveAdded="addDrive($event)" ref="addDriveForm"></add-drive-form>
     </div>
     `,
 
@@ -45,19 +47,41 @@ Vue.component("drives",{
             .then(response => {
                 this.drives = response.data;
             });
+            this.getVirtual();  
         },
         selectDrive : function(drive){
             this.selectedDrive = drive;
         },
-        driveAdd : function(){
-            this.$refs.addDriveForm.virtualMachines = {...this.virtualMachines};
+        openDriveModal : function(mode){
+            this.$refs.addDriveForm.modal = mode;
             $("#driveModal").modal('show');
         },
+        driveAdd : function(){
+            this.$refs.addDriveForm.virtualMachines = {...this.virtualMachines};
+            this.openDriveModal('add');
+        },
+        addDrive : function(drive){
+            this.drives.push(drive);
+        },
         editDrive : function(){
-
+            this.$refs.addDriveForm.virtualMachines = {...this.virtualMachines};
+            this.$refs.addDriveForm.setEditedDrive(this.selectedDrive);
+            this.openDriveModal('edit');
         },
         deleteDrive : function(){
-
+            var self = this;
+            axios
+            .post("/deleteDrive",'' + this.selectedDrive.name)
+            .then(function(response){
+                if(response.data){
+                    self.selectedDrive = null;
+                    toast("Successfully added");
+                    self.getDrives();
+                }
+            })
+            .catch(error=>{
+                alert("Something wrong");
+            });
         },
         getVirtual : function(){
             axios
@@ -68,7 +92,7 @@ Vue.component("drives",{
         },
     },
     mounted () {
-        this.getDrives();
-        this.getVirtual();  
+        this.role = localStorage.getItem("role");
+        this.getDrives(); 
     }
 });
