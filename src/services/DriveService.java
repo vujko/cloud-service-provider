@@ -41,17 +41,19 @@ public class DriveService {
 		return drivess;	
 	}
 	
-	public Drive addDrive(String name,DriveType type,int capacity,String vmName) {
+	public Drive addDrive(String email,String name,DriveType type,int capacity,String vmName) {
 		VirtualMachine vm = App.machineService.getMachine(vmName);
-		if(!driveExists(name)){
+		User user = App.userService.getUser(email);
+		if(!driveExists(name)){	
 			Drive drive = new Drive(name,type,capacity);
 			drive.setVm(vm);
 			drives.add(drive);
+			user.getOrganization().getDrives().add(drive);
+			vm.getDrives().add(drive);
 			return drive;
-			//povezati sa virtuelnim
 		}
 		return null;
-				
+				//
 	}
 	public boolean deleteDrive(String name) {
 		if(driveExists(name)) {
@@ -63,8 +65,9 @@ public class DriveService {
 	}
 	
 	public boolean updateDrive(Update update) {
-		if(driveExists(update.newName)) {
-			return false;
+		if(!update.newName.equals(update.oldName)) {
+			if(driveExists(update.newName)) 
+				return false;
 		}
 		Drive drive = getDrive(update.oldName);
 		drive.setName(update.newName);

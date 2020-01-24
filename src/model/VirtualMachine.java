@@ -1,11 +1,12 @@
 package model;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 public class VirtualMachine {
 	private String name;
 	private CategoryVM category;
-	private Collection<Drive> drives;
+	private transient Collection<Drive> drives;
 	
 	public VirtualMachine(String name, CategoryVM category, Collection<Drive> drives) {
 		super();
@@ -15,7 +16,7 @@ public class VirtualMachine {
 	}
 
 	public VirtualMachine() {
-		super();
+		this.drives = new HashSet<Drive>();
 	}
 
 	public String getName() {

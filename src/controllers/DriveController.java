@@ -31,7 +31,8 @@ public class DriveController {
 	public static Route addDrive = (Request request, Response response)->{
 		response.type("application/json");
 		Adding drive = App.g.fromJson(request.body(), Adding.class);
-		Drive d = App.driveService.addDrive(drive.name,drive.type,drive.capacity,drive.vm);
+		String userEmail = request.session(false).attribute("email");
+		Drive d = App.driveService.addDrive(userEmail,drive.name,drive.type,drive.capacity,drive.vm);
 		if(d != null) {
 			response.status(200);
 			

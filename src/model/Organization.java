@@ -128,4 +128,10 @@ public class Organization {
 	public void addUser(User u){
 		this.users.add(u);
 	}
+
+
+	public void addVirtaulMachine(VirtualMachine machine) {
+		virtualMachines.add(machine);
+		
+	}
 }

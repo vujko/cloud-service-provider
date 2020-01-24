@@ -18,6 +18,7 @@ import controllers.LoginController;
 import controllers.MachineController;
 import controllers.OrganizationControlller;
 import controllers.UserController;
+import model.Organization;
 import services.CategoryService;
 import services.DriveService;
 import services.MachineService;
@@ -40,6 +41,9 @@ public class App {
 		categoryService = new CategoryService();
 		machineService = new MachineService();
 		driveService = new DriveService();
+		
+			
+		(orgService.getOrganization("Organizacija1")).addVirtaulMachine(machineService.getMachine("Virtualna1"));
 		
 		port(8080);		
 		staticFiles.externalLocation(new File("./WebContent").getCanonicalPath()); 

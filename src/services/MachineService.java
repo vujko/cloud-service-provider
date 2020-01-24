@@ -4,9 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import model.CategoryVM;
+import model.Drive;
 import model.User;
-import model.VirtualMachine;
 import model.User.Role;
+import model.VirtualMachine;
 
 public class MachineService {
 	private static Set<VirtualMachine> machines = loadMachines();
@@ -14,8 +15,8 @@ public class MachineService {
 	
 	private static HashSet<VirtualMachine> loadMachines(){
 		HashSet<VirtualMachine> machines = new HashSet<VirtualMachine>();
-		VirtualMachine vm1 = new VirtualMachine("Virtualna1", new CategoryVM("K1", 4, 4, 8), null);
-		VirtualMachine vm2 = new VirtualMachine("Virtualna2", new CategoryVM("K2", 8, 8, 16), null);
+		VirtualMachine vm1 = new VirtualMachine("Virtualna1", new CategoryVM("K1", 4, 4, 8), new HashSet<Drive>());
+		VirtualMachine vm2 = new VirtualMachine("Virtualna2", new CategoryVM("K2", 8, 8, 16), new HashSet<Drive>());
 		machines.add(vm1);
 		machines.add(vm2);
 		return machines;

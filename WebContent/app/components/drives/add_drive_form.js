@@ -34,7 +34,8 @@ Vue.component("add-drive-form",{
     <div class="modal-dialog" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="driveModalLabel">Add a new Drive</h5>
+            <h5 class="modal-title" id="driveModalLabel" v-if="modal=='add'">Add a new Drive</h5>
+            <h5 class="modal-title" id="driveModalLabel" v-if="modal=='edit'">Edit   Drive</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -44,26 +45,27 @@ Vue.component("add-drive-form",{
         <fieldset>  
             <div class="form-group">
                 <label for="naziv">Naziv:</label>
-                <input class="form-control" id="naziv" placeholder="Name" name="naziv" type="text" v-model="dict[modal].name" required><p id="name_err"></p>
+                <input class="form-control" id="naziv" placeholder="Name" name="naziv" type="text" 
+                   v-bind:disabled="role=='USER'"  v-model="dict[modal].name" required><p id="name_err"></p>
             </div>
             <div class="form-group">
                 <label for="type">Tip:</label>
-
-                <select class="form-control" id="type" name="type" type="text" v-model="dict[modal].type" required>
+                <select class="form-control" v-bind:disabled="role=='USER'" id="type" name="type" type="text" v-model="dict[modal].type" required>
                 <option>SSD</option>
                 <option>HDD</option>
                 </select>
             </select>
             </div>
             <div class="form-group">
-
                 <label for="capacity"> Kapacitet: </label>
-                <input class="form-control" id="capacity" placeholder="Kapcitet" name="capacity" type="text" v-model="dict[modal].capacity" required>
+                <input class="form-control" id="capacity" placeholder="Kapcitet" name="capacity" type="text" 
+                   v-bind:disabled="role=='USER'"  v-model="dict[modal].capacity" required>
                 <p id="cap_err"> </p>
             </div>
             <div class="form-group">
                 <label for="masina">Virtuelna masina:</label>
-                <select class="form-control" id="masina" name="masina" type="text" v-model="dict[modal].vm.name" required>
+                <select class="form-control" id="masina" name="masina" type="text" 
+                  v-bind:disabled="role=='USER'" v-model="dict[modal].vm.name" required>
                     <option v-for="virtual in virtualMachines">{{virtual.name}}</option>
                 </select>
             </div>
@@ -125,6 +127,7 @@ Vue.component("add-drive-form",{
                     self.resetFields();
                     $("#driveModal").modal('hide');
                     toast("Successfully updated.");
+                    self.$parent.selectedDrive = null;
                 })
                 .catch(error =>{
                     self.highlightNameFields();
