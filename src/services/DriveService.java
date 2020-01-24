@@ -1,7 +1,6 @@
 package services;
 
 import java.io.FileReader;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -13,9 +12,13 @@ import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import controllers.DriveController.Update;
+import main.App;
 import model.Drive;
 import model.User;
 import model.User.Role;
+import model.Drive.DriveType;
+import model.VirtualMachine;
 
 
 public class DriveService {
@@ -36,6 +39,39 @@ public class DriveService {
 			e.printStackTrace();
 		}
 		return drivess;	
+	}
+	
+	public Drive addDrive(String name,DriveType type,int capacity,String vmName) {
+		VirtualMachine vm = App.machineService.getMachine(vmName);
+		if(!driveExists(name)){
+			Drive drive = new Drive(name,type,capacity);
+			drive.setVm(vm);
+			drives.add(drive);
+			return drive;
+			//povezati sa virtuelnim
+		}
+		return null;
+				
+	}
+	public boolean deleteDrive(String name) {
+		if(driveExists(name)) {
+			Drive drive = getDrive(name);
+			drives.remove(drive);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean updateDrive(Update update) {
+		if(driveExists(update.newName)) {
+			return false;
+		}
+		Drive drive = getDrive(update.oldName);
+		drive.setName(update.newName);
+		drive.setType(update.type);
+		drive.setCapacity(update.capacity);
+		drive.setVm(App.machineService.getMachine(update.vm));
+		return true;
 	}
 	
 	public static void saveDrives(String path) {
@@ -59,5 +95,18 @@ public class DriveService {
 		return new HashSet<Drive>(user.getOrganization().getDrives());
 	}
 	
-	
+	public boolean driveExists(String name) {
+		for(Drive d:drives) {
+			if(d.getName().equals(name))
+				return true;
+		}
+		return false;
+	}
+	public Drive getDrive(String name) {
+		for(Drive d:drives) {
+			if(d.getName().equals(name))
+				return d;
+		}
+		return null;
+	}
 }

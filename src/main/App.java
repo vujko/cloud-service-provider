@@ -60,8 +60,11 @@ public class App {
 		post("/deleteUser", UserController.deleteUser);
 		post("/checkEmail", UserController.checkEmail);
 
+
 		get("/getDrives/:email", DriveController.getDrives);
-		get("/getVirtual", MachineController.getAllMachines);
+		post("/addDrive", DriveController.addDrive);
+		post("/deleteDrive",DriveController.deleteDrive);
+		post("/updateDrive",DriveController.updateDrive);
 
 		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/addOrganization", OrganizationControlller.addOrganization);

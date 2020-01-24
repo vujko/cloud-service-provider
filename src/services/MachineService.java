@@ -24,13 +24,19 @@ public class MachineService {
 	public Set<VirtualMachine> getMachines(){
 		return machines;
 	}
-
 	public Set<VirtualMachine> getMachines(String email){
 		User user = UserService.getUser(email);
 		if(user.getRole() == Role.SUPER_ADMIN){
 			return machines;
 		}
 		return new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
+
 		// return machines;
+	}
+	public VirtualMachine getMachine(String name) {
+		for(VirtualMachine v : machines)
+			if(v.getName().equals(name))
+				return v;
+		return null;
 	}
 }
