@@ -16,7 +16,8 @@ const router = new VueRouter({
         {path : "/organizations", component : Organizations},
         {path : "/profile", component : ProfilePage},
         {path : "/categories", component : Categories},
-        {path : "/drives", component : Drives}
+        {path : "/drives", component : Drives},
+        {path : "/VM"}
 
     ]
 });

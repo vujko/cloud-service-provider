@@ -14,6 +14,8 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import model.Drive;
+import model.User;
+import model.User.Role;
 
 
 public class DriveService {
@@ -49,8 +51,12 @@ public class DriveService {
 		}
 	}
 	
-	public Set<Drive> getDrives(){
-		return drives;
+	public Set<Drive> getDrives(String email){
+		User user = UserService.getUser(email);
+		if(user.getRole() == Role.SUPER_ADMIN){
+			return drives;
+		}
+		return new HashSet<Drive>(user.getOrganization().getDrives());
 	}
 	
 	

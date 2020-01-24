@@ -41,7 +41,7 @@ Vue.component("drives",{
     methods : {
         getDrives : function(){
             axios
-            .get("/getDrives")
+            .get("/getDrives/" + localStorage.getItem("email"))
             .then(response => {
                 this.drives = response.data;
             });

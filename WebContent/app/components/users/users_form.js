@@ -167,6 +167,7 @@ Vue.component("user-form", {
                         $('#userModal').modal('hide');
                         toast("Successfully updated.");
                         self.$parent.getUsers();
+                        self.$parent.selectedUser = null;
                     }
                 })
                 

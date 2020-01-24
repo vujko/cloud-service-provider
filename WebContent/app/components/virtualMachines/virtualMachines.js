@@ -1,0 +1,74 @@
+Vue.component("vm", {
+    data : function(){
+        return {
+            role : null,
+            machines : null,
+            selectedMachine : null
+        }
+    },
+    template : `<div>
+    <table class="table table-striped col px-md-2">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Ime</th><th scope="col">Br. jezgara</th><th scope="col">RAM (GB)</th><th scope="col">GPU</th><th scope="col" v-if="role == 'SUPER_ADMIN'" >Organizacija</th></tr></thead>
+            <tbody>
+            <tr v-for="m in machines" :key="m.name" v-on:click="selectMachine(m)" v-bind:class="{selected : selectedMachine != null && selectedMachine.name===m.name}">
+                <td>{{ m.name }}</td>
+                <td>{{ m.category.cores }}</td>
+                <td>{{ m.category.ram }}</td>
+                <td>{{ m.category.gpus }}</td>
+
+            </tr>
+            </tbody>
+    </table>
+    <span>
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" v-on:click="addVM()">
+            Add Virtual Machine
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="editVM()" v-bind:disabled="selectedMachine==null">
+            Edit Virtual Machine
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="deleteVM()" v-bind:disabled="selectedMachine==null">
+            Delete Virtual Machine 
+        </button>
+    </span>
+    <vm-form ref="vmForm"></vm-form>
+
+    </div>
+    `,
+    methods : {
+
+        openMachineModal : function(type){
+            $("#vmModal").modal("show");
+            this.$refs.vmForm.modal = type;
+        },
+
+        selectMachine : function(m){
+            this.selectedMachine = m;
+        },
+
+        addVM : function(){
+            this.openMachineModal('add');
+        },
+
+        editVM : function(){
+
+        },
+
+        deleteVM : function(){
+
+        },
+        getMachines : function(){
+            axios
+            .get("/getMachines/" + localStorage.getItem("email"))
+            .then(response => {
+                this.machines = response.data;
+            })
+        }
+    },
+
+    mounted(){
+        this.getMachines();
+        this.role = localStorage.getItem("role");
+    }
+})

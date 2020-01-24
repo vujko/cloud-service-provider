@@ -33,14 +33,14 @@ Vue.component("add-drive-form",{
             </div>
             <div class="form-group">
                 <label for="type">Tip:</label>
-                <select class="form-control" id="type" name="type" type="text" v-model="selectedType" required>
+                <select class="form-control" id="type" name="type" type="text" v-model="selectedType" placeholder="asdasd" required>
                 <option>SSD</option>
                 <option>HDD</option>
                 </select>
             </select>
             </div>
             <div class="form-group">
-                <label for="capacity"> Kapacitet: </label>
+                <label for="capacity">Kapacitet</label>
                 <input class="form-control" id="capacity" placeholder="Kapcitet" name="capacity" type="text" v-model="drive_input.capacity" required>
             </div>
             <div class="form-group">

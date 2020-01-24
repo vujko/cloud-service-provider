@@ -20,6 +20,7 @@ import controllers.OrganizationControlller;
 import controllers.UserController;
 import services.CategoryService;
 import services.DriveService;
+import services.MachineService;
 import services.OrganizationService;
 import services.UserService;
 
@@ -29,7 +30,7 @@ public class App {
 	public static OrganizationService orgService;
 	public static UserService userService;
 	public static CategoryService categoryService;
-
+	public static MachineService machineService;
 	public static DriveService driveService;
 	public static Gson g = new Gson();
 	
@@ -37,7 +38,7 @@ public class App {
 		orgService = new OrganizationService();
 		userService = new UserService();
 		categoryService = new CategoryService();
-		
+		machineService = new MachineService();
 		driveService = new DriveService();
 		
 		port(8080);		
@@ -59,8 +60,8 @@ public class App {
 		post("/deleteUser", UserController.deleteUser);
 		post("/checkEmail", UserController.checkEmail);
 
-		get("/getDrives", DriveController.getDrives);
-		get("/getVirtual", MachineController.getMachines);
+		get("/getDrives/:email", DriveController.getDrives);
+		get("/getVirtual", MachineController.getAllMachines);
 
 		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/addOrganization", OrganizationControlller.addOrganization);
@@ -71,6 +72,8 @@ public class App {
 		post("/addCategory", CategoryController.addCategory);
 		post("/updateCategory", CategoryController.updateCategory);
 		post("/deleteCategory", CategoryController.deleteCategory);
+
+		get("/getMachines/:email", MachineController.getMachines);
 		
 	}	
 }

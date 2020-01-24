@@ -11,7 +11,7 @@ Vue.component("home-page", {
 		
 		<div class="container">
 		<h3>{{role}}</h3>
-		<p>Prikaz VM</p>
+		<vm></vm>
 		</div>
 	</div>
 `

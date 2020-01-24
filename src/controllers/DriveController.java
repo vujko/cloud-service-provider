@@ -10,7 +10,7 @@ public class DriveController {
 	
 	public static Route getDrives = (Request request, Response response) -> {
 		response.type("application/json");
-		return App.g.toJson(App.driveService.getDrives());
+		return App.g.toJson(App.driveService.getDrives(request.params("email")));
 	};
 	
 }

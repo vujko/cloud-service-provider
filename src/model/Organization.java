@@ -8,18 +8,21 @@ public class Organization {
 	private String description;
 	private String logo;
 	private transient Collection<User> users;
-	private Collection<VirtualMachine> resources;
+	private Collection<VirtualMachine> virtualMachines;
+	private Collection<Drive> drives;
+
 	
 	
 	
 	public Organization(String name, String description, String logo, Collection<User> users,
-			Collection<VirtualMachine> resources) {
+			Collection<VirtualMachine> virtualMachines, Collection<Drive> drives) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.logo = logo;
 		this.users = users;
-		this.resources = resources;
+		this.virtualMachines = virtualMachines;
+		this.drives = drives;
 	}
 
 
@@ -27,7 +30,8 @@ public class Organization {
 		super();
 		this.name = "";
 		this.users = new HashSet<User>();
-		this.resources = new HashSet<VirtualMachine>();
+		this.virtualMachines = new HashSet<VirtualMachine>();
+		this.drives = new HashSet<Drive>();
 	}
 
 
@@ -71,13 +75,22 @@ public class Organization {
 	}
 
 
-	public Collection<VirtualMachine> getResources() {
-		return resources;
+	public Collection<VirtualMachine> getVirtualMachines() {
+		return virtualMachines;
 	}
 
 
-	public void setResources(Collection<VirtualMachine> resources) {
-		this.resources = resources;
+	public void setVirtualMachines(Collection<VirtualMachine> virtualMachines) {
+		this.virtualMachines = virtualMachines;
+	}
+
+	public Collection<Drive> getDrives() {
+		return drives;
+	}
+
+
+	public void setDrives(Collection<Drive> drives) {
+		this.drives = drives;
 	}
 
 
