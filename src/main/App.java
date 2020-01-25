@@ -69,6 +69,7 @@ public class App {
 		post("/addDrive", DriveController.addDrive);
 		post("/deleteDrive",DriveController.deleteDrive);
 		post("/updateDrive",DriveController.updateDrive);
+		post("/searchDrives",DriveController.searchDrive);
 
 		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/addOrganization", OrganizationControlller.addOrganization);

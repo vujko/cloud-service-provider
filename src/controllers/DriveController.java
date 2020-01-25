@@ -1,5 +1,8 @@
 package controllers;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import main.App;
 import model.Drive;
 import model.Drive.DriveType;
@@ -60,6 +63,17 @@ public class DriveController {
 		}
 		res.status(400);
 		return false;
+	};
+	public static Route searchDrive = (Request req, Response res)->{
+		res.type("application/json");
+		String argument = App.g.fromJson(req.body(), String.class);
+		Set<Drive> searched = App.driveService.search(argument);
+		if(searched.size() != 0) {
+			res.status(200);
+			return App.g.toJson(searched);
+		}
+		res.status(400);
+		return App.g.toJson(searched);
 	};
 	
 }

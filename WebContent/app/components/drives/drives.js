@@ -9,7 +9,6 @@ Vue.component("drives",{
     },
     template : 
     `<div>
-        <nav-bar></nav-bar>
         <table class="table table-striped">
             <thead class="thead-dark">
                 <tr>
@@ -63,6 +62,21 @@ Vue.component("drives",{
         addDrive : function(drive){
             this.drives.push(drive);
         },
+        search : function(drive){           
+            var self = this;
+            axios
+            .post("/searchDrives",'' + drive)
+            .then(function(response){
+                self.drives = response.data;
+            })
+            .catch(function(response){
+                self.drives = response.data;
+                alert("Nema rezultata pretrage");
+            })
+            // var newDrive = {"name" : '' + drive, "type" : '' + "SSD",
+            // "capacity" : '' + "100", "vm" : '' + "nekatemo"};
+            //this.drives.push(newDrive);
+        },
         editDrive : function(){
             this.$refs.addDriveForm.virtualMachines = {...this.virtualMachines};
             this.$refs.addDriveForm.setEditedDrive(this.selectedDrive);
@@ -94,5 +108,6 @@ Vue.component("drives",{
     mounted () {
         this.role = localStorage.getItem("role");
         this.getDrives(); 
+        EventBus.$on('searched', this.search);
     }
 });

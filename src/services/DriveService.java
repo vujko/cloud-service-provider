@@ -77,6 +77,18 @@ public class DriveService {
 		return true;
 	}
 	
+	public Set<Drive> search(String argument){
+		HashSet<Drive> searched = new HashSet<Drive>();
+		if(argument == null) {
+			return drives;
+		}
+		for(Drive drive : drives) {
+			if(drive.getName().toLowerCase().contains(argument.toLowerCase()))
+				searched.add(drive);
+		}
+		return searched;
+	}
+	
 	public static void saveDrives(String path) {
 		try {
 			FileWriter writer = new FileWriter(path);
