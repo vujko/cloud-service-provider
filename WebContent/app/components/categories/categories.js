@@ -7,7 +7,6 @@ Vue.component("categories", {
     },
     template : `
     <div>
-        <nav-bar></nav-bar>
         <table class="table table-striped">
             <thead class="thead-dark"> 
             <tr>

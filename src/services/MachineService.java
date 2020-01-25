@@ -9,8 +9,8 @@ import main.App;
 import model.CategoryVM;
 import model.Drive;
 import model.User;
-import model.VirtualMachine;
 import model.User.Role;
+import model.VirtualMachine;
 
 public class MachineService {
 	private static Set<VirtualMachine> machines = loadMachines();

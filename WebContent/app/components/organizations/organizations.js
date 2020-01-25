@@ -9,7 +9,6 @@ Vue.component("organizations",{
     },
     template : `
     <div>
-        <nav-bar></nav-bar>
         <table class="table table-striped col px-md-2">
             <thead class="thead-dark">
             <tr>

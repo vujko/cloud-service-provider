@@ -1,4 +1,4 @@
-Vue.component("home-page", {
+Vue.component("drive-page", {
 	data: function () {
 		return {
 			role : null
@@ -6,10 +6,16 @@ Vue.component("home-page", {
 	},
 	template: ` 
 	   <layout-page>
-	 		<vm></vm>  
+	 		<drives @searched='search($event)'></drives>  
 	   </layout-page>
 `
 	, 
+
+	methods : {
+		search : function(event){
+			alert(event);
+		}
+	},
 	mounted(){
 		this.role = localStorage.getItem("role");
 	}

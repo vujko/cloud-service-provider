@@ -6,7 +6,7 @@ import java.util.HashSet;
 public class VirtualMachine {
 	private String name;
 	private CategoryVM category;
-	private Collection<Drive> drives;
+	private transient Collection<Drive> drives;
 	private Organization organization;
 	
 	public VirtualMachine(String name, CategoryVM category, Collection<Drive> drives, Organization organization) {
@@ -18,7 +18,6 @@ public class VirtualMachine {
 	}
 
 	public VirtualMachine() {
-		super();
 		this.drives = new HashSet<Drive>();
 	}
 

@@ -22,7 +22,7 @@ Vue.component("vm", {
                 <td>{{ m.category.cores }}</td>
                 <td>{{ m.category.ram }}</td>
                 <td>{{ m.category.gpus }}</td>
-                <td v-if="'organization' in m">{{ m.organization.name}} </td>
+                <td v-if="'organization' in m && role == 'SUPER_ADMIN'">{{ m.organization.name}} </td>
 
             </tr>
             </tbody>

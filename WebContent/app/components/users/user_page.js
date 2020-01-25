@@ -1,4 +1,4 @@
-Vue.component("home-page", {
+Vue.component("user-page", {
 	data: function () {
 		return {
 			role : null
@@ -6,7 +6,7 @@ Vue.component("home-page", {
 	},
 	template: ` 
 	   <layout-page>
-	 		<vm></vm>  
+	 		<users></users>  
 	   </layout-page>
 `
 	, 

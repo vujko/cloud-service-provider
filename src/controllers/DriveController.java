@@ -1,5 +1,8 @@
 package controllers;
 
+import java.util.Set;
+
+
 import main.App;
 import model.Drive;
 import model.Drive.DriveType;
@@ -31,7 +34,8 @@ public class DriveController {
 	public static Route addDrive = (Request request, Response response)->{
 		response.type("application/json");
 		Adding drive = App.g.fromJson(request.body(), Adding.class);
-		Drive d = App.driveService.addDrive(drive.name,drive.type,drive.capacity,drive.vm);
+		String userEmail = request.session(false).attribute("email");
+		Drive d = App.driveService.addDrive(userEmail,drive.name,drive.type,drive.capacity,drive.vm);
 		if(d != null) {
 			response.status(200);
 			
@@ -59,6 +63,29 @@ public class DriveController {
 		}
 		res.status(400);
 		return false;
+	};
+	public static Route searchDrive = (Request req, Response res)->{
+		res.type("application/json");
+		String argument = App.g.fromJson(req.body(), String.class);
+		Set<Drive> searched = App.driveService.search(argument);
+		if(searched.size() != 0) {
+			res.status(200);
+			return App.g.toJson(searched);
+		}
+		res.status(400);
+		return App.g.toJson(searched);
+	};
+	public static Route filterCapacity = (Request req, Response res)->{
+		res.type("application/json");
+		//ArrayList<Boolean> checked = (ArrayList<Boolean>)App.g.fromJson(req.body(),new TypeToken<ArrayList<Boolean>>(){}.getType());
+		Boolean[] checked = App.g.fromJson(req.body(),Boolean[].class);
+		Set<Drive> filtered = App.driveService.filterCapacity(checked);
+		if(filtered.size() != 0) {
+			res.status(200);
+			return App.g.toJson(filtered);
+		}
+		res.status(400);
+		return App.g.toJson(filtered);
 	};
 	
 }

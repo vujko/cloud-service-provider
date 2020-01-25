@@ -41,6 +41,9 @@ public class App {
 		machineService = new MachineService();
 		driveService = new DriveService();
 		
+			
+		(orgService.getOrganization("Organizacija1")).addVirtaulMachine(MachineService.getMachine("Virtualna1"));
+		
 		port(8080);		
 		staticFiles.externalLocation(new File("./WebContent").getCanonicalPath()); 
 		
@@ -65,6 +68,8 @@ public class App {
 		post("/addDrive", DriveController.addDrive);
 		post("/deleteDrive",DriveController.deleteDrive);
 		post("/updateDrive",DriveController.updateDrive);
+		post("/searchDrives",DriveController.searchDrive);
+		post("/driveFilterCapacity",DriveController.filterCapacity);
 
 		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/addOrganization", OrganizationControlller.addOrganization);

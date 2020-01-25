@@ -1,10 +1,10 @@
 const LoginPage = {template : "<log-in></log-in>"}
 const HomePage = { template : "<home-page></home-page>"}
-const Users = {template: "<users></users>"}
-const Organizations = { template : "<organizations></organizations>"}
-const ProfilePage = { template : "<profile></profile>"}
-const Categories = {template : "<categories></categories>"}
-const Drives = {template : "<drives></drives>"}
+const Users = {template: "<user-page></user-page>"}
+const Organizations = { template : "<organization-page></organization-page>"}
+const ProfilePage = { template : "<profile-page></profile-page>"}
+const Categories = {template : "<category-page></category-page>"}
+const Drives = {template : "<drive-page ></drive-page>"}
 
 const router = new VueRouter({
     mode : 'hash',
@@ -37,11 +37,12 @@ router.beforeEach((to, from , next) => {
         else{
             localStorage.setItem("role", response.data.role);
             localStorage.setItem("email", response.data.email);
+            localStorage.setItem("page", to.path);
             next();
         }
     })
 })
-
+var EventBus = new Vue();
 var app = new Vue({
     router,
     el : '#app'
