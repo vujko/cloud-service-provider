@@ -70,6 +70,7 @@ public class App {
 		post("/deleteDrive",DriveController.deleteDrive);
 		post("/updateDrive",DriveController.updateDrive);
 		post("/searchDrives",DriveController.searchDrive);
+		post("/driveFilterCapacity",DriveController.filterCapacity);
 
 		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/addOrganization", OrganizationControlller.addOrganization);

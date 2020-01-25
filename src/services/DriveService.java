@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,9 +16,9 @@ import com.google.gson.stream.JsonReader;
 import controllers.DriveController.Update;
 import main.App;
 import model.Drive;
+import model.Drive.DriveType;
 import model.User;
 import model.User.Role;
-import model.Drive.DriveType;
 import model.VirtualMachine;
 
 
@@ -87,6 +88,55 @@ public class DriveService {
 				searched.add(drive);
 		}
 		return searched;
+	}
+	
+	public Set<Drive> filterCapacity(Boolean[] checked){
+		HashSet<Drive> filteredCap = new HashSet<Drive>();
+		HashSet<Drive> filteredType = new HashSet<Drive>();
+		
+		if(checked[0]&&checked[1]&&checked[2]&&checked[3]&&checked[4])
+			return drives;
+		if(!checked[0]&&!checked[1]&&!checked[2]&&!checked[3]&&!checked[4])
+			return drives;
+		
+		for(Drive d : drives) {
+			if(checked[0]) {
+				if(d.getCapacity()>= 200 && d.getCapacity()<500)
+					filteredCap.add(d);
+			}if(checked[1]) {
+				if(d.getCapacity()>=500 && d.getCapacity()<1000)
+					filteredCap.add(d);
+			}
+			if(checked[2]) {
+				if(d.getCapacity()>= 1000)
+					filteredCap.add(d);
+			}
+		}
+		if(!checked[0]&&!checked[1]&&!checked[2]) {
+			for(Drive d : drives) {
+				if(checked[3] && d.getType().equals(Drive.DriveType.HDD))
+					filteredCap.add(d);
+				if(checked[4] && d.getType().equals(Drive.DriveType.SSD))
+					filteredCap.add(d);
+			}
+			return filteredCap;
+		}
+			
+		
+		for(Drive d : filteredCap) {
+			if(checked[3] && checked[4])
+				return filteredCap;
+			if(checked[3] || checked[4]) {
+				if(checked[3] && d.getType().equals(Drive.DriveType.HDD)) {
+					filteredType.add(d);
+				}
+				if(checked[4] && d.getType().equals(Drive.DriveType.SSD))
+					filteredType.add(d);
+			}
+		}
+		if(!checked[3] && !checked[4])
+			return filteredCap;
+		return filteredType;
 	}
 	
 	public static void saveDrives(String path) {

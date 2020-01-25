@@ -13,7 +13,7 @@ Vue.component("drives",{
             <thead class="thead-dark">
                 <tr>
                 <th>Ime</th>
-                <th>Kapacitet(MB)</th>
+                <th>Kapacitet(GB)</th>
                 <th>Virtuelna masina</th></tr></thead>
                 <tbody>
                 <tr v-for="drive in drives" 
@@ -73,9 +73,18 @@ Vue.component("drives",{
                 self.drives = response.data;
                 alert("Nema rezultata pretrage");
             })
-            // var newDrive = {"name" : '' + drive, "type" : '' + "SSD",
-            // "capacity" : '' + "100", "vm" : '' + "nekatemo"};
-            //this.drives.push(newDrive);
+        },
+        filter : function(capacity,type){
+            var self = this;
+            var filter = capacity.concat(type); 
+            axios
+            .post("/driveFilterCapacity",filter)
+            .then(function(response){
+                self.drives = response.data;
+            })
+            .catch(function(response){
+                self.drives = response.data;
+            })
         },
         editDrive : function(){
             this.$refs.addDriveForm.virtualMachines = {...this.virtualMachines};
@@ -109,5 +118,6 @@ Vue.component("drives",{
         this.role = localStorage.getItem("role");
         this.getDrives(); 
         EventBus.$on('searched', this.search);
+        EventBus.$on('filterCapacity', this.filter);
     }
 });

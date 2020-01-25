@@ -1,7 +1,9 @@
 package controllers;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Set;
+
+import com.google.gson.reflect.TypeToken;
 
 import main.App;
 import model.Drive;
@@ -74,6 +76,18 @@ public class DriveController {
 		}
 		res.status(400);
 		return App.g.toJson(searched);
+	};
+	public static Route filterCapacity = (Request req, Response res)->{
+		res.type("application/json");
+		//ArrayList<Boolean> checked = (ArrayList<Boolean>)App.g.fromJson(req.body(),new TypeToken<ArrayList<Boolean>>(){}.getType());
+		Boolean[] checked = App.g.fromJson(req.body(),Boolean[].class);
+		Set<Drive> filtered = App.driveService.filterCapacity(checked);
+		if(filtered.size() != 0) {
+			res.status(200);
+			return App.g.toJson(filtered);
+		}
+		res.status(400);
+		return App.g.toJson(filtered);
 	};
 	
 }
