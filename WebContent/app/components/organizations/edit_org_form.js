@@ -11,7 +11,9 @@ Vue.component("edit-org-form",{
                 name : "",
                 description : "",
                 logo : ""
-            }
+            },
+            avilableMachines : null,
+            selectedMachines : null
         }
     },
 
@@ -36,7 +38,15 @@ Vue.component("edit-org-form",{
                     <input class="form-control" id="edit_org_desc" placeholder="Description" name="description" type="text" v-model="editedOrg.description" required>
                 </div>
 
-
+                <div >
+                    <label>Avilable Virtual machines:</label>
+                    <div>
+                    <select class="mdb-select md-form form-control" id="machineEditSelect" multiple  style="width:450px" >
+                        <option v-for="m in selectedMachines" selected="selected">{{m.name}}</option>
+                        <option v-for="am in avilableMachines">{{am.name}}</option>
+                    </select>
+                    </div>
+                </div>
 
 
                 <div class="border">
@@ -103,9 +113,12 @@ Vue.component("edit-org-form",{
             this.backup = {...selectedOrg};
             this.editedOrg = selectedOrg;
             this.oldName = selectedOrg.name;
-            document.getElementById('edit_org_name').setAttribute("value",selectedOrg.name); 
-            document.getElementById('edit_org_desc').setAttribute("value",selectedOrg.description); 
-            document.getElementById('edit_org_logo').setAttribute("value",selectedOrg.logo); 
+            axios
+            .get("/getSelectedMachines/" + selectedOrg.name)
+            .then(response => {
+                this.selectedMachines = response.data;
+            })
+
         },
         resetNameField : function(){
             document.getElementById('edit_org_name').style.borderColor = "";
@@ -123,12 +136,19 @@ Vue.component("edit-org-form",{
                 $('<input type="submit">').hide().appendTo($editOrgForm).click().remove();
             }
             else{
+                var e = $("#machineEditSelect");
+                var selectedMachines = e.val();
+                if(selectedMachines == null){
+                    selectedMachines = [];
+                }
+
                 axios
-                .post("/updateOrganization", {"oldName" : self.oldName, "newName" : ''+ self.editedOrg.name, "description" : '' + self.editedOrg.description, "logo": '' + self.editedOrg.logo})
+                .post("/updateOrganization", {"oldName" : self.oldName, "newName" : ''+ self.editedOrg.name, "description" : '' + self.editedOrg.description, "logo": '' + self.editedOrg.logo, "machines" : selectedMachines})
                 .then(response => {
                     if(response.data){
                         $('#editOrgModal').modal('hide');
                         self.resetNameField();
+                        //this.$parent.getMachines();
                         toast("Successfully updated organization"); 
                     }
                 })

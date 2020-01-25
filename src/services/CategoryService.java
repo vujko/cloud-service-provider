@@ -59,7 +59,7 @@ public class CategoryService {
         return true;
     }
 
-    public CategoryVM getCategory(String name){
+    public static CategoryVM getCategory(String name){
         for (CategoryVM cat : categories) {
             if(cat.getName().equalsIgnoreCase(name)){
                 return cat;

@@ -12,7 +12,10 @@ import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import controllers.OrganizationControlller.OrganizationToAdd;
+import controllers.OrganizationControlller.OrganizationToUpdate;
 import model.Organization;
+import model.VirtualMachine;
 
 
 public class OrganizationService {
@@ -52,32 +55,57 @@ public class OrganizationService {
         return organizations;
     }
 
-    public boolean addOrganization(Organization org){
-        if(organizationExsists(org.getName())){
+    public Set<VirtualMachine> getSelectedMachines(String orgName){
+        for (Organization org : organizations) {
+            if(org.getName().equals(orgName)){
+                return  new HashSet<VirtualMachine>(org.getVirtualMachines());
+            }
+        }
+        return new HashSet<VirtualMachine>();
+    }
+
+    public boolean addOrganization(OrganizationToAdd ota){
+        Organization org = new Organization();
+        if(organizationExsists(ota.name)){
             return false;
+        }
+        org.setName(ota.name);
+        org.setDescription(ota.description);
+        org.setLogo(ota.logo);
+        for (String machineName : ota.machines) {
+            VirtualMachine vm = MachineService.getMachine(machineName);
+            org.addMachine(vm);
+            vm.setOrganization(org);
         }
         organizations.add(org);
         saveOrganizations(path);
         return true;
     }
 
-    public boolean updateOrganization(String oldName, Organization newOrg){
-        Organization org = getOrganization(oldName);
-        if(!oldName.equalsIgnoreCase(newOrg.getName())){
-            if(organizationExsists(newOrg.getName())){
+    public boolean updateOrganization(OrganizationToUpdate newOrg){
+        Organization org = getOrganization(newOrg.oldName);
+        if(!newOrg.oldName.equalsIgnoreCase(newOrg.newName)){
+            if(organizationExsists(newOrg.newName)){
                 return false;
             }
         }
-        org.setName(newOrg.getName());
-        org.setDescription(newOrg.getDescription());
-        org.setLogo(newOrg.getLogo());
+        org.setName(newOrg.newName);
+        org.setDescription(newOrg.description);
+        org.setLogo(newOrg.logo);
+        org.clearVirtualMachines();
+        for(String machineName : newOrg.machines){
+            VirtualMachine vm = MachineService.getMachine(machineName);
+            org.addMachine(vm);
+            vm.setOrganization(org);
+        }
         saveOrganizations(path);
         return true;
     }
     
     public boolean deleteOrganization(String name) { 	
     	if(organizationExsists(name)) {
-    		Organization forDelete = getOrganization(name);
+            Organization forDelete = getOrganization(name);
+            forDelete.getVirtualMachines().forEach((vm) -> vm.setOrganization(null));
             organizations.remove(forDelete);
             saveOrganizations(path);
         	return true;

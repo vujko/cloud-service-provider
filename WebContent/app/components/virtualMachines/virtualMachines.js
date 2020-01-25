@@ -3,8 +3,13 @@ Vue.component("vm", {
         return {
             role : null,
             machines : null,
-            selectedMachine : null
+            selectedMachine : null,
+            organizations : null,
+            orgName : {
+
+            }
         }
+        
     },
     template : `<div>
     <table class="table table-striped col px-md-2">
@@ -17,6 +22,7 @@ Vue.component("vm", {
                 <td>{{ m.category.cores }}</td>
                 <td>{{ m.category.ram }}</td>
                 <td>{{ m.category.gpus }}</td>
+                <td v-if="'organization' in m">{{ m.organization.name}} </td>
 
             </tr>
             </tbody>
@@ -49,10 +55,12 @@ Vue.component("vm", {
 
         addVM : function(){
             this.openMachineModal('add');
+            this.$refs.vmForm.setUpForAdding();
         },
 
         editVM : function(){
-
+            this.openMachineModal("edit");
+            this.$refs.vmForm.setEditedMachine(this.selectedMachine);
         },
 
         deleteVM : function(){
@@ -64,11 +72,15 @@ Vue.component("vm", {
             .then(response => {
                 this.machines = response.data;
             })
-        }
+        },
+
+        
+        
     },
 
     mounted(){
         this.getMachines();
         this.role = localStorage.getItem("role");
+        
     }
 })

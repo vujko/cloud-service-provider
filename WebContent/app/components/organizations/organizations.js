@@ -35,7 +35,7 @@ Vue.component("organizations",{
             </button>
         </span>
         <!-- Modals -->
-        <organization-form></organization-form>
+        <organization-form ref="addForm"></organization-form>
         <edit-org-form ref="editForm"></edit-org-form>
     </div>	 
     
@@ -57,6 +57,15 @@ Vue.component("organizations",{
                 this.organizations = response.data
             });
         },
+        
+        getMachines : function(){
+            axios
+            .get("/getAvilableMachines")
+            .then(response => {
+                this.$refs.addForm.machines = response.data;
+                this.$refs.editForm.avilableMachines = response.data;
+            })
+        },
         deleteOrganization : function(){
             var self = this;
             axios
@@ -66,6 +75,7 @@ Vue.component("organizations",{
                     self.selectedOrg = null;
                     toast("Successfully deleted.");
                     self.getOrganizations();
+                    self.getMachines();
                 }
             })
             .catch(error =>{
@@ -75,6 +85,7 @@ Vue.component("organizations",{
     },
     mounted () {
         this.getOrganizations();
+        this.getMachines();
         this.role = localStorage.getItem("role");
 
     }

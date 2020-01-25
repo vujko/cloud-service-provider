@@ -8,7 +8,7 @@ public class Organization {
 	private String description;
 	private String logo;
 	private transient Collection<User> users;
-	private Collection<VirtualMachine> virtualMachines;
+	private transient Collection<VirtualMachine> virtualMachines;
 	private Collection<Drive> drives;
 
 	
@@ -82,6 +82,14 @@ public class Organization {
 
 	public void setVirtualMachines(Collection<VirtualMachine> virtualMachines) {
 		this.virtualMachines = virtualMachines;
+	}
+
+	public void addMachine(VirtualMachine vm){
+		this.virtualMachines.add(vm);
+	}
+
+	public void clearVirtualMachines(){
+		this.virtualMachines = new HashSet<VirtualMachine>();
 	}
 
 	public Collection<Drive> getDrives() {

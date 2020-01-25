@@ -77,6 +77,11 @@ public class App {
 		post("/deleteCategory", CategoryController.deleteCategory);
 
 		get("/getMachines/:email", MachineController.getMachines);
+		get("/getAvilableMachines", MachineController.getAvilableMachines);
+		post("/addVM", MachineController.addMachine);
+		get("/getSelectedDisks/:machineName", MachineController.getSelectedDisks);
+		get("/getSelectedMachines/:orgName", OrganizationControlller.getSelectedMachines);
+
 		
 	}	
 }

@@ -1,21 +1,25 @@
 package model;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 public class VirtualMachine {
 	private String name;
 	private CategoryVM category;
 	private Collection<Drive> drives;
+	private Organization organization;
 	
-	public VirtualMachine(String name, CategoryVM category, Collection<Drive> drives) {
+	public VirtualMachine(String name, CategoryVM category, Collection<Drive> drives, Organization organization) {
 		super();
 		this.name = name;
 		this.category = category;
 		this.drives = drives;
+		this.organization = organization;
 	}
 
 	public VirtualMachine() {
 		super();
+		this.drives = new HashSet<Drive>();
 	}
 
 	public String getName() {
@@ -42,6 +46,14 @@ public class VirtualMachine {
 		this.drives = drives;
 	}
 
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
+	public Organization getOrganization(){
+		return organization;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -65,6 +77,10 @@ public class VirtualMachine {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	public void addDrive(Drive drive) {
+		this.drives.add(drive);
 	}
 	
 	

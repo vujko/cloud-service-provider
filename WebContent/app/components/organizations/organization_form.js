@@ -7,7 +7,8 @@ Vue.component("organization-form", {
                 logo : ""
             },
 
-            logo : null
+            logo : null,
+            machines : null
         }
     },
     template : `
@@ -30,6 +31,16 @@ Vue.component("organization-form", {
                 <div class="form-group">
                     <input class="form-control" id="org_desc" placeholder="Description" name="description" type="text" v-model="org_input.description" required>
                 </div>
+
+                <div >
+                    <label>Avilable Virtual machines:</label>
+                    <div>
+                    <select class="mdb-select md-form form-control" id="machineSelect" multiple  style="width:450px" >
+                        <option v-for="m in machines">{{m.name}}</option>
+                    </select>
+                    </div>
+                </div>
+
 
                 <div class="border">
                     <label class="form-group form-control" >Logo</label>
@@ -82,7 +93,6 @@ Vue.component("organization-form", {
         },
 
 
-
         clearFields : function(){
             this.org_input.name = "";
             this.org_input.description = "";
@@ -99,15 +109,21 @@ Vue.component("organization-form", {
             var self = this;
             var $orgForm = $("#orgForm");
             this.org_input.logo = this.logo;
-
+            
             if( ! $orgForm[0].checkValidity()){
                 $('<input type="submit">').hide().appendTo($orgForm).click().remove();
             }
             else{
+                var e = $("#machineSelect");
+                var selectedMachines = e.val();
+                if(selectedMachines == null){
+                    selectedMachines = [];
+                }
                 axios
-                .post("/addOrganization", {"name" : '' + this.org_input.name, "description" : '' + this.org_input.description, "logo" : '' + this.org_input.logo, "users" : [], "resources" : []})
+                .post("/addOrganization", {"name" : '' + this.org_input.name, "description" : '' + this.org_input.description, "logo" : '' + this.org_input.logo, "machines" : selectedMachines})
                 .then(response =>{
                     self.$parent.getOrganizations();
+                    self.$parent.getMachines();
                     self.clearFields();          
                 })
                 .catch(error =>{
@@ -116,5 +132,5 @@ Vue.component("organization-form", {
             }
             
         }
-    }
+    },
 })

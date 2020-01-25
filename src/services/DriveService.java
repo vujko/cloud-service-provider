@@ -13,7 +13,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import controllers.DriveController.Update;
-import main.App;
 import model.Drive;
 import model.User;
 import model.User.Role;
@@ -42,7 +41,7 @@ public class DriveService {
 	}
 	
 	public Drive addDrive(String name,DriveType type,int capacity,String vmName) {
-		VirtualMachine vm = App.machineService.getMachine(vmName);
+		VirtualMachine vm = MachineService.getMachine(vmName);
 		if(!driveExists(name)){
 			Drive drive = new Drive(name,type,capacity);
 			drive.setVm(vm);
@@ -70,7 +69,7 @@ public class DriveService {
 		drive.setName(update.newName);
 		drive.setType(update.type);
 		drive.setCapacity(update.capacity);
-		drive.setVm(App.machineService.getMachine(update.vm));
+		drive.setVm(MachineService.getMachine(update.vm));
 		return true;
 	}
 	
@@ -102,7 +101,7 @@ public class DriveService {
 		}
 		return false;
 	}
-	public Drive getDrive(String name) {
+	public static Drive getDrive(String name) {
 		for(Drive d:drives) {
 			if(d.getName().equals(name))
 				return d;
