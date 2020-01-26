@@ -77,7 +77,142 @@ public class MachineService {
 		// saveMachines(path);
 		return true;
 	}
-
+	public static Set<VirtualMachine> searchMachine(String arg){
+		HashSet<VirtualMachine> searched = new HashSet<VirtualMachine>();
+		if(arg == null)
+			return machines;
+		for(VirtualMachine vm : machines) {
+			if(vm.getName().toLowerCase().contains(arg.toLowerCase()))
+				searched.add(vm);
+		}
+		return searched;
+	}
+	public static Set<VirtualMachine> filterVM(String[] checked){
+		HashSet<VirtualMachine> filteredCore = new HashSet<VirtualMachine>();
+		HashSet<VirtualMachine> filteredRam = new HashSet<VirtualMachine>();
+		HashSet<VirtualMachine> filteredGpu = new HashSet<VirtualMachine>();
+		if(checked.length == 12)
+			return machines;
+		if(checked[0].equals("prazna"))
+			return machines;
+		
+		for(String arg : checked) {
+			if(arg.equals("4core")) {
+				VirtualMachine vm = getMachineCore(4);
+				if(vm != null)
+					filteredCore.add(vm);
+			}
+			else if(arg.equals("8core")) {
+				VirtualMachine vm = getMachineCore(8);
+				if(vm != null)
+					filteredCore.add(vm);
+			}
+			else if(arg.equals("16core")) {
+				VirtualMachine vm = getMachineCore(16);
+				if(vm != null)
+					filteredCore.add(vm);
+			}
+			else if(arg.equals("32core")) {
+				VirtualMachine vm = getMachineCore(32);
+				if(vm != null)
+					filteredCore.add(vm);
+			}
+		}
+		for(String arg: checked) {
+			if(arg.equals("4gb")) {
+				VirtualMachine vm = getMachineRam(4);
+				if(vm != null)
+					filteredRam.add(vm);
+			}
+			else if(arg.equals("8gb")) {
+				VirtualMachine vm = getMachineRam(8);
+				if(vm != null)
+					filteredRam.add(vm);
+			}
+			else if(arg.equals("16gb")) {
+				VirtualMachine vm = getMachineRam(16);
+				if(vm != null)
+					filteredRam.add(vm);
+			}
+			else if(arg.equals("32gb")) {
+				VirtualMachine vm = getMachineRam(32);
+				if(vm != null)
+					filteredRam.add(vm);
+			}
+		}
+		for(String arg : checked) {
+			if(arg.equals("4gpu")) {
+				VirtualMachine vm = getMachineGpu(4);
+				if(vm != null)
+					filteredGpu.add(vm);
+			}
+			else if(arg.equals("8gpu")) {
+				VirtualMachine vm = getMachineGpu(8);
+				if(vm != null)
+					filteredGpu.add(vm);
+			}
+			else if(arg.equals("16gpu")) {
+				VirtualMachine vm = getMachineGpu(16);
+				if(vm != null)
+					filteredGpu.add(vm);
+			}
+			else if(arg.equals("32gpu")) {
+				VirtualMachine vm = getMachineGpu(32);
+				if(vm != null)
+					filteredGpu.add(vm);
+			}
+		}
+		if(filteredCore.size() != 0 && filteredRam.size() != 0 && filteredGpu.size()!=0) {
+			filteredCore.retainAll(filteredRam);
+			if(filteredCore.size()!=0)
+				filteredCore.retainAll(filteredGpu);
+			return filteredCore;
+		}
+		if(filteredCore.size() != 0 && filteredRam.size() != 0) {
+			filteredCore.retainAll(filteredRam);
+			return filteredCore;
+		}
+		if(filteredCore.size() != 0 && filteredGpu.size() != 0) {
+			filteredCore.retainAll(filteredGpu);
+			return filteredCore;
+		}
+		if(filteredRam.size() != 0 && filteredGpu.size() != 0) {
+			filteredRam.retainAll(filteredGpu);
+			return filteredRam;
+		}
+		if(filteredRam.size() != 0)
+			return filteredRam;
+		if(filteredGpu.size() != 0)
+			return filteredGpu;
+		
+		return filteredCore;
+	}
+	
+	public static VirtualMachine getMachineCore(int cores) {
+		for(VirtualMachine vm : machines) {
+			if(vm.getCategory().getCores() == cores) {
+				return vm;
+			}
+		}
+		return null;
+	}
+	public static VirtualMachine getMachineRam(int rams) {
+		for(VirtualMachine vm : machines) {
+			if(vm.getCategory().getRam() == rams) {
+				return vm;
+			}
+		}
+		return null;
+	}
+	public static VirtualMachine getMachineGpu(int gpu) {
+		for(VirtualMachine vm : machines) {
+			if(vm.getCategory().getGpus() == gpu) {
+				return vm;
+			}
+		}
+		return null;
+	}
+	
 	public static boolean machineExsists(String name){
 		for (VirtualMachine vm : machines) {
 			if(vm.getName().equalsIgnoreCase(name)){
@@ -86,4 +221,5 @@ public class MachineService {
 		}
 		return false;
 	}
+	
 }

@@ -1,8 +1,10 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import main.App;
+import model.VirtualMachine;
 import services.MachineService;
 import spark.Request;
 import spark.Response;
@@ -47,4 +49,29 @@ public class MachineController {
 		return App.g.toJson(App.machineService.getAvilableMachines());
 
 	};
-}
+	
+	public static Route search = (Request req, Response res)->{
+		res.type("application/json");
+		String argument = App.g.fromJson(req.body(), String.class);
+		Set<VirtualMachine> searched = App.machineService.searchMachine(argument);
+		if(searched.size() != 0) {
+			res.status(200);
+			return App.g.toJson(searched);
+		}
+		res.status(400);
+		return App.g.toJson(searched);
+	};
+	public static Route filter = (Request req, Response res)->{
+		res.type("application/json");
+		String[] checked = App.g.fromJson(req.body(), String[].class);
+		Set<VirtualMachine> filtered = App.machineService.filterVM(checked);
+		
+		if(filtered.size() != 0) {
+			res.status(200);
+			return App.g.toJson(filtered);
+		}
+		res.status(400);
+		return App.g.toJson(filtered);
+	};
+
+}	

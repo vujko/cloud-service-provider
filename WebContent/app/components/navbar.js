@@ -20,7 +20,8 @@ Vue.component("nav-bar",{
           </li>
           &nbsp;
           <li v-if="page=='DRIVES' || page=='HOMEPAGE'" class="nav-item active">
-              <button type="button" class="btn btn-light" v-on:click="search()"> Pretrazi </button>
+              <button type="button" v-if="page=='DRIVES'" class="btn btn-light" v-on:click="searchDrive()"> Pretrazi </button>
+              <button type="button" v-if="page=='HOMEPAGE'" class="btn btn-light" v-on:click="searchVM()"> Pretrazi </button>
           </li>
         </ul>
         <ul class="navbar-nav px-3">
@@ -42,8 +43,11 @@ Vue.component("nav-bar",{
           self.$router.replace("/");
         })
       },
-      search : function(){
+      searchDrive : function(){
         EventBus.$emit("searched",this.input);        
+      },
+      searchVM : function(){
+        EventBus.$emit("searchedVM",this.input);
       }
     },
     mounted(){

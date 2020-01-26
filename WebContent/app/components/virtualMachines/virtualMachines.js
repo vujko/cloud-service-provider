@@ -73,14 +73,37 @@ Vue.component("vm", {
                 this.machines = response.data;
             })
         },
-
-        
-        
+        search : function(SearchArgument){
+            var self = this;
+            axios
+            .post("/searchVM",'' + SearchArgument)
+            .then(function(response){
+                self.machines = response.data;
+            })
+            .catch(function(response){
+                self.machines = response.data;
+                alert("Nema rezultata pretrage");
+            })
+        },
+        filter : function(filterArg){
+            if(!filterArg.length) 
+                filterArg = ["prazna"];
+            var self = this; 
+            axios
+            .post("/VMfilter",filterArg)
+            .then(function(response){
+                self.machines = response.data;
+            })
+            .catch(function(response){
+                self.machines = response.data;
+            })
+        }
     },
 
     mounted(){
         this.getMachines();
         this.role = localStorage.getItem("role");
-        
+        EventBus.$on('searchedVM', this.search);
+        EventBus.$on('filterVM', this.filter);
     }
 })

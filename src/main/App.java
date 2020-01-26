@@ -86,7 +86,7 @@ public class App {
 		post("/addVM", MachineController.addMachine);
 		get("/getSelectedDisks/:machineName", MachineController.getSelectedDisks);
 		get("/getSelectedMachines/:orgName", OrganizationControlller.getSelectedMachines);
-
-		
+		post("/searchVM", MachineController.search);
+		post("/VMfilter",MachineController.filter);
 	}	
 }
