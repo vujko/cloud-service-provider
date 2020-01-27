@@ -61,7 +61,8 @@ Vue.component("drives",{
             this.openDriveModal('add');
         },
         addDrive : function(drive){
-            this.drives.push(drive);
+            //this.drives.push(drive);
+            this.getDrives();
         },
         search : function(drive){           
             var self = this;
@@ -99,7 +100,7 @@ Vue.component("drives",{
             .then(function(response){
                 if(response.data){
                     self.selectedDrive = null;
-                    toast("Successfully added");
+                    toast("Successfully deleted");
                     self.getDrives();
                 }
             })

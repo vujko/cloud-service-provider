@@ -102,7 +102,8 @@ public class DriveService {
 		for (Organization org : App.orgService.getOrganizations()) {
 			for(Drive d : org.getDrives()){
 				if(d.getName().equals(name)){
-					d = null;
+					org.getDrives().remove(d);
+					//d = null;
 					removed = true;
 				}
 			}
