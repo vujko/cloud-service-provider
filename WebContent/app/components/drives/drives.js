@@ -20,7 +20,7 @@ Vue.component("drives",{
                 v-on:click="selectDrive(drive)" v-bind:class="{selected : selectedDrive != null && selectedDrive.name===drive.name}">
                     <td>{{drive.name}}</td>
                     <td>{{drive.capacity}}</td>
-                    <td>{{drive.vm.name}}</td>
+                    <td v-if="'vm' in drive">{{drive.vm.name}}</td>
                 </tr>
                 </tbody>
         </table>
@@ -53,6 +53,7 @@ Vue.component("drives",{
         },
         openDriveModal : function(mode){
             this.$refs.addDriveForm.modal = mode;
+            this.$refs.addDriveForm.role = this.role;
             $("#driveModal").modal('show');
         },
         driveAdd : function(){
@@ -94,7 +95,7 @@ Vue.component("drives",{
         deleteDrive : function(){
             var self = this;
             axios
-            .post("/deleteDrive",'' + this.selectedDrive.name)
+            .post("/deleteDrive",{"name":'' + this.selectedDrive.name})
             .then(function(response){
                 if(response.data){
                     self.selectedDrive = null;

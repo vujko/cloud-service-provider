@@ -1,8 +1,17 @@
 package services;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import controllers.MachineController.MachineToAdd;
 import main.App;
@@ -13,19 +22,38 @@ import model.User.Role;
 import model.VirtualMachine;
 
 public class MachineService {
+	private static final String Path = "./data/machines.json";
+	private static Gson g = new Gson();
 	private static Set<VirtualMachine> machines = loadMachines();
 	
-	
 	private static HashSet<VirtualMachine> loadMachines(){
-		HashSet<VirtualMachine> machines = new HashSet<VirtualMachine>();
-		VirtualMachine vm1 = new VirtualMachine("Virtualna1", new CategoryVM("Kategorija1", 8, 8, 16), new HashSet<Drive>(Arrays.asList(DriveService.getDrive("WD BLUE"))), App.orgService.getOrganization("Organizacija1"));
-		VirtualMachine vm2 = new VirtualMachine("Virtualna2", new CategoryVM("Kategorija2", 4, 4, 8), new HashSet<Drive>(Arrays.asList(DriveService.getDrive("TOSHIBA"))), App.orgService.getOrganization("Organizacija2"));
-		machines.add(vm1);
-		machines.add(vm2);
-		App.orgService.getOrganization("Organizacija1").addMachine(vm1);
-		App.orgService.getOrganization("Organizacija2").addMachine(vm2);
-		return machines;
+		HashSet<VirtualMachine> machiness = new HashSet<VirtualMachine>();
+		
+		try {
+			Type drivesType = new TypeToken<Set<VirtualMachine>>(){}.getType();
+			FileReader fw = new FileReader(Path);
+			JsonReader reader = new JsonReader(fw);
+			machiness = g.fromJson(reader, drivesType);
+			return machiness;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return machiness;
 	}
+	
+	public static void saveMachines(String path) {
+		try {
+			FileWriter writer = new FileWriter(path);
+			String json = g.toJson(machines);
+			writer.write(json);
+			writer.close();
+		} catch (JsonIOException e) {
+            e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public Set<VirtualMachine> getMachines(){
 		return machines;
@@ -74,7 +102,7 @@ public class MachineService {
 			vm.addDrive(DriveService.getDrive(diskName));
 		}
 		machines.add(vm);
-		// saveMachines(path);
+		saveMachines(Path);
 		return true;
 	}
 	public static Set<VirtualMachine> searchMachine(String arg){
@@ -98,68 +126,94 @@ public class MachineService {
 		
 		for(String arg : checked) {
 			if(arg.equals("4core")) {
-				VirtualMachine vm = getMachineCore(4);
-				if(vm != null)
-					filteredCore.add(vm);
+				HashSet<VirtualMachine> vm = getMachineCore(4);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredCore.add(v);
+				}
 			}
 			else if(arg.equals("8core")) {
-				VirtualMachine vm = getMachineCore(8);
-				if(vm != null)
-					filteredCore.add(vm);
+				HashSet<VirtualMachine> vm = getMachineCore(8);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredCore.add(v);
+				}
 			}
 			else if(arg.equals("16core")) {
-				VirtualMachine vm = getMachineCore(16);
-				if(vm != null)
-					filteredCore.add(vm);
+				HashSet<VirtualMachine> vm = getMachineCore(16);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredCore.add(v);
+				}
 			}
 			else if(arg.equals("32core")) {
-				VirtualMachine vm = getMachineCore(32);
-				if(vm != null)
-					filteredCore.add(vm);
+				HashSet<VirtualMachine> vm = getMachineCore(32);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredCore.add(v);
+				}
 			}
 		}
 		for(String arg: checked) {
 			if(arg.equals("4gb")) {
-				VirtualMachine vm = getMachineRam(4);
-				if(vm != null)
-					filteredRam.add(vm);
+				HashSet<VirtualMachine> vm = getMachineRam(4);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredRam.add(v);
+				}
+					
 			}
 			else if(arg.equals("8gb")) {
-				VirtualMachine vm = getMachineRam(8);
-				if(vm != null)
-					filteredRam.add(vm);
+				HashSet<VirtualMachine> vm = getMachineRam(8);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredRam.add(v);
+				}
 			}
 			else if(arg.equals("16gb")) {
-				VirtualMachine vm = getMachineRam(16);
-				if(vm != null)
-					filteredRam.add(vm);
+				HashSet<VirtualMachine> vm = getMachineRam(16);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredRam.add(v);
+				}
 			}
 			else if(arg.equals("32gb")) {
-				VirtualMachine vm = getMachineRam(32);
-				if(vm != null)
-					filteredRam.add(vm);
+				HashSet<VirtualMachine> vm = getMachineRam(32);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredRam.add(v);
+				}
 			}
 		}
 		for(String arg : checked) {
 			if(arg.equals("4gpu")) {
-				VirtualMachine vm = getMachineGpu(4);
-				if(vm != null)
-					filteredGpu.add(vm);
+				HashSet<VirtualMachine> vm = getMachineGpu(4);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredGpu.add(v);
+				}
+					
 			}
 			else if(arg.equals("8gpu")) {
-				VirtualMachine vm = getMachineGpu(8);
-				if(vm != null)
-					filteredGpu.add(vm);
+				HashSet<VirtualMachine> vm = getMachineGpu(8);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredGpu.add(v);
+				}
 			}
 			else if(arg.equals("16gpu")) {
-				VirtualMachine vm = getMachineGpu(16);
-				if(vm != null)
-					filteredGpu.add(vm);
+				HashSet<VirtualMachine> vm = getMachineGpu(16);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredGpu.add(v);
+				}
 			}
 			else if(arg.equals("32gpu")) {
-				VirtualMachine vm = getMachineGpu(32);
-				if(vm != null)
-					filteredGpu.add(vm);
+				HashSet<VirtualMachine> vm = getMachineGpu(32);
+				if(vm.size() != 0) {
+					for(VirtualMachine v : vm)
+						filteredGpu.add(v);
+				}
 			}
 		}
 		if(filteredCore.size() != 0 && filteredRam.size() != 0 && filteredGpu.size()!=0) {
@@ -188,29 +242,32 @@ public class MachineService {
 		return filteredCore;
 	}
 	
-	public static VirtualMachine getMachineCore(int cores) {
+	public static HashSet<VirtualMachine> getMachineCore(int cores) {
+		HashSet<VirtualMachine> vms = new HashSet<VirtualMachine>();
 		for(VirtualMachine vm : machines) {
 			if(vm.getCategory().getCores() == cores) {
-				return vm;
+				vms.add(vm);
 			}
 		}
-		return null;
+		return vms;
 	}
-	public static VirtualMachine getMachineRam(int rams) {
+	public static HashSet<VirtualMachine> getMachineRam(int rams) {
+		HashSet<VirtualMachine> vms = new HashSet<VirtualMachine>();
 		for(VirtualMachine vm : machines) {
 			if(vm.getCategory().getRam() == rams) {
-				return vm;
+				vms.add(vm);
 			}
 		}
-		return null;
+		return vms;
 	}
-	public static VirtualMachine getMachineGpu(int gpu) {
+	public static HashSet<VirtualMachine> getMachineGpu(int gpu) {
+		HashSet<VirtualMachine> vms = new HashSet<VirtualMachine>();
 		for(VirtualMachine vm : machines) {
 			if(vm.getCategory().getGpus() == gpu) {
-				return vm;
+				vms.add(vm);
 			}
 		}
-		return null;
+		return vms;
 	}
 	
 	public static boolean machineExsists(String name){

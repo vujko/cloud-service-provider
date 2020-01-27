@@ -15,6 +15,9 @@ public class CategoryController{
         public int ram;
         public int gpus;
     }
+    public class Delete{
+    	public String name;
+    }
     public static Route getCategories = (Request req, Response res) ->{
         res.type("application/json");
         return App.g.toJson(App.categoryService.getCategories());
@@ -47,9 +50,9 @@ public class CategoryController{
     };
 
     public static Route deleteCategory = (Request req, Response res) ->{
-        String catName = App.g.fromJson(req.body(), String.class);
+        Delete catName = App.g.fromJson(req.body(), Delete.class);
         res.type("application/json");
-        if(App.categoryService.deleteCategory(catName)){
+        if(App.categoryService.deleteCategory(catName.name)){
             res.status(200);
             return true;
         }

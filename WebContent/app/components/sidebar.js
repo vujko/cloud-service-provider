@@ -4,7 +4,8 @@ Vue.component("side-bar",{
             page : null,
             checkedDrives : [],
             type : [],
-            checkedVM : []
+            checkedVM : [],
+            role : null
         }
     },
     template : `    
@@ -16,7 +17,7 @@ Vue.component("side-bar",{
                         Home <span class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-if="role!='USER'">
                     <a class="nav-link" href="#/users"><span data-feather="file"></span>
                         Users
                 </a>
@@ -84,7 +85,7 @@ Vue.component("side-bar",{
                     </ul>
                 </li>
                 <li v-if="page=='HOMEPAGE'" class="nav-item">
-                    <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">Broj jezgara</a>
+                    <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">Broj GPU</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu5">
                         <li><span class="fa fa-chevron-right mr-2"></span>
                             <input type="checkbox" id="4GPU" value="4gpu" v-model="checkedVM">4</li>
@@ -127,6 +128,7 @@ Vue.component("side-bar",{
     },
     mounted(){
         this.page = localStorage.getItem("page").substring(1).toUpperCase();
+        this.role = localStorage.getItem("role");
     }
 
 })

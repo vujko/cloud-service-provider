@@ -1,25 +1,52 @@
 package services;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import model.CategoryVM;
+import model.Drive;
 
 public class CategoryService {
     //TODO citanje i upis kategorija
+	private static final String Path = "./data/category.json";
     private static Gson g = new Gson();
-    private static Set<CategoryVM> categories = loadCategories("123");
+    private static Set<CategoryVM> categories = loadCategories(Path);
 
 
     public static Set<CategoryVM> loadCategories(String path){
         Set<CategoryVM> categories = new HashSet<CategoryVM>();
-        categories.add(new CategoryVM("Kategorija1", 8, 8, 16));
-        categories.add(new CategoryVM("Kategorija2", 4, 4, 8));
-
+		try {
+			Type drivesType = new TypeToken<Set<CategoryVM>>(){}.getType();
+			FileReader fw = new FileReader(path);
+			JsonReader reader = new JsonReader(fw);
+			categories = g.fromJson(reader, drivesType);
+			return categories;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
         return categories;
+    }
+    public static void saveCategories(String path) {
+    	try {
+			FileWriter writer = new FileWriter(path);
+			String json = g.toJson(categories);
+			writer.write(json);
+			writer.close();
+		} catch (JsonIOException e) {
+            e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     public Set<CategoryVM> getCategories(){
@@ -31,7 +58,7 @@ public class CategoryService {
             return false;
         }
         categories.add(cat);
-        // saveOrganizations(path);
+        saveCategories(Path);
         return true;
     }
 
@@ -55,7 +82,7 @@ public class CategoryService {
         cat.setCores(newCat.getCores());
         cat.setGpus(newCat.getGpus());
         cat.setRam(newCat.getRam());
-        // saveCategories();
+        saveCategories(Path);
         return true;
     }
 
@@ -72,7 +99,7 @@ public class CategoryService {
         if(categoryExsists(name)){
             CategoryVM forDelete = getCategory(name);
             categories.remove(forDelete);
-            // saveCategories();
+            saveCategories(Path);
             return true;
         }
         return false;

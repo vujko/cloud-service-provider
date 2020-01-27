@@ -65,7 +65,7 @@ Vue.component("add-drive-form",{
             <div class="form-group">
                 <label for="masina">Virtuelna masina:</label>
                 <select class="form-control" id="masina" name="masina" type="text" 
-                  v-bind:disabled="role=='USER'" v-model="dict[modal].vm.name" required>
+                  v-bind:disabled="role=='USER'" v-model="dict[modal].vm.name">
                     <option v-for="virtual in virtualMachines">{{virtual.name}}</option>
                 </select>
             </div>
@@ -74,7 +74,7 @@ Vue.component("add-drive-form",{
         </div>
         <div class="modal-footer">
             <button type="button" v-if="modal=='add'" class="btn btn-primary" v-on:click="addDrive()">Add</button>
-            <button type="button" v-if="modal=='edit'" class="btn btn-primary" v-on:click="editDrive()">Save changes</button>
+            <button type="button" v-if="modal=='edit' & role!='USER'" class="btn btn-primary" v-on:click="editDrive()">Save changes</button>
             <button type="button" class="btn btn-secondary" v-on:click="cancel(modal)">Cancel</button>
         </div>
     </div>

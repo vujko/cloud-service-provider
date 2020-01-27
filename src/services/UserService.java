@@ -82,11 +82,27 @@ public class UserService {
         return null;
     }
     public Set<User> getUsersAdmin(String email){
+    	Set<User> getusr = new HashSet<User>();
     	User user = getUser(email);
-        return (Set<User>)user.getOrganization().getUsers();
+    	for(User u : user.getOrganization().getUsers()) {
+    		if(u.getEmail().equals(email))
+    			continue;
+    		getusr.add(u);
+    	}
+
+        return getusr;
     }
     public Set<User> getUsers(){	
         return users;
+    }
+    public Set<User> getUsersSuper(String email){
+    	Set<User> getusr = new HashSet<User>();
+    	for(User u : users) {
+    		if(u.getEmail().equals(email))
+    			continue;
+    		getusr.add(u);
+    	}
+    	return getusr;
     }
 
     public boolean addUser(User user,String email){
@@ -107,6 +123,7 @@ public class UserService {
         	or.addUser(user);
         	user.setOrganization(or);
         	users.add(user);
+        	saveUsers(path);
         	return true;
         }
         
