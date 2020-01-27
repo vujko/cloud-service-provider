@@ -92,5 +92,8 @@ public class App {
 		post("/updateMachine", MachineController.updateMachine);
 
 		
+		get("/getSelectedMachines/:orgName", OrganizationControlller.getSelectedMachines);
+		post("/searchVM", MachineController.search);
+		post("/VMfilter",MachineController.filter);
 	}	
 }
