@@ -61,7 +61,7 @@ Vue.component("categories", {
         deleteCategory(){
             var self = this;
             axios
-            .post('/deleteCategory', '' + this.selectedCategory.name)
+            .post('/deleteCategory',{"name": '' + this.selectedCategory.name})
             .then(function(response){
                 if(response.data){
                     self.selectedCategory = null;

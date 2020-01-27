@@ -44,7 +44,7 @@ public class App {
 		
 		ReferenceController.setUpReferences();
 		(orgService.getOrganization("Organizacija1")).addVirtaulMachine(MachineService.getMachine("Virtualna1"));
-		
+	
 		port(8080);		
 		staticFiles.externalLocation(new File("./WebContent").getCanonicalPath()); 
 		

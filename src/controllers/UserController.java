@@ -26,7 +26,8 @@ public class UserController {
     }
     public static Route getUsersSuper = (Request req, Response res) ->{
 		res.type("aplication/json");
-		return App.g.toJson(App.userService.getUsers());
+		String email = req.session(false).attribute("email");
+		return App.g.toJson(App.userService.getUsersSuper(email));
     };
     public static Route getUsersAdmin = (Request req, Response res) ->{
 		res.type("aplication/json");

@@ -57,15 +57,25 @@ public class DriveService {
 	}
 	
 	public Drive addDrive(String email,String name,DriveType type,int capacity,String vmName) {
-		// User user = UserService.getUser(email);
 		if(!driveExists(name)){	
 			Drive drive = new Drive(name,type,capacity);
+			User user = UserService.getUser(email);
 			if(MachineService.machineExsists(vmName)){
 				VirtualMachine vm = MachineService.getMachine(vmName);
 				drive.setVm(vm);
 				drive.setOrganization(vm.getOrganization());
-				vm.getOrganization().addDrive(drive);
 				vm.getDrives().add(drive);
+
+				if(user.getRole() == User.Role.SUPER_ADMIN){
+					vm.getOrganization().addDrive(drive);
+				}
+				else{
+					user.getOrganization().addDrive(drive);
+				}
+			}
+			else if(user.getRole() == User.Role.ADMIN){
+				user.getOrganization().addDrive(drive);
+				drive.setOrganization(user.getOrganization());
 			}
 			drives.add(drive);
 			saveDrives(Path);
@@ -80,7 +90,7 @@ public class DriveService {
 			removeDriveFromOrganizations(name);
 			removeDriveFromMachines(name);
 			OrganizationService.saveOrganizations();
-			// MachineService.saveMachines(); TODO			
+			MachineService.saveMachines();		
 			saveDrives(Path);
 			return true;
 		}
@@ -141,16 +151,24 @@ public class DriveService {
 		return searched;
 	}
 	
-	public Set<Drive> filterCapacity(Boolean[] checked){
+	public Set<Drive> filterCapacity(Boolean[] checked,String email){
 		HashSet<Drive> filteredCap = new HashSet<Drive>();
 		HashSet<Drive> filteredType = new HashSet<Drive>();
+		Set<Drive> users_drives = new HashSet<Drive>();
+		User user = UserService.getUser(email);
+		
+		if(user.getRole() == User.Role.SUPER_ADMIN)
+			users_drives = this.drives;
+		else if(user.getRole() == User.Role.ADMIN)
+			users_drives = new HashSet<Drive> (user.getOrganization().getDrives());
+		
 		
 		if(checked[0]&&checked[1]&&checked[2]&&checked[3]&&checked[4])
-			return drives;
+			return users_drives;
 		if(!checked[0]&&!checked[1]&&!checked[2]&&!checked[3]&&!checked[4])
-			return drives;
+			return users_drives;
 		
-		for(Drive d : drives) {
+		for(Drive d : users_drives) {
 			if(checked[0]) {
 				if(d.getCapacity()>= 200 && d.getCapacity()<500)
 					filteredCap.add(d);
@@ -164,7 +182,7 @@ public class DriveService {
 			}
 		}
 		if(!checked[0]&&!checked[1]&&!checked[2]) {
-			for(Drive d : drives) {
+			for(Drive d : users_drives) {
 				if(checked[3] && d.getType().equals(Drive.DriveType.HDD))
 					filteredCap.add(d);
 				if(checked[4] && d.getType().equals(Drive.DriveType.SSD))

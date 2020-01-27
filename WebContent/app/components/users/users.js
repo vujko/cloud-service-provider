@@ -1,16 +1,17 @@
 Vue.component("users", {
 	data: function () {
 		    return {
-              users : null,
+              users : [],
               verified : false,
               role : null,
-              selectedUser : null
+              selectedUser : null,
+              noRes : false
 		    }
 	},
 	template: ` 
     <div>
         
-        <table class="table table-striped">
+        <table v-if="noRes==false" class="table table-striped">
             <thead class="thead-dark"> 
             <tr>
                 <th>Ime</th><th >Prezime</th><th>Email</th><th v-if="role=='SUPER_ADMIN' ">Organization</th></tr></thead>
@@ -23,6 +24,7 @@ Vue.component("users", {
                 </tr>
             </tbody>
         </table>
+        <h4 align="center" v-if="noRes==true">Nema rezultata</h4>    
         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" v-on:click="userAdd">
             Add User
         </button>
@@ -42,7 +44,10 @@ Vue.component("users", {
             axios
             .get('/getUsers/' + this.role)
             .then(response => {
-                this.users = response.data
+                if(!response.data.length)
+                    this.noRes =true;
+                else
+                    this.users = response.data;
             });
         },
         selectUser : function(user){
@@ -69,8 +74,9 @@ Vue.component("users", {
             this.$refs.userForm.modal = 'add';
             $('#userModal').modal('show');       
         },
-        addUser : function(user){
+        addUser : function(user){      
             this.users.push(user);
+            this.noRes = false;
         } 
         ,
         deleteUser : function(){

@@ -25,7 +25,9 @@ public class DriveController {
 		public int capacity;
 		public String vm;
 	}
-	
+	public class Delete{
+		public String name;
+	}
 	public static Route getDrives = (Request request, Response response) -> {
 		response.type("application/json");
 		return App.g.toJson(App.driveService.getDrives(request.params("email")));
@@ -45,9 +47,9 @@ public class DriveController {
 		return App.g.toJson(null);
 	};
 	public static Route deleteDrive = (Request request, Response res)->{
-		String name = App.g.fromJson(request.body(), String.class);
+		Delete name = App.g.fromJson(request.body(), Delete.class);
 		res.type("application/json");
-		if(App.driveService.deleteDrive(name)) {
+		if(App.driveService.deleteDrive(name.name)) {
 			res.status(200);
 			return true;
 		}
@@ -82,8 +84,9 @@ public class DriveController {
 	public static Route filterCapacity = (Request req, Response res)->{
 		res.type("application/json");
 		//ArrayList<Boolean> checked = (ArrayList<Boolean>)App.g.fromJson(req.body(),new TypeToken<ArrayList<Boolean>>(){}.getType());
+		String email = req.session(false).attribute("email");
 		Boolean[] checked = App.g.fromJson(req.body(),Boolean[].class);
-		Set<Drive> filtered = App.driveService.filterCapacity(checked);
+		Set<Drive> filtered = App.driveService.filterCapacity(checked,email);
 		if(filtered.size() != 0) {
 			res.status(200);
 			return App.g.toJson(filtered);

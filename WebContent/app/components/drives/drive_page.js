@@ -6,7 +6,7 @@ Vue.component("drive-page", {
 	},
 	template: ` 
 	   <layout-page>
-	 		<drives @searched='search($event)'></drives>  
+	 		<drives></drives>  
 	   </layout-page>
 `
 	, 
