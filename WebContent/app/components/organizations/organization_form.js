@@ -8,7 +8,7 @@ Vue.component("organization-form", {
             },
 
             logo : null,
-            machines : null
+            disks : null
         }
     },
     template : `
@@ -33,10 +33,10 @@ Vue.component("organization-form", {
                 </div>
 
                 <div >
-                    <label>Avilable Virtual machines:</label>
+                    <label>Avilable Disks:</label>
                     <div>
-                    <select class="mdb-select md-form form-control" id="machineSelect" multiple  style="width:450px" >
-                        <option v-for="m in machines">{{m.name}}</option>
+                    <select class="mdb-select md-form form-control" id="diskSelect" multiple  style="width:450px" >
+                        <option v-for="d in disks">{{d.name}}</option>
                     </select>
                     </div>
                 </div>
@@ -114,16 +114,16 @@ Vue.component("organization-form", {
                 $('<input type="submit">').hide().appendTo($orgForm).click().remove();
             }
             else{
-                var e = $("#machineSelect");
-                var selectedMachines = e.val();
-                if(selectedMachines == null){
-                    selectedMachines = [];
+                var e = $("#diskSelect");
+                var selectedDisks = e.val();
+                if(selectedDisks == null){
+                    selectedDisks = [];
                 }
                 axios
-                .post("/addOrganization", {"name" : '' + this.org_input.name, "description" : '' + this.org_input.description, "logo" : '' + this.org_input.logo, "machines" : selectedMachines})
+                .post("/addOrganization", {"name" : '' + this.org_input.name, "description" : '' + this.org_input.description, "logo" : '' + this.org_input.logo, "disks" : selectedDisks})
                 .then(response =>{
                     self.$parent.getOrganizations();
-                    self.$parent.getMachines();
+                    self.$parent.getDisks();
                     self.clearFields();          
                 })
                 .catch(error =>{

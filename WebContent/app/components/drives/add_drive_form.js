@@ -65,7 +65,7 @@ Vue.component("add-drive-form",{
             <div class="form-group">
                 <label for="masina">Virtuelna masina:</label>
                 <select class="form-control" id="masina" name="masina" type="text" 
-                  v-bind:disabled="role=='USER'" v-model="dict[modal].vm.name" required>
+                  v-bind:disabled="role=='USER'" v-model="dict[modal].vm.name">
                     <option v-for="virtual in virtualMachines">{{virtual.name}}</option>
                 </select>
             </div>

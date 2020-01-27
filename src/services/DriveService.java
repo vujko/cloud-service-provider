@@ -13,7 +13,9 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import controllers.DriveController.Update;
+import main.App;
 import model.Drive;
+import model.Organization;
 import model.Drive.DriveType;
 import model.User;
 import model.User.Role;
@@ -39,28 +41,78 @@ public class DriveService {
 		}
 		return drivess;	
 	}
+
+	public Set<Drive> getDrives(){
+		return drives;
+	}
+
+	public Set<Drive> getAvilableDrives(){
+		Set<Drive> result = new HashSet<Drive>();
+		for(Drive d : drives){
+			if(d.getOrganization().getName().equals("") || d.getOrganization() == null){
+				result.add(d);
+			}
+		}
+		return result;
+	}
 	
 	public Drive addDrive(String email,String name,DriveType type,int capacity,String vmName) {
-		VirtualMachine vm = MachineService.getMachine(vmName);
-		User user = UserService.getUser(email);
+		// User user = UserService.getUser(email);
 		if(!driveExists(name)){	
 			Drive drive = new Drive(name,type,capacity);
-			drive.setVm(vm);
+			if(MachineService.machineExsists(vmName)){
+				VirtualMachine vm = MachineService.getMachine(vmName);
+				drive.setVm(vm);
+				drive.setOrganization(vm.getOrganization());
+				vm.getOrganization().addDrive(drive);
+				vm.getDrives().add(drive);
+			}
 			drives.add(drive);
-			user.getOrganization().getDrives().add(drive);
-			vm.getDrives().add(drive);
+			saveDrives(Path);
 			return drive;
 		}
 		return null;
-				//
 	}
 	public boolean deleteDrive(String name) {
 		if(driveExists(name)) {
 			Drive drive = getDrive(name);
 			drives.remove(drive);
+			removeDriveFromOrganizations(name);
+			removeDriveFromMachines(name);
+			OrganizationService.saveOrganizations();
+			// MachineService.saveMachines(); TODO			
+			saveDrives(Path);
 			return true;
 		}
 		return false;
+	}
+
+	private void removeDriveFromOrganizations(String name){
+		boolean removed = false;
+		for (Organization org : App.orgService.getOrganizations()) {
+			for(Drive d : org.getDrives()){
+				if(d.getName().equals(name)){
+					d = null;
+					removed = true;
+				}
+			}
+			if(removed)
+				return;
+		}
+	}
+
+	private void removeDriveFromMachines(String name){
+		boolean removed = false;
+		for (VirtualMachine vm : App.machineService.getMachines()) {
+			for(Drive d : vm.getDrives()){
+				if(d.getName().equals(name)){
+					d = null;
+					removed = true;
+				}
+			}
+			if(removed)
+				return;
+		}
 	}
 	
 	public boolean updateDrive(Update update) {
@@ -73,6 +125,7 @@ public class DriveService {
 		drive.setType(update.type);
 		drive.setCapacity(update.capacity);
 		drive.setVm(MachineService.getMachine(update.vm));
+		saveDrives(Path);
 		return true;
 	}
 	

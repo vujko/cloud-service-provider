@@ -6,21 +6,27 @@ public class Drive {
 	private DriveType type;
 	private int capacity;
 	private VirtualMachine vm;
+	private Organization organization;
 	
-	public Drive(String name, DriveType type, int capacity, VirtualMachine vm) {
+	public Drive(String name, DriveType type, int capacity, VirtualMachine vm, Organization org) {
 		super();
 		this.name = name;
 		this.type = type;
 		this.capacity = capacity;
 		this.vm = vm;
+		this.organization = org;
 	}
 	public Drive(String name,DriveType type, int capacity) {
 		this.name = name;
 		this.type = type;
 		this.capacity = capacity;
+		this.vm = new VirtualMachine();
+		this.organization = new Organization();
 	}
 	public Drive() {
-		super();
+		
+		this.vm = new VirtualMachine();
+		this.organization = new Organization();
 	}
 	public String getName() {
 		return name;
@@ -45,6 +51,13 @@ public class Drive {
 	}
 	public void setVm(VirtualMachine vm) {
 		this.vm = vm;
+	}
+
+	public Organization getOrganization(){
+		return organization;
+	}
+	public void setOrganization(Organization org){
+		this.organization = org;
 	}
 	@Override
 	public int hashCode() {

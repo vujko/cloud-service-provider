@@ -20,7 +20,7 @@ Vue.component("drives",{
                 v-on:click="selectDrive(drive)" v-bind:class="{selected : selectedDrive != null && selectedDrive.name===drive.name}">
                     <td>{{drive.name}}</td>
                     <td>{{drive.capacity}}</td>
-                    <td>{{drive.vm.name}}</td>
+                    <td v-if="'vm' in drive" >{{drive.vm.name}}</td>
                 </tr>
                 </tbody>
         </table>

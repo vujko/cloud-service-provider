@@ -14,6 +14,7 @@ import com.google.gson.stream.JsonReader;
 
 import controllers.OrganizationControlller.OrganizationToAdd;
 import controllers.OrganizationControlller.OrganizationToUpdate;
+import model.Drive;
 import model.Organization;
 import model.VirtualMachine;
 
@@ -38,7 +39,7 @@ public class OrganizationService {
         return new HashSet<Organization>();
     }
 
-    public static void saveOrganizations(String path) {
+    public static void saveOrganizations() {
         try {
             FileWriter writer = new FileWriter(path);
             String json = g.toJson(organizations);
@@ -64,6 +65,30 @@ public class OrganizationService {
         return new HashSet<VirtualMachine>();
     }
 
+    public Set<Drive> getSelectedDisks(String orgName){
+        for(Organization org : organizations){
+            if(org.getName().equals(orgName)){
+                return new HashSet<Drive>(org.getDrives());
+            }
+        }
+        return new HashSet<Drive>();
+    }
+
+    public Set<Drive> getDrivesWithoutVM(String orgName){
+        Set<Drive> result = new HashSet<Drive>();
+        for(Organization org : organizations){
+            if(org.getName().equals(orgName)){
+                for(Drive d : org.getDrives()){
+                    if(d.getVm() == null || d.getVm().getName() == null || d.getVm().getName() == ""){
+                        result.add(d);
+                    }
+                }
+                return result;
+            }
+        }
+        return result;
+    }
+
     public boolean addOrganization(OrganizationToAdd ota){
         Organization org = new Organization();
         if(organizationExsists(ota.name)){
@@ -72,13 +97,13 @@ public class OrganizationService {
         org.setName(ota.name);
         org.setDescription(ota.description);
         org.setLogo(ota.logo);
-        for (String machineName : ota.machines) {
-            VirtualMachine vm = MachineService.getMachine(machineName);
-            org.addMachine(vm);
-            vm.setOrganization(org);
+        for (String driveName : ota.disks) {
+            Drive d = DriveService.getDrive(driveName);
+            org.addDrive(d);
+            d.setOrganization(org);
         }
         organizations.add(org);
-        saveOrganizations(path);
+        saveOrganizations();
         return true;
     }
 
@@ -92,13 +117,13 @@ public class OrganizationService {
         org.setName(newOrg.newName);
         org.setDescription(newOrg.description);
         org.setLogo(newOrg.logo);
-        org.clearVirtualMachines();
-        for(String machineName : newOrg.machines){
-            VirtualMachine vm = MachineService.getMachine(machineName);
-            org.addMachine(vm);
-            vm.setOrganization(org);
+        org.clearDrives();
+        for(String driveName : newOrg.disks){
+            Drive d = DriveService.getDrive(driveName);
+            org.addDrive(d);
+            d.setOrganization(org);
         }
-        saveOrganizations(path);
+        saveOrganizations();
         return true;
     }
     
@@ -107,7 +132,7 @@ public class OrganizationService {
             Organization forDelete = getOrganization(name);
             forDelete.getVirtualMachines().forEach((vm) -> vm.setOrganization(null));
             organizations.remove(forDelete);
-            saveOrganizations(path);
+            saveOrganizations();
         	return true;
     	}
     	return false;

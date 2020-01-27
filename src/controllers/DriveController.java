@@ -54,6 +54,10 @@ public class DriveController {
 		res.status(400);
 		return false;
 	};
+	public static Route getAvilableDisks = (Request req, Response res) -> {
+		res.type("application/json");
+		return App.g.toJson(App.driveService.getAvilableDrives());
+	};
 	public static Route updateDrive = (Request req, Response res)->{
 		res.type("application/json");
 		Update update = App.g.fromJson(req.body(), Update.class);

@@ -9,7 +9,7 @@ public class Organization {
 	private String logo;
 	private transient Collection<User> users;
 	private transient Collection<VirtualMachine> virtualMachines;
-	private Collection<Drive> drives;
+	private transient Collection<Drive> drives;
 
 	
 	
@@ -90,6 +90,18 @@ public class Organization {
 
 	public void clearVirtualMachines(){
 		this.virtualMachines = new HashSet<VirtualMachine>();
+	}
+
+	public void clearDrives(){
+		for (Drive drive : drives) {
+			drive.setVm(null);
+			drive.setOrganization(null); //da li treba?
+		}
+		this.drives = new HashSet<Drive>();
+	}
+
+	public void addDrive(Drive d){
+		this.drives.add(d);
 	}
 
 	public Collection<Drive> getDrives() {

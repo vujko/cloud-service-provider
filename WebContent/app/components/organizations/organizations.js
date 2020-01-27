@@ -57,12 +57,12 @@ Vue.component("organizations",{
             });
         },
         
-        getMachines : function(){
+        getDisks : function(){
             axios
-            .get("/getAvilableMachines")
+            .get("/getAvilableDisks")
             .then(response => {
-                this.$refs.addForm.machines = response.data;
-                this.$refs.editForm.avilableMachines = response.data;
+                this.$refs.addForm.disks = response.data;
+                this.$refs.editForm.avilableDisks = response.data;
             })
         },
         deleteOrganization : function(){
@@ -74,7 +74,7 @@ Vue.component("organizations",{
                     self.selectedOrg = null;
                     toast("Successfully deleted.");
                     self.getOrganizations();
-                    self.getMachines();
+                    self.getDisks();
                 }
             })
             .catch(error =>{
@@ -84,7 +84,7 @@ Vue.component("organizations",{
     },
     mounted () {
         this.getOrganizations();
-        this.getMachines();
+        this.getDisks();
         this.role = localStorage.getItem("role");
 
     }

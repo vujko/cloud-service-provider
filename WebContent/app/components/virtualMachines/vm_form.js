@@ -4,29 +4,38 @@ Vue.component("vm-form", {
             modal : "add",
             backup : {
                 name : "",
-                cores : null,
-                ram : null,
-                gpus : null
+                category : {
+                    name : "",    
+                    cores : null,
+                    ram : null,
+                    gpus : null,
+                }
             },
             dict : {
                 add : {
                     name : "",
-                    cores : null,
-                    ram : null,
-                    gpus : null
+                    category : {
+                        name : "",    
+                        cores : null,
+                        ram : null,
+                        gpus : null,
+                    }
                 },
                 edit : {
                     name : "",
-                    cores : "",
-                    ram : "",
-                    gpus : ""
+                    category : {    
+                        name : "", 
+                        cores : null,
+                        ram : null,
+                        gpus : null,
+                    }
                 },
 
             },
             categories : null,
             drives : null,
-            selectedCatName : null,
-            selectedDrives : null
+            selectedDrives : null,
+            orgDrives : null
         }
     },
 
@@ -38,7 +47,11 @@ Vue.component("vm-form", {
         <div class="modal-header">
             <h5 class="modal-title" id="vmModalLabel" v-if="modal=='add'">Add a new Virtual Machine</h5>
             <h5 class="modal-title" id="vmModalLabel" v-if="modal=='edit'">Edit a Virtual Machine</h5>
-            <button type="button" class="close" v-on:click="clearFields()" aria-label="Close">
+            <button type="button" class="close" v-on:click="clearFields()" v-if="modal=='add'" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+
+            <button type="button" class="close" v-on:click="cancelUpdate()" v-if="modal=='edit'" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -57,8 +70,9 @@ Vue.component("vm-form", {
                         <option v-for="d in drives">{{d.name}}</option>
                     </select>
 
-                    <select class="mdb-select md-form form-control" id="diskEdit" multiple  style="width:450px" v-else>
-                        <option v-for="sd in selectedDrives" selected="selected">{{sd.name}}</option>
+                    <select class="mdb-select md-form form-control" id="diskEditSelect" multiple  style="width:450px" v-else>
+                        <option :id="sd.name" v-for="sd in selectedDrives" selected>{{sd.name}}</option>
+                        <option :id="od.name" v-for="od in orgDrives">{{od.name}}</option>
                     </select>
                     </div>
                 </div>
@@ -75,11 +89,11 @@ Vue.component("vm-form", {
                 <form class="form-inline">
                     <div class="form-group" style="margin-top : 10px">
                         <label style="margin-right: 10px;">Cores:</label>
-                        <input class="form-control"  id="vm_cores" name="name" v-model="dict[modal].cores" style="width:70px; height : 35px; margin-right: 25px;" disabled>
+                        <input class="form-control"  id="vm_cores" name="name" v-model="dict[modal].category.cores" style="width:70px; height : 35px; margin-right: 25px;" disabled>
                         <label style="margin-right: 10px;">RAM:</label>
-                        <input class="form-control" id="vm_ram" name="name" v-model="dict[modal].ram" style="width:70px; height : 35px; margin-right: 25px;" disabled>
+                        <input class="form-control" id="vm_ram" name="name" v-model="dict[modal].category.ram" style="width:70px; height : 35px; margin-right: 25px;" disabled>
                         <label style="margin-right: 10px;">GPUS:</label>
-                        <input class="form-control" id="vm_gpus" name="name" v-model="dict[modal].gpus" style="width:70px; height : 35px; margin-right: 25px;" disabled>
+                        <input class="form-control" id="vm_gpus" name="name" v-model="dict[modal].category.gpus" style="width:70px; height : 35px; margin-right: 25px;" disabled>
                     </div>
                 </form>              
                 
@@ -105,10 +119,26 @@ Vue.component("vm-form", {
             var e = document.getElementById("categorySelect");
             e.value = selectedMachine.category.name;
             this.setCategoryParams();
+            if('organization' in selectedMachine){
+                this.getDrivesWithoutVM(selectedMachine.organization.name);
+            }
+            this.getSelectedDrives(selectedMachine.name);
+            
+        },
+
+        getSelectedDrives : function(machineName){
             axios
-            .get("/getSelectedDisks/" + selectedMachine.name)
+            .get("/getSelectedDisks/" + machineName)
             .then(response => {
                 this.selectedDrives = response.data;
+            })
+        },
+
+        getDrivesWithoutVM : function(orgName){
+            axios
+            .get("/getDrivesWithoutVM/" + orgName)
+            .then(response =>{
+                this.orgDrives = response.data;
             })
         },
 
@@ -117,10 +147,7 @@ Vue.component("vm-form", {
             var newCatName = e.options[e.selectedIndex].text;
             this.categories.forEach(element => {
                 if(element.name == newCatName){
-                    this.dict[this.modal].cores = element.cores;
-                    this.dict[this.modal].gpus = element.gpus;
-                    this.dict[this.modal].ram = element.ram;
-                    this.selectedCatName = element.name;
+                    this.dict[this.modal].category = element;
                 }
             });
         },
@@ -139,6 +166,18 @@ Vue.component("vm-form", {
         
         },
 
+        cancelUpdate : function(){
+            this.dict.edit.name = this.backup.name;
+            this.dict.edit.category = this.backup.category;
+            this.selectedDrives.forEach(element => {
+                document.getElementById(element.name).selected = true;
+            })
+
+            $("#vmModal").modal('hide');
+            this.resetNameField();
+            this.$parent.selectedMachine = null;
+        },
+
         highlightNameField : function(){
             document.getElementById('vm_name').style.borderColor = "red";
             document.getElementById('name_err').innerHTML = "Virtual machine with that name already exsists.Please enter another."; 
@@ -153,8 +192,9 @@ Vue.component("vm-form", {
                 var e = $("#diskSelect");
                 var disks = e.val();
                 axios
-                .post("/addVM", {"name" : ''+ self.dict.add.name, "categoryName" : '' + self.selectedCatName, "disks" :  disks})
+                .post("/addVM", {"name" : ''+ self.dict.add.name, "categoryName" : '' + self.dict.add.category.name, "disks" :  disks})
                 .then(response => {
+                    $("#vmModal").modal('hide');
                     self.$parent.getMachines();
                     self.clearFields();
                 })
@@ -163,6 +203,32 @@ Vue.component("vm-form", {
                 })
             }
         },
+
+        updateVm : function(){
+            var self = this;
+            var $vmForm = $("#vmForm");
+            if(!$vmForm[0].checkValidity()){
+                $('<input type="submit">').hide().appendTo($vmForm).click().remove();
+            }
+            else{
+                var e = $("#diskEditSelect");
+                var selectedDisks = e.val();
+                if(selectedDisks == null){
+                    selectedDisks = [];
+                }
+
+                axios
+                .post("/updateMachine", {"oldName" : '' + self.backup.name, "newName" : '' + self.dict.edit.name, "categoryName" : '' + self.dict.edit.category.name, "disks" : selectedDisks})
+                .then(response => {
+                    $("#vmModal").modal('hide');
+                    self.resetNameField();
+                    toast("Successfully updated virtual machine");
+                })
+                .catch(error => {
+                    self.highlightNameField();
+                })
+            }
+        },  
 
         getCategories : function(){
             axios

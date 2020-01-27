@@ -17,6 +17,7 @@ import controllers.DriveController;
 import controllers.LoginController;
 import controllers.MachineController;
 import controllers.OrganizationControlller;
+import controllers.ReferenceController;
 import controllers.UserController;
 import services.CategoryService;
 import services.DriveService;
@@ -41,7 +42,7 @@ public class App {
 		machineService = new MachineService();
 		driveService = new DriveService();
 		
-			
+		ReferenceController.setUpReferences();
 		(orgService.getOrganization("Organizacija1")).addVirtaulMachine(MachineService.getMachine("Virtualna1"));
 		
 		port(8080);		
@@ -70,11 +71,14 @@ public class App {
 		post("/updateDrive",DriveController.updateDrive);
 		post("/searchDrives",DriveController.searchDrive);
 		post("/driveFilterCapacity",DriveController.filterCapacity);
+		get("/getAvilableDisks", DriveController.getAvilableDisks);
 
 		get("/getOrganizations", OrganizationControlller.getOrganizations);
 		post("/addOrganization", OrganizationControlller.addOrganization);
 		post("/updateOrganization", OrganizationControlller.updateOrganization);
 		post("/deleteOrganization", OrganizationControlller.deleteOrganization);
+		get("/getOrgDrives/:orgName", OrganizationControlller.getSelectedDisks);
+		get("/getDrivesWithoutVM/:orgName", OrganizationControlller.getDrivesWithoutVM);
 
 		get("/getCategories", CategoryController.getCategories);
 		post("/addCategory", CategoryController.addCategory);
@@ -85,7 +89,7 @@ public class App {
 		get("/getAvilableMachines", MachineController.getAvilableMachines);
 		post("/addVM", MachineController.addMachine);
 		get("/getSelectedDisks/:machineName", MachineController.getSelectedDisks);
-		get("/getSelectedMachines/:orgName", OrganizationControlller.getSelectedMachines);
+		post("/updateMachine", MachineController.updateMachine);
 
 		
 	}	

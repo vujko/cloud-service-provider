@@ -15,14 +15,14 @@ public class OrganizationControlller {
         public String name;
         public String description;
         public String logo;
-        public ArrayList<String> machines;
+        public ArrayList<String> disks;
     }
     public class OrganizationToUpdate{
         public String oldName;
         public String newName;
         public String description;
         public String logo;
-        public ArrayList<String> machines;
+        public ArrayList<String> disks;
     }
     public class OrganizationToDelete{
     	public String name;
@@ -36,6 +36,16 @@ public class OrganizationControlller {
     public static Route getSelectedMachines = (Request req, Response res) -> {
         res.type("application/json");
         return App.g.toJson(App.orgService.getSelectedMachines(req.params("orgName")));
+    };
+
+    public static Route getSelectedDisks = (Request req, Response res) -> {
+        res.type("application/json");
+        return App.g.toJson(App.orgService.getSelectedDisks(req.params("orgName")));
+    };
+
+    public static Route getDrivesWithoutVM = (Request req, Response res) ->{
+        res.type("application/json");
+        return App.g.toJson(App.orgService.getDrivesWithoutVM(req.params("orgName")));
     };
 
     public static Route addOrganization = (Request req, Response res) -> {

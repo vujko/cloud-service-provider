@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import controllers.MachineController.MachineToAdd;
+import controllers.MachineController.MachineToUpdate;
 import main.App;
 import model.CategoryVM;
 import model.Drive;
@@ -71,9 +72,32 @@ public class MachineService {
 		vm.setName(mta.name);
 		vm.setCategory(CategoryService.getCategory(mta.categoryName));
 		for (String diskName : mta.disks) {
-			vm.addDrive(DriveService.getDrive(diskName));
+			Drive drive = DriveService.getDrive(diskName);
+			vm.addDrive(drive);
+			drive.setVm(vm);
+			// drive.setOrganization(org);
 		}
 		machines.add(vm);
+		// saveMachines(path);
+		return true;
+	}
+
+	public static boolean updateMachine(MachineToUpdate mtu){
+		VirtualMachine vm = getMachine(mtu.oldName);
+		if(!mtu.oldName.equals(mtu.newName)){
+			if(machineExsists(mtu.newName)){
+				return false;
+			}
+		}
+		vm.setName(mtu.newName);
+		vm.setCategory(CategoryService.getCategory(mtu.categoryName));
+		vm.clearDisks();
+		for(String diskName : mtu.disks){
+			Drive drive = DriveService.getDrive(diskName);
+			vm.addDrive(drive);
+			drive.setVm(vm);
+			drive.setOrganization(vm.getOrganization());
+		}
 		// saveMachines(path);
 		return true;
 	}

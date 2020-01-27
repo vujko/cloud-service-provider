@@ -12,8 +12,8 @@ Vue.component("edit-org-form",{
                 description : "",
                 logo : ""
             },
-            avilableMachines : null,
-            selectedMachines : null
+            avilableDisks : null,
+            selectedDisks : null
         }
     },
 
@@ -39,11 +39,11 @@ Vue.component("edit-org-form",{
                 </div>
 
                 <div >
-                    <label>Avilable Virtual machines:</label>
+                    <label>Avilable Disks:</label>
                     <div>
                     <select class="mdb-select md-form form-control" id="machineEditSelect" multiple  style="width:450px" >
-                        <option v-for="m in selectedMachines" selected="selected">{{m.name}}</option>
-                        <option v-for="am in avilableMachines">{{am.name}}</option>
+                        <option :id="d.name" v-for="d in selectedDisks" selected="selected">{{d.name}}</option>
+                        <option v-for="ad in avilableDisks">{{ad.name}}</option>
                     </select>
                     </div>
                 </div>
@@ -105,6 +105,9 @@ Vue.component("edit-org-form",{
             this.editedOrg.name = this.backup.name;
             this.editedOrg.description = this.backup.description;
             this.editedOrg.logo = this.backup.logo;
+            this.selectedDisks.forEach(element =>{
+                document.getElementById(element.name).selected = true;
+            })
             $('#editOrgModal').modal('hide');
             this.resetNameField();
         },
@@ -114,9 +117,9 @@ Vue.component("edit-org-form",{
             this.editedOrg = selectedOrg;
             this.oldName = selectedOrg.name;
             axios
-            .get("/getSelectedMachines/" + selectedOrg.name)
+            .get("/getOrgDrives/" + selectedOrg.name)
             .then(response => {
-                this.selectedMachines = response.data;
+                this.selectedDisks = response.data;
             })
 
         },
@@ -137,18 +140,18 @@ Vue.component("edit-org-form",{
             }
             else{
                 var e = $("#machineEditSelect");
-                var selectedMachines = e.val();
-                if(selectedMachines == null){
-                    selectedMachines = [];
+                var selectedDisks = e.val();
+                if(selectedDisks == null){
+                    selectedDisks = [];
                 }
 
                 axios
-                .post("/updateOrganization", {"oldName" : self.oldName, "newName" : ''+ self.editedOrg.name, "description" : '' + self.editedOrg.description, "logo": '' + self.editedOrg.logo, "machines" : selectedMachines})
+                .post("/updateOrganization", {"oldName" : self.oldName, "newName" : ''+ self.editedOrg.name, "description" : '' + self.editedOrg.description, "logo": '' + self.editedOrg.logo, "disks" : selectedDisks})
                 .then(response => {
                     if(response.data){
                         $('#editOrgModal').modal('hide');
                         self.resetNameField();
-                        //this.$parent.getMachines();
+                        self.$parent.selectedOrg = null;
                         toast("Successfully updated organization"); 
                     }
                 })
