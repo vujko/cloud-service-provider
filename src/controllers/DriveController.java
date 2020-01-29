@@ -12,11 +12,13 @@ import spark.Route;
 
 public class DriveController {
 	
-	private class Adding{
-		private String name;
-		private DriveType type;
-		private int capacity;
-		private String vm;
+	public class DriveToAdd{
+		public String name;
+		public DriveType type;
+		public int capacity;
+		public String vm;
+		public String organization;
+
 	}
 	public class Update{
 		public String oldName;
@@ -35,9 +37,9 @@ public class DriveController {
 	
 	public static Route addDrive = (Request request, Response response)->{
 		response.type("application/json");
-		Adding drive = App.g.fromJson(request.body(), Adding.class);
+		DriveToAdd drive = App.g.fromJson(request.body(), DriveToAdd.class);
 		String userEmail = request.session(false).attribute("email");
-		Drive d = App.driveService.addDrive(userEmail,drive.name,drive.type,drive.capacity,drive.vm);
+		Drive d = App.driveService.addDrive(userEmail,drive);
 		if(d != null) {
 			response.status(200);
 			

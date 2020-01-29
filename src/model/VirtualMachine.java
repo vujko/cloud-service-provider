@@ -103,14 +103,24 @@ public class VirtualMachine {
 
 	public void addDrive(Drive drive) {
 		this.drives.add(drive);
+		drive.setOrganization(this.organization);
+		this.organization.addDrive(drive);
 	}
 
 	public void clearDisks(){
 		for (Drive drive : drives) {
 			drive.setVm(null);
-			drive.setOrganization(null); //da li treba?
 		}
 		this.drives = new HashSet<Drive>();
+	}
+
+	public void deleteDrive(Drive d){
+		drives.forEach(driveToDelete -> {
+			if(driveToDelete.getName().equals(d.getName())){
+				driveToDelete = null;
+				
+			}
+		});
 	}
 	
 	

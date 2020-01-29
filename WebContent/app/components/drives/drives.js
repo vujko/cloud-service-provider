@@ -4,6 +4,7 @@ Vue.component("drives",{
             drives : null,
             selectedDrive : null,
             virtualMachines : null,
+            organizations : null,
             role : null
         }
     },
@@ -12,14 +13,20 @@ Vue.component("drives",{
         <table class="table table-striped">
             <thead class="thead-dark">
                 <tr>
+
                 <th>Ime</th>
                 <th>Kapacitet(GB)</th>
-                <th>Virtuelna masina</th></tr></thead>
+                <th>Organizacija</th>
+                <th>Virtuelna masina</th>
+
+                </tr>                
+                </thead>
                 <tbody>
                 <tr v-for="drive in drives" 
                 v-on:click="selectDrive(drive)" v-bind:class="{selected : selectedDrive != null && selectedDrive.name===drive.name}">
                     <td>{{drive.name}}</td>
                     <td>{{drive.capacity}}</td>
+                    <td v-if="'organization' in drive" > {{drive.organization.name}}</td>
                     <td v-if="'vm' in drive" >{{drive.vm.name}}</td>
                 </tr>
                 </tbody>
@@ -46,7 +53,6 @@ Vue.component("drives",{
             .then(response => {
                 this.drives = response.data;
             });
-            this.getVirtual();  
         },
         selectDrive : function(drive){
             this.selectedDrive = drive;
@@ -57,8 +63,9 @@ Vue.component("drives",{
             $("#driveModal").modal('show');
         },
         driveAdd : function(){
-            this.$refs.addDriveForm.virtualMachines = {...this.virtualMachines};
             this.openDriveModal('add');
+            this.$refs.addDriveForm.setUpForAdding();
+
         },
         addDrive : function(drive){
             //this.drives.push(drive);
@@ -89,7 +96,12 @@ Vue.component("drives",{
             })
         },
         editDrive : function(){
-            this.$refs.addDriveForm.virtualMachines = {...this.virtualMachines};
+            
+            axios
+            .get("getSelectedMachines/" + this.selectedDrive.organization.name)
+            .then(response =>{
+                this.$refs.addDriveForm.virtualMachines = response.data;
+            })
             this.$refs.addDriveForm.setEditedDrive(this.selectedDrive);
             this.openDriveModal('edit');
         },
@@ -115,10 +127,18 @@ Vue.component("drives",{
                 this.virtualMachines = response.data;
             });
         },
+        getOrganizations : function(){
+            axios
+            .get("/getOrganizations")
+            .then(response => {
+                this.organizations = response.data
+            });
+        }
     },
     mounted () {
         this.role = localStorage.getItem("role");
         this.getDrives(); 
+        this.getVirtual();
         EventBus.$on('searched', this.search);
         EventBus.$on('filterCapacity', this.filter);
     }

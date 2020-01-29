@@ -3,8 +3,6 @@ package services;
 import java.util.HashSet;
 import java.util.Set;
 
-
-import main.App;
 import model.Organization;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -99,8 +97,8 @@ public class UserService {
         if(userExsists(user.getEmail())){
             return false;
         }
-        if(App.orgService.organizationExsists(user.getOrganization().getName())) {
-        	Organization o = App.orgService.getOrganization(user.getOrganization().getName());
+        if(OrganizationService.organizationExsists(user.getOrganization().getName())) {
+        	Organization o = OrganizationService.getOrganization(user.getOrganization().getName());
         	o.getUsers().add(user);
         	user.setOrganization(o);
             users.add(user);
@@ -109,7 +107,7 @@ public class UserService {
         }
         User u = getUser(email);
         if(u.getRole().name().equals("ADMIN")) {	
-        	Organization or = App.orgService.getOrganization(u.getOrganization().getName());
+        	Organization or = OrganizationService.getOrganization(u.getOrganization().getName());
         	or.addUser(user);
         	user.setOrganization(or);
         	users.add(user);
@@ -145,7 +143,7 @@ public class UserService {
     public boolean deleteUser(String email) {
     	if(userExsists(email)) {
     		User u = getUser(email);
-    		Organization organization = App.orgService.getOrganization(u.getOrganization().getName());
+    		Organization organization = OrganizationService.getOrganization(u.getOrganization().getName());
     		organization.getUsers().remove(u);
             users.remove(u);
             saveUsers(path);

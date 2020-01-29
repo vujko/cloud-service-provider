@@ -16,6 +16,7 @@ public class MachineController {
 		public String name;
 		public String categoryName;
 		public ArrayList<String> disks;
+		public String orgName;
 	}
 
 	public class MachineToUpdate{
@@ -50,7 +51,8 @@ public class MachineController {
 	public static Route addMachine = (Request req, Response res) ->{
 		MachineToAdd vma = App.g.fromJson(req.body(), MachineToAdd.class);
 		res.type("application/json");
-		if(MachineService.addMachine(vma)){
+		String email = req.session(false).attribute("email");
+		if(MachineService.addMachine(email, vma)){
 			res.status(200);
 			return true;
 		}
@@ -62,6 +64,17 @@ public class MachineController {
 		MachineToUpdate updateMachine = App.g.fromJson(req.body(), MachineToUpdate.class);
 		res.type("application/json");
 		if(MachineService.updateMachine(updateMachine)){
+			res.status(200);
+			return true;
+		}
+		res.status(400);
+		return false;
+	};
+
+
+	public static Route deleteMachine = (Request req, Response res) -> {
+		res.type("application/json");
+		if(App.machineService.deleteMachine(req.body())){
 			res.status(200);
 			return true;
 		}

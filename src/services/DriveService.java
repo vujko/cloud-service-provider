@@ -12,22 +12,22 @@ import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import controllers.DriveController.DriveToAdd;
 import controllers.DriveController.Update;
 import main.App;
 import model.Drive;
 import model.Organization;
-import model.Drive.DriveType;
 import model.User;
 import model.User.Role;
 import model.VirtualMachine;
 
 
 public class DriveService {
-	private static final String Path = "./data/drives.json";
+	private static final String path = "./data/drives.json";
 	private static Gson g = new Gson();
-	private static Set<Drive> drives = loadDrives(Path);
+	private static Set<Drive> drives = loadDrives();
 		
-	public static Set<Drive> loadDrives(String path){
+	public static Set<Drive> loadDrives(){
 		Set<Drive> drivess = new HashSet<Drive>();
 		
 		try {
@@ -49,36 +49,41 @@ public class DriveService {
 	public Set<Drive> getAvilableDrives(){
 		Set<Drive> result = new HashSet<Drive>();
 		for(Drive d : drives){
-			if(d.getOrganization().getName().equals("") || d.getOrganization() == null){
+			if(d.getOrganization() == null || d.getOrganization().getName().equals("")){
 				result.add(d);
 			}
 		}
 		return result;
 	}
 	
-	public Drive addDrive(String email,String name,DriveType type,int capacity,String vmName) {
-		if(!driveExists(name)){	
-			Drive drive = new Drive(name,type,capacity);
-			User user = UserService.getUser(email);
-			if(MachineService.machineExsists(vmName)){
-				VirtualMachine vm = MachineService.getMachine(vmName);
+	public Drive addDrive(String email,DriveToAdd dta) {
+		if(!driveExists(dta.name)){	
+			Drive drive = new Drive(dta.name,dta.type,dta.capacity);
+			
+			//super admin mora postaviti postojecu organizaciju
+			if(OrganizationService.organizationExsists(dta.organization)){
+				Organization org = OrganizationService.getOrganization(dta.organization);
+				drive.setOrganization(org);
+				org.addDrive(drive);
+			}
+			//admin kao org salje prazno ime
+			else{
+				User user = UserService.getUser(email);
+				Organization org = user.getOrganization();
+				org.addDrive(drive);
+				drive.setOrganization(org);
+
+			}
+
+			if(MachineService.machineExsists(dta.vm)){
+				VirtualMachine vm = MachineService.getMachine(dta.vm);
 				drive.setVm(vm);
-				drive.setOrganization(vm.getOrganization());
 				vm.getDrives().add(drive);
 
-				if(user.getRole() == User.Role.SUPER_ADMIN){
-					vm.getOrganization().addDrive(drive);
-				}
-				else{
-					user.getOrganization().addDrive(drive);
-				}
-			}
-			else if(user.getRole() == User.Role.ADMIN){
-				user.getOrganization().addDrive(drive);
-				drive.setOrganization(user.getOrganization());
+
 			}
 			drives.add(drive);
-			saveDrives(Path);
+			saveDrives();
 			return drive;
 		}
 		return null;
@@ -91,38 +96,33 @@ public class DriveService {
 			removeDriveFromMachines(name);
 			OrganizationService.saveOrganizations();
 			MachineService.saveMachines();		
-			saveDrives(Path);
+			saveDrives();
 			return true;
 		}
 		return false;
 	}
 
 	private void removeDriveFromOrganizations(String name){
-		boolean removed = false;
+
 		for (Organization org : App.orgService.getOrganizations()) {
 			for(Drive d : org.getDrives()){
 				if(d.getName().equals(name)){
 					org.getDrives().remove(d);
-					//d = null;
-					removed = true;
+					return;
 				}
 			}
-			if(removed)
-				return;
 		}
 	}
 
 	private void removeDriveFromMachines(String name){
-		boolean removed = false;
+
 		for (VirtualMachine vm : App.machineService.getMachines()) {
 			for(Drive d : vm.getDrives()){
 				if(d.getName().equals(name)){
-					d = null;
-					removed = true;
+					vm.getDrives().remove(d);
+					return;
 				}
 			}
-			if(removed)
-				return;
 		}
 	}
 	
@@ -135,8 +135,10 @@ public class DriveService {
 		drive.setName(update.newName);
 		drive.setType(update.type);
 		drive.setCapacity(update.capacity);
-		drive.setVm(MachineService.getMachine(update.vm));
-		saveDrives(Path);
+		VirtualMachine vm = MachineService.getMachine(update.vm);
+		drive.setVm(vm);
+		vm.addDrive(drive);
+		saveDrives();
 		return true;
 	}
 	
@@ -159,7 +161,7 @@ public class DriveService {
 		User user = UserService.getUser(email);
 		
 		if(user.getRole() == User.Role.SUPER_ADMIN)
-			users_drives = this.drives;
+			users_drives = drives;
 		else if(user.getRole() == User.Role.ADMIN)
 			users_drives = new HashSet<Drive> (user.getOrganization().getDrives());
 		
@@ -209,7 +211,7 @@ public class DriveService {
 		return filteredType;
 	}
 	
-	public static void saveDrives(String path) {
+	public static void saveDrives() {
 		try {
 			FileWriter writer = new FileWriter(path);
 			String json = g.toJson(drives);

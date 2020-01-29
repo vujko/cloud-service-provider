@@ -39,11 +39,12 @@ Vue.component("edit-org-form",{
                 </div>
 
                 <div >
-                    <label>Avilable Disks:</label>
+                    <label>Selected Disks:</label>
                     <div>
-                    <select class="mdb-select md-form form-control" id="machineEditSelect" multiple  style="width:450px" >
-                        <option :id="d.name" v-for="d in selectedDisks" selected="selected">{{d.name}}</option>
-                        <option v-for="ad in avilableDisks">{{ad.name}}</option>
+                    <select class="mdb-select md-form form-control" id="machineEditSelect" multiple  style="width:450px" disabled>
+                        <option :id="d.name" v-for="d in selectedDisks">{{d.name}}</option>
+                        <!-- <option v-for="ad in avilableDisks">{{ad.name}}</option> -->
+
                     </select>
                     </div>
                 </div>
@@ -105,9 +106,9 @@ Vue.component("edit-org-form",{
             this.editedOrg.name = this.backup.name;
             this.editedOrg.description = this.backup.description;
             this.editedOrg.logo = this.backup.logo;
-            this.selectedDisks.forEach(element =>{
-                document.getElementById(element.name).selected = true;
-            })
+            // this.selectedDisks.forEach(element =>{
+            //     document.getElementById(element.name).selected = true;
+            // })
             $('#editOrgModal').modal('hide');
             this.resetNameField();
         },

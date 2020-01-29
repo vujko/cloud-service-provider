@@ -20,6 +20,7 @@ import controllers.MachineController.MachineToAdd;
 import controllers.MachineController.MachineToUpdate;
 import model.DateActivity;
 import model.Drive;
+import model.Organization;
 import model.User;
 import model.User.Role;
 import model.VirtualMachine;
@@ -94,19 +95,32 @@ public class MachineService {
 		return null;
 	}
 
-	public static boolean addMachine(MachineToAdd mta){
+	public static boolean addMachine(String email, MachineToAdd mta){
 		VirtualMachine vm = new VirtualMachine();
 		if(machineExsists(mta.name)){
 			return false;
 		}
 		vm.setName(mta.name);
 		vm.setCategory(CategoryService.getCategory(mta.categoryName));
+		if(OrganizationService.organizationExsists(mta.orgName)){
+			Organization org = OrganizationService.getOrganization(mta.orgName);
+			vm.setOrganization(org);
+			org.addMachine(vm);	
+		}
+		else{
+			User admin = UserService.getUser(email);
+			Organization org = admin.getOrganization();
+			vm.setOrganization(org);
+			org.addMachine(vm);
+		}
+
 		for (String diskName : mta.disks) {
 			Drive drive = DriveService.getDrive(diskName);
 			vm.addDrive(drive);
 			drive.setVm(vm);
 			// drive.setOrganization(org); TODO
 		}
+
 		machines.add(vm);
 		saveMachines();
 		return true;
@@ -151,6 +165,20 @@ public class MachineService {
 		}
 		saveMachines();
 		return true;
+	}
+
+	public boolean deleteMachine(String name){
+		if(machineExsists(name)){
+			VirtualMachine vm = getMachine(name);
+			vm.clearDisks();
+			DriveService.saveDrives();
+			vm.getOrganization().getVirtualMachines().remove(vm);
+			OrganizationService.saveOrganizations();
+			machines.remove(vm);
+			saveMachines();
+			return true;
+		}
+		return false;
 	}
 
 	public static Set<VirtualMachine> searchMachine(String arg){

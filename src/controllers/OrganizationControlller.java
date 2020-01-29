@@ -48,6 +48,11 @@ public class OrganizationControlller {
         return App.g.toJson(App.orgService.getDrivesWithoutVM(req.params("orgName")));
     };
 
+    public static Route getUsersDrivesWithoutVM = (Request req, Response res) ->{
+        res.type("application/json");
+        return App.g.toJson(App.orgService.getUsersDrivesWithoutVM(req.session(false).attribute("email")));
+    };
+
     public static Route addOrganization = (Request req, Response res) -> {
         OrganizationToAdd org = App.g.fromJson(req.body(), OrganizationToAdd.class);
         res.type("application/json");

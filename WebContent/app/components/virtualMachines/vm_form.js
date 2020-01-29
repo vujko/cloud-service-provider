@@ -20,7 +20,9 @@ Vue.component("vm-form", {
                         cores : null,
                         ram : null,
                         gpus : null,
-                    }
+                    },
+                    organization : null
+
                 },
                 edit : {
                     name : "",
@@ -30,16 +32,20 @@ Vue.component("vm-form", {
                         ram : null,
                         gpus : null,
                     },
-                    listOfActivities : []
+                    listOfActivities : [],
+                    organization : null
                 },
 
             },
             categories : null,
             drives : null,
             selectedDrives : null,
-            orgDrives : null,
             selectedActivity : "",
-            deleteItems : []
+            deleteItems : [],
+            orgDrives : [],
+            role : null,
+            organizations : null,
+            selectedOrgName : null
         }
     },
 
@@ -67,11 +73,21 @@ Vue.component("vm-form", {
                     <label>Name:</label>
                     <input class="form-control" id="vm_name" name="name" type="name" v-model="dict[modal].name   " required><p id="name_err"></p>
                 </div>
+
+                <div class="form-group" v-if="role == 'SUPER_ADMIN'">
+                    <label>Organization:</label>
+                    <div>
+                    <select class="mdb-select md-form form-control" id="organizationSelect" style="width:450px" v-on:change="setUpDisks()" v-bind:disabled="modal == 'edit'">
+                        <option v-for="o in organizations" :value="o.name">{{o.name}}</option>
+                    </select>
+                    </div>
+                </div>
+
                 <div >
-                    <label>Disks:</label>
+                    <label>Avilable Disks From Organization:</label>
                     <div>
                     <select class="mdb-select md-form form-control" id="diskSelect" multiple  style="width:450px" v-if="modal=='add'">
-                        <option v-for="d in drives">{{d.name}}</option>
+                        <option v-for="d in orgDrives">{{d.name}}</option>
                     </select>
 
                     <select class="mdb-select md-form form-control" id="diskEditSelect" multiple  style="width:450px" v-else>
@@ -81,7 +97,9 @@ Vue.component("vm-form", {
                     </div>
                 </div>
 
-                <div >
+                
+                
+                <div class="form-group">
                     <label>Category:</label>
                     <div>
                     <select class="mdb-select md-form form-control" id="categorySelect" style="width:450px" v-on:change="setCategoryParams()">
@@ -182,6 +200,12 @@ Vue.component("vm-form", {
             })
         },
 
+        setUpDisks : function(){
+            var e = document.getElementById("organizationSelect");
+            this.selectedOrgName = e.options[e.selectedIndex].text;
+            this.getDrivesWithoutVM(this.selectedOrgName);
+        },
+
         setCategoryParams : function(){
             var e = document.getElementById("categorySelect");
             var newCatName = e.options[e.selectedIndex].text;
@@ -233,8 +257,11 @@ Vue.component("vm-form", {
             else{
                 var e = $("#diskSelect");
                 var disks = e.val();
+                if(disks == null){
+                    disks = [];
+                }
                 axios
-                .post("/addVM", {"name" : ''+ self.dict.add.name, "categoryName" : '' + self.dict.add.category.name, "disks" :  disks})
+                .post("/addVM", {"name" : ''+ self.dict.add.name, "categoryName" : '' + self.dict.add.category.name, "disks" :  disks, "orgName" : ''+ self.selectedOrgName})
                 .then(response => {
                     $("#vmModal").modal('hide');
                     self.$parent.getMachines();
@@ -294,11 +321,30 @@ Vue.component("vm-form", {
 
         setUpForAdding : function(){            
             this.setCategoryParams();
+            if(this.role == 'SUPER_ADMIN'){
+                this.setUpDisks();
+            }
+        },
+
+        getOrganizations : function(){
+            axios
+            .get("/getOrganizations")
+            .then(response => {
+                this.organizations = response.data;
+            })
         }
     },
 
     mounted(){
         this.getCategories();
-        this.getDrives();
+        this.getOrganizations();
+        this.role = localStorage.getItem("role");
+        if(this.role == 'ADMIN'){
+            axios
+            .get("/getUsersDrivesWithoutVM")
+            .then(response => {
+                this.orgDrives = response.data;
+            })
+        }
     }
 })

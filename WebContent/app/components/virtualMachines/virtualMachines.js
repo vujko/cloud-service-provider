@@ -64,7 +64,17 @@ Vue.component("vm", {
         },
 
         deleteVM : function(){
-
+            var self = this;
+            axios
+            .post("/deleteMachine", '' + this.selectedMachine.name)
+            .then(response =>{
+                self.selectedMachine = null;
+                toast("Successfully deleted.");
+                self.getMachines();
+            })
+            .catch(error =>{
+                alert("Unable to delete machine.")
+            })
         },
         getMachines : function(){
             axios

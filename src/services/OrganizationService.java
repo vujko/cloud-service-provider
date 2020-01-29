@@ -14,6 +14,7 @@ import com.google.gson.stream.JsonReader;
 
 import controllers.OrganizationControlller.OrganizationToAdd;
 import controllers.OrganizationControlller.OrganizationToUpdate;
+import main.App;
 import model.Drive;
 import model.Organization;
 import model.VirtualMachine;
@@ -89,6 +90,10 @@ public class OrganizationService {
         return result;
     }
 
+    public Set<Drive> getUsersDrivesWithoutVM(String email){
+        return getDrivesWithoutVM(UserService.getUser(email).getOrganization().getName());
+    }
+
     public boolean addOrganization(OrganizationToAdd ota){
         Organization org = new Organization();
         if(organizationExsists(ota.name)){
@@ -130,7 +135,14 @@ public class OrganizationService {
     public boolean deleteOrganization(String name) { 	
     	if(organizationExsists(name)) {
             Organization forDelete = getOrganization(name);
-            forDelete.getVirtualMachines().forEach((vm) -> vm.setOrganization(null));
+            forDelete.getVirtualMachines().forEach((vm) -> {
+                App.machineService.getMachines().remove(vm);
+            });
+            MachineService.saveMachines();
+            forDelete.getDrives().forEach((d) -> {
+                App.driveService.getDrives().remove(d);
+            });
+            DriveService.saveDrives();
             organizations.remove(forDelete);
             saveOrganizations();
         	return true;
@@ -138,7 +150,7 @@ public class OrganizationService {
     	return false;
     }
 
-    public boolean organizationExsists(String name){
+    public static boolean organizationExsists(String name){
         for (Organization org : organizations) {
             if(org.getName().equalsIgnoreCase(name)){
                 return true;
@@ -147,7 +159,7 @@ public class OrganizationService {
         return false;
     }
 
-    public Organization getOrganization(String name){
+    public static Organization getOrganization(String name){
         for (Organization org : organizations) {
             if(org.getName().equalsIgnoreCase(name)){
                 return org;

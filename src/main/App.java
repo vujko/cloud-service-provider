@@ -43,13 +43,13 @@ public class App {
 		driveService = new DriveService();
 		
 		ReferenceController.setUpReferences();
-		(orgService.getOrganization("Organizacija1")).addVirtaulMachine(MachineService.getMachine("Virtualna1"));
+		(OrganizationService.getOrganization("Organizacija1")).addVirtaulMachine(MachineService.getMachine("Virtualna1"));
 	
 		port(8080);		
 		staticFiles.externalLocation(new File("./WebContent").getCanonicalPath()); 
 		
 
-		post("/login", LoginController.handleLogin);
+		post("/login", LoginController.handleLogin);	
 		post("/verify", LoginController.verifyLogin);
 		post("/logout", LoginController.handleLogout);
 		get("/ensureLogin", LoginController.ensureLogin);
@@ -79,6 +79,7 @@ public class App {
 		post("/deleteOrganization", OrganizationControlller.deleteOrganization);
 		get("/getOrgDrives/:orgName", OrganizationControlller.getSelectedDisks);
 		get("/getDrivesWithoutVM/:orgName", OrganizationControlller.getDrivesWithoutVM);
+		get("/getUsersDrivesWithoutVM", OrganizationControlller.getUsersDrivesWithoutVM);
 
 		get("/getCategories", CategoryController.getCategories);
 		post("/addCategory", CategoryController.addCategory);
@@ -90,7 +91,7 @@ public class App {
 		post("/addVM", MachineController.addMachine);
 		get("/getSelectedDisks/:machineName", MachineController.getSelectedDisks);
 		post("/updateMachine", MachineController.updateMachine);
-
+		post("/deleteMachine", MachineController.deleteMachine);
 		
 		get("/getSelectedMachines/:orgName", OrganizationControlller.getSelectedMachines);
 		post("/searchVM", MachineController.search);
