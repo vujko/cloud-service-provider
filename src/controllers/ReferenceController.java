@@ -12,7 +12,7 @@ public class ReferenceController {
         connectUsersWithOrganizations();
         connectMachinesWithDrives();
         connectOrganizationsWithMachines();
-        // connectOrganizationsWithDrives();
+        connectOrganizationsWithDrives();
     }
 
     private static void connectUsersWithOrganizations(){
@@ -44,22 +44,26 @@ public class ReferenceController {
                 if(vm.getOrganization().getName().equals(org.getName())){
                     vm.setOrganization(org);
                     org.addMachine(vm);
-                    vm.getDrives().forEach((d) -> d.setOrganization(org));
+                    // vm.getDrives().forEach((d) -> {
+                    //     org.addDrive(d);
+                    //     d.setOrganization(org);
+                    // });
+
                 }
             }
         }
     }
 
-    // private static void connectOrganizationsWithDrives(){
-    //     for(Organization org : App.orgService.getOrganizations()){
-    //         for(Drive d : App.driveService.getDrives()){
-    //             if(d.getOrganization().getName().equals(org.getName())){
-    //                 d.setOrganization(org);
-    //                 org.addDrive(d);
-    //             }
-    //         }
-    //     }
-    // }
+    private static void connectOrganizationsWithDrives(){
+        for(Organization org : App.orgService.getOrganizations()){
+            for(Drive d : App.driveService.getDrives()){
+                if(d.getOrganization().getName().equals(org.getName())){
+                    d.setOrganization(org);
+                    org.addDrive(d);
+                }
+            }
+        }
+    }
 
 
 

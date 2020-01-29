@@ -89,6 +89,10 @@ public class OrganizationService {
         return result;
     }
 
+    public Set<Drive> getUsersDrivesWithoutVM(String email){
+        return getDrivesWithoutVM(UserService.getUser(email).getOrganization().getName());
+    }
+
     public boolean addOrganization(OrganizationToAdd ota){
         Organization org = new Organization();
         if(organizationExsists(ota.name)){
@@ -138,7 +142,7 @@ public class OrganizationService {
     	return false;
     }
 
-    public boolean organizationExsists(String name){
+    public static boolean organizationExsists(String name){
         for (Organization org : organizations) {
             if(org.getName().equalsIgnoreCase(name)){
                 return true;
@@ -147,7 +151,7 @@ public class OrganizationService {
         return false;
     }
 
-    public Organization getOrganization(String name){
+    public static Organization getOrganization(String name){
         for (Organization org : organizations) {
             if(org.getName().equalsIgnoreCase(name)){
                 return org;

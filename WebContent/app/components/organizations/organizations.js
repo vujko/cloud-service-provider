@@ -62,7 +62,7 @@ Vue.component("organizations",{
             .get("/getAvilableDisks")
             .then(response => {
                 this.$refs.addForm.disks = response.data;
-                this.$refs.editForm.avilableDisks = response.data;
+                // this.$refs.editForm.avilableDisks = response.data;
             })
         },
         deleteOrganization : function(){

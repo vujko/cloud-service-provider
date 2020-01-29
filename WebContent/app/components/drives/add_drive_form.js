@@ -6,13 +6,15 @@ Vue.component("add-drive-form",{
                     name : "",
                     type : "",
                     capacity : "",
-                    vm : {name : ""}
+                    vm : {name : ""},
+                    organization : {name : ""}
                 },
                 edit : {
                     name : "",
                     type : "",
                     capacity : "",
-                    vm : {name : ""}
+                    vm : {name : ""},
+                    organization : {name : ""}
                 }
             },
             backup : {
@@ -23,6 +25,7 @@ Vue.component("add-drive-form",{
             },
             role : null,
             virtualMachines : null,
+            organizations : null,
             selectedVM : "",
             selectedType : "",
             modal : "add"
@@ -62,6 +65,21 @@ Vue.component("add-drive-form",{
                    v-bind:disabled="role=='USER'"  v-model="dict[modal].capacity" required>
                 <p id="cap_err"> </p>
             </div>
+
+            <div class="form-group" v-bind:hidden="modal == 'edit' || role == 'ADMIN'">
+                <label for="masina">Organizacija:</label>
+                <select class="mdb-select md-form form-control" id="organizationSelect" style="width:450px" v-on:change="setUpMachines()">
+                    <option v-for="o in organizations" :value="o.name">{{o.name}}</option>
+                </select>
+            </div>
+            
+            <div class="form-group" v-if="modal == 'edit'">
+                <label for="masina">Organizacija:</label>
+                <input class="form-control" id="organization" placeholder="No organization" name="organization" type="text" 
+                   disabled  v-model="dict[modal].organization.name" required>
+            </div>
+
+
             <div class="form-group">
                 <label for="masina">Virtuelna masina:</label>
                 <select class="form-control" id="masina" name="masina" type="text" 
@@ -69,6 +87,7 @@ Vue.component("add-drive-form",{
                     <option v-for="virtual in virtualMachines">{{virtual.name}}</option>
                 </select>
             </div>
+
         </fieldset>
         </form>
         </div>
@@ -84,8 +103,44 @@ Vue.component("add-drive-form",{
     methods : {
         setEditedDrive : function(selectedDrive){
             this.backup = {...selectedDrive};
-            this.dict.edit = selectedDrive;
-            this.dict.edit.vm.name = selectedDrive.vm.name;
+            this.dict.edit = selectedDrive;   
+            if('vm' in this.dict.edit){
+                this.dict.edit.vm.name = selectedDrive.vm.name;
+            }
+            else{
+                this.dict.edit.vm = {name : ""};
+            }
+
+        },
+
+        setUpForAdding : function(){
+            if(this.role == 'SUPER_ADMIN'){
+                this.setUpMachines();
+            }
+            else{
+                this.getAdminMachines();
+            }
+        },
+        getAdminMachines : function(){
+            axios
+            .get("/getMachines/" + localStorage.getItem("email"))
+            .then(response => {
+                this.virtualMachines = response.data;
+            });
+        },
+        setUpMachines : function(){
+            var e = document.getElementById("organizationSelect");
+            var selectedOrgName = e.options[e.selectedIndex].text;
+            this.dict[this.modal].organization.name = selectedOrgName;
+            this.getOrgMachines(selectedOrgName);
+        },
+
+        getOrgMachines : function(orgName){
+            axios
+            .get("getSelectedMachines/" + orgName)
+            .then(response =>{
+                this.virtualMachines = response.data;
+            })
         },
         addDrive : function(){
             var self = this;
@@ -97,9 +152,12 @@ Vue.component("add-drive-form",{
                 if(!this.checkNumber(this.dict.add.capacity)){
                     return;
                 }
+                if(this.role == 'ADMIN'){
+                    this.dict.add.organization.name = "";
+                }
                 axios
                 .post("/addDrive", {"name" : '' + this.dict.add.name, "type" : '' + this.dict.add.type,
-                       "capacity" : '' + this.dict.add.capacity, "vm" : '' + this.dict.add.vm.name})
+                       "capacity" : '' + this.dict.add.capacity, "vm" : '' + this.dict.add.vm.name, "organization" : '' + this.dict.add.organization.name})
                 .then(response =>{
                     this.$emit("driveAdded",response.data);
                     toast("Succesfully added");
@@ -174,8 +232,18 @@ Vue.component("add-drive-form",{
             }
             return true;
         },
-        mounted(){
-            
+        getOrganizations : function(){
+            axios
+            .get("/getOrganizations")
+            .then(response => {
+                this.organizations = response.data
+            });
         }
+        
+    },
+    mounted(){
+        
+        this.role = localStorage.getItem("role");
+        this.getOrganizations();
     }
 })

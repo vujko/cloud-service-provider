@@ -32,14 +32,14 @@ Vue.component("organization-form", {
                     <input class="form-control" id="org_desc" placeholder="Description" name="description" type="text" v-model="org_input.description" required>
                 </div>
 
-                <div >
+                <!-- <div >
                     <label>Avilable Disks:</label>
                     <div>
                     <select class="mdb-select md-form form-control" id="diskSelect" multiple  style="width:450px" >
                         <option v-for="d in disks">{{d.name}}</option>
                     </select>
                     </div>
-                </div>
+                </div> -->
 
 
                 <div class="border">

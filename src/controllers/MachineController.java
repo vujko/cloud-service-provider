@@ -16,6 +16,7 @@ public class MachineController {
 		public String name;
 		public String categoryName;
 		public ArrayList<String> disks;
+		public String orgName;
 	}
 
 	public class MachineToUpdate{
@@ -43,7 +44,8 @@ public class MachineController {
 	public static Route addMachine = (Request req, Response res) ->{
 		MachineToAdd vma = App.g.fromJson(req.body(), MachineToAdd.class);
 		res.type("application/json");
-		if(MachineService.addMachine(vma)){
+		String email = req.session(false).attribute("email");
+		if(MachineService.addMachine(email, vma)){
 			res.status(200);
 			return true;
 		}
