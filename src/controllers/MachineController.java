@@ -23,6 +23,8 @@ public class MachineController {
 		public String newName;
 		public String categoryName;
 		public ArrayList<String> disks;
+		public boolean activity;
+		public ArrayList<String> deletedItems;
 	}
 	public class Filter{
 		public Set<String> core;

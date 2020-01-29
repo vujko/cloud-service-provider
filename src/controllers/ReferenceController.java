@@ -41,11 +41,13 @@ public class ReferenceController {
     private static void connectOrganizationsWithMachines(){
         for(Organization org : App.orgService.getOrganizations()){
             for(VirtualMachine vm : App.machineService.getMachines()){
-                if(vm.getOrganization().getName().equals(org.getName())){
-                    vm.setOrganization(org);
-                    org.addMachine(vm);
-                    vm.getDrives().forEach((d) -> d.setOrganization(org));
-                }
+            	if(vm.getOrganization() != null) {
+	                if(vm.getOrganization().getName().equals(org.getName())){
+	                    vm.setOrganization(org);
+	                    org.addMachine(vm);
+	                    vm.getDrives().forEach((d) -> d.setOrganization(org));
+	                }
+            	}
             }
         }
     }

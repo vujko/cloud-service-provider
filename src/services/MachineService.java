@@ -4,6 +4,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +18,7 @@ import com.google.gson.stream.JsonReader;
 import controllers.MachineController.Filter;
 import controllers.MachineController.MachineToAdd;
 import controllers.MachineController.MachineToUpdate;
-
+import model.DateActivity;
 import model.Drive;
 import model.User;
 import model.User.Role;
@@ -109,7 +112,7 @@ public class MachineService {
 		return true;
 	}
 
-	public static boolean updateMachine(MachineToUpdate mtu){
+	public static boolean updateMachine(MachineToUpdate mtu) throws ParseException{
 		VirtualMachine vm = getMachine(mtu.oldName);
 		if(!mtu.oldName.equals(mtu.newName)){
 			if(machineExsists(mtu.newName)){
@@ -117,6 +120,27 @@ public class MachineService {
 			}
 		}
 		vm.setName(mtu.newName);
+		//aktivnost
+		if(mtu.activity != vm.isActivity()) {
+			vm.setActivity(mtu.activity);
+			if(mtu.activity) {
+				DateActivity dact = new DateActivity();
+				dact.setStartActivity(new Date());   //current time
+				vm.getListOfActivities().add(dact);
+			}else {
+				DateActivity dact = vm.getListOfActivities().get(vm.getListOfActivities().size() - 1);
+				dact.setEndActivity(new Date());
+			}
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy hh:mm:ss a");
+		if(mtu.deletedItems.size() != 0) {
+			for(String del : mtu.deletedItems) {
+				Date date = sdf.parse(del);
+				System.out.println(del);
+				vm.getListOfActivities().removeIf(dact -> dact.getStartActivity().equals(date));			
+			}
+		}
+			
 		vm.setCategory(CategoryService.getCategory(mtu.categoryName));
 		vm.clearDisks();
 		for(String diskName : mtu.disks){
@@ -164,7 +188,7 @@ public class MachineService {
 				HashSet<VirtualMachine> vm = getMachineCore(4,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
-						filteredCore.add(v);
+						filteredCore.add(v);//
 				}
 			}
 			else if(arg.equals("8core")) {

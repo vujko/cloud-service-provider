@@ -9,7 +9,8 @@ Vue.component("vm-form", {
                     cores : null,
                     ram : null,
                     gpus : null,
-                }
+                },
+                listOfActivities : []
             },
             dict : {
                 add : {
@@ -28,14 +29,17 @@ Vue.component("vm-form", {
                         cores : null,
                         ram : null,
                         gpus : null,
-                    }
+                    },
+                    listOfActivities : []
                 },
 
             },
             categories : null,
             drives : null,
             selectedDrives : null,
-            orgDrives : null
+            orgDrives : null,
+            selectedActivity : "",
+            deleteItems : []
         }
     },
 
@@ -96,8 +100,28 @@ Vue.component("vm-form", {
                         <input class="form-control" id="vm_gpus" name="name" v-model="dict[modal].category.gpus" style="width:70px; height : 35px; margin-right: 25px;" disabled>
                     </div>
                 </form>              
-                
-                
+                <div v-if="modal == 'edit'" class="form-group" style="margin-top : 20px" >
+                    <input type="checkbox" id="activity" v-model="dict[modal].activity">
+                    <label for="activity">On</label>
+                </div>
+                <div>
+                    <label>Lista aktivnosti:</label>
+                    <div>
+                    <select class="custom-select" id="selectAct" v-model="selectedActivity">
+                        <option disabled value="">Please select one</option>
+                        <option v-for="act in dict[modal].listOfActivities">
+                            {{act.startActivity +'--' + (act.endActivity == undefined ? "" : act.endActivity)}}  </option>
+                    </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" 
+                        v-bind:disabled="selectedActivity==''" v-on:click="editAct()">
+                        Edit this activity</button>
+                    <button type="button" class="btn btn-sm btn-primary" 
+                    v-bind:disabled="selectedActivity==''" v-on:click="deleteAct()">
+                    Delete this activity</button>
+                </div>
             </fieldset>
             </form>
         </div>
@@ -109,10 +133,26 @@ Vue.component("vm-form", {
         </div>
         </div>
     </div>
+    <activity-form ref="activity"></activity-form>
     </div>`
     ,
     methods : {
-
+        editAct : function(){
+            this.$refs.activity.setEdit(this.selectedActivity);
+            $("#actModal").modal("show");
+        },
+        deleteAct : function() {
+            var dateActivity = this.getSelectedActivity();
+            var filtered = this.dict.edit.listOfActivities.filter(item => item.startActivity != dateActivity.startActivity);
+            this.dict.edit.listOfActivities = filtered;
+            this.deleteItems.push(dateActivity.startActivity);
+            this.selectedActivity = "";
+        },
+        getSelectedActivity : function(){
+            var splited = this.selectedActivity.split("--");
+            var dateActivity = {"startActivity" : splited[0],"endActivity" : splited[1]};
+            return dateActivity;
+        },
         setEditedMachine : function(selectedMachine){
             this.backup = {...selectedMachine};
             this.dict.edit = selectedMachine;
@@ -168,7 +208,9 @@ Vue.component("vm-form", {
 
         cancelUpdate : function(){
             this.dict.edit.name = this.backup.name;
+            this.dict.edit.activity = this.backup.activity;
             this.dict.edit.category = this.backup.category;
+            this.dict.edit.listOfActivities = this.backup.listOfActivities;
             this.selectedDrives.forEach(element => {
                 document.getElementById(element.name).selected = true;
             })
@@ -218,10 +260,14 @@ Vue.component("vm-form", {
                 }
 
                 axios
-                .post("/updateMachine", {"oldName" : '' + self.backup.name, "newName" : '' + self.dict.edit.name, "categoryName" : '' + self.dict.edit.category.name, "disks" : selectedDisks})
+                .post("/updateMachine", {"oldName" : '' + self.backup.name, "newName" : '' + self.dict.edit.name, 
+                        "categoryName" : '' + self.dict.edit.category.name, "disks" : selectedDisks,
+                        "activity" : self.dict.edit.activity,"deletedItems" : self.deleteItems})
                 .then(response => {
                     $("#vmModal").modal('hide');
                     self.resetNameField();
+                    self.$parent.getMachines();
+                    self.$parent.selectedMachine = null;
                     toast("Successfully updated virtual machine");
                 })
                 .catch(error => {
