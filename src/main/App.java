@@ -49,7 +49,7 @@ public class App {
 		staticFiles.externalLocation(new File("./WebContent").getCanonicalPath()); 
 		
 
-		post("/login", LoginController.handleLogin);
+		post("/login", LoginController.handleLogin);	
 		post("/verify", LoginController.verifyLogin);
 		post("/logout", LoginController.handleLogout);
 		get("/ensureLogin", LoginController.ensureLogin);

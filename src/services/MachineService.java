@@ -12,6 +12,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import controllers.MachineController.Filter;
 import controllers.MachineController.MachineToAdd;
 import controllers.MachineController.MachineToUpdate;
 
@@ -152,48 +153,59 @@ public class MachineService {
 		}
 		return searched;
 	}
-	public static Set<VirtualMachine> filterVM(String[] checked){
+	public static Set<VirtualMachine> filterVM(Filter checked,String email){
 		HashSet<VirtualMachine> filteredCore = new HashSet<VirtualMachine>();
 		HashSet<VirtualMachine> filteredRam = new HashSet<VirtualMachine>();
 		HashSet<VirtualMachine> filteredGpu = new HashSet<VirtualMachine>();
-		if(checked.length == 12)
-			return machines;
-		if(checked[0].equals("prazna"))
-			return machines;
+		User user = UserService.getUser(email);
 		
-		for(String arg : checked) {
+		if(checked.core.size() == 3 && checked.ram.size() == 3 && checked.gpu.size() == 3) {
+			if(user.getRole()==User.Role.SUPER_ADMIN)
+				return machines;
+			else {
+				return new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
+			}
+		}	
+		if(checked.core.size() == 0 && checked.ram.size() == 0 && checked.gpu.size() == 0) {
+			if(user.getRole()==User.Role.SUPER_ADMIN)
+				return machines;
+			else {
+				return new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
+		}
+		}
+		for(String arg : checked.core) {
 			if(arg.equals("4core")) {
-				HashSet<VirtualMachine> vm = getMachineCore(4);
+				HashSet<VirtualMachine> vm = getMachineCore(4,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredCore.add(v);
 				}
 			}
 			else if(arg.equals("8core")) {
-				HashSet<VirtualMachine> vm = getMachineCore(8);
+				HashSet<VirtualMachine> vm = getMachineCore(8,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredCore.add(v);
 				}
 			}
 			else if(arg.equals("16core")) {
-				HashSet<VirtualMachine> vm = getMachineCore(16);
+				HashSet<VirtualMachine> vm = getMachineCore(16,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredCore.add(v);
 				}
 			}
 			else if(arg.equals("32core")) {
-				HashSet<VirtualMachine> vm = getMachineCore(32);
+				HashSet<VirtualMachine> vm = getMachineCore(32,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredCore.add(v);
 				}
 			}
 		}
-		for(String arg: checked) {
+		for(String arg: checked.ram) {
 			if(arg.equals("4gb")) {
-				HashSet<VirtualMachine> vm = getMachineRam(4);
+				HashSet<VirtualMachine> vm = getMachineRam(4,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredRam.add(v);
@@ -201,30 +213,30 @@ public class MachineService {
 					
 			}
 			else if(arg.equals("8gb")) {
-				HashSet<VirtualMachine> vm = getMachineRam(8);
+				HashSet<VirtualMachine> vm = getMachineRam(8,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredRam.add(v);
 				}
 			}
 			else if(arg.equals("16gb")) {
-				HashSet<VirtualMachine> vm = getMachineRam(16);
+				HashSet<VirtualMachine> vm = getMachineRam(16,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredRam.add(v);
 				}
 			}
 			else if(arg.equals("32gb")) {
-				HashSet<VirtualMachine> vm = getMachineRam(32);
+				HashSet<VirtualMachine> vm = getMachineRam(32,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredRam.add(v);
 				}
 			}
 		}
-		for(String arg : checked) {
+		for(String arg : checked.gpu) {
 			if(arg.equals("4gpu")) {
-				HashSet<VirtualMachine> vm = getMachineGpu(4);
+				HashSet<VirtualMachine> vm = getMachineGpu(4,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredGpu.add(v);
@@ -232,74 +244,95 @@ public class MachineService {
 					
 			}
 			else if(arg.equals("8gpu")) {
-				HashSet<VirtualMachine> vm = getMachineGpu(8);
+				HashSet<VirtualMachine> vm = getMachineGpu(8,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredGpu.add(v);
 				}
 			}
 			else if(arg.equals("16gpu")) {
-				HashSet<VirtualMachine> vm = getMachineGpu(16);
+				HashSet<VirtualMachine> vm = getMachineGpu(16,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredGpu.add(v);
 				}
 			}
 			else if(arg.equals("32gpu")) {
-				HashSet<VirtualMachine> vm = getMachineGpu(32);
+				HashSet<VirtualMachine> vm = getMachineGpu(32,user);
 				if(vm.size() != 0) {
 					for(VirtualMachine v : vm)
 						filteredGpu.add(v);
 				}
 			}
 		}
-		if(filteredCore.size() != 0 && filteredRam.size() != 0 && filteredGpu.size()!=0) {
+		if(checked.core.size() != 0 && checked.ram.size() != 0 && checked.gpu.size()!=0) {
 			filteredCore.retainAll(filteredRam);
 			if(filteredCore.size()!=0)
 				filteredCore.retainAll(filteredGpu);
 			return filteredCore;
 		}
-		if(filteredCore.size() != 0 && filteredRam.size() != 0) {
+		if(checked.core.size() != 0 && checked.ram.size() != 0) {
 			filteredCore.retainAll(filteredRam);
 			return filteredCore;
 		}
-		if(filteredCore.size() != 0 && filteredGpu.size() != 0) {
+		if(checked.core.size() != 0 && checked.gpu.size() != 0) {
 			filteredCore.retainAll(filteredGpu);
 			return filteredCore;
 		}
-		if(filteredRam.size() != 0 && filteredGpu.size() != 0) {
+		if(checked.ram.size() != 0 && checked.gpu.size() != 0) {
 			filteredRam.retainAll(filteredGpu);
 			return filteredRam;
 		}
-		if(filteredRam.size() != 0)
-			return filteredRam;
-		if(filteredGpu.size() != 0)
-			return filteredGpu;
 		
-		return filteredCore;
+		if(filteredRam.size() != 0 && checked.core.size() == 0 && checked.gpu.size() == 0)
+			return filteredRam;
+		if(filteredGpu.size() != 0 && checked.core.size() == 0 && checked.ram.size() == 0)
+			return filteredGpu;
+		if(filteredCore.size() != 0 && checked.ram.size()==0 && checked.gpu.size() == 0)
+			return filteredCore;
+		
+		return new HashSet<VirtualMachine>();
 	}
 	
-	public static HashSet<VirtualMachine> getMachineCore(int cores) {
+	public static HashSet<VirtualMachine> getMachineCore(int cores,User user) {
 		HashSet<VirtualMachine> vms = new HashSet<VirtualMachine>();
-		for(VirtualMachine vm : machines) {
+		Set<VirtualMachine> machiness = new HashSet<VirtualMachine>();
+		if(user.getRole() == User.Role.SUPER_ADMIN) {
+			machiness = machines;
+		}else {
+			machiness = new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
+		}
+		for(VirtualMachine vm : machiness) {
 			if(vm.getCategory().getCores() == cores) {
 				vms.add(vm);
 			}
 		}
 		return vms;
 	}
-	public static HashSet<VirtualMachine> getMachineRam(int rams) {
+	public static HashSet<VirtualMachine> getMachineRam(int rams,User user) {
 		HashSet<VirtualMachine> vms = new HashSet<VirtualMachine>();
-		for(VirtualMachine vm : machines) {
+		Set<VirtualMachine> machiness = new HashSet<VirtualMachine>();
+		if(user.getRole() == User.Role.SUPER_ADMIN) {
+			machiness = machines;
+		}else {
+			machiness = new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
+		}
+		for(VirtualMachine vm : machiness) {
 			if(vm.getCategory().getRam() == rams) {
 				vms.add(vm);
 			}
 		}
 		return vms;
 	}
-	public static HashSet<VirtualMachine> getMachineGpu(int gpu) {
+	public static HashSet<VirtualMachine> getMachineGpu(int gpu,User user) {
 		HashSet<VirtualMachine> vms = new HashSet<VirtualMachine>();
-		for(VirtualMachine vm : machines) {
+		Set<VirtualMachine> machiness = new HashSet<VirtualMachine>();
+		if(user.getRole() == User.Role.SUPER_ADMIN) {
+			machiness = machines;
+		}else {
+			machiness = new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
+		}
+		for(VirtualMachine vm : machiness) {
 			if(vm.getCategory().getGpus() == gpu) {
 				vms.add(vm);
 			}

@@ -90,6 +90,15 @@ public class VirtualMachine {
 		}
 		this.drives = new HashSet<Drive>();
 	}
+
+	public void deleteDrive(Drive d){
+		drives.forEach(driveToDelete -> {
+			if(driveToDelete.getName().equals(d.getName())){
+				driveToDelete = null;
+				
+			}
+		});
+	}
 	
 	
 	

@@ -68,7 +68,8 @@ Vue.component("drives",{
 
         },
         addDrive : function(drive){
-            this.drives.push(drive);
+            //this.drives.push(drive);
+            this.getDrives();
         },
         search : function(drive){           
             var self = this;

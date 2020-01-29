@@ -4,7 +4,9 @@ Vue.component("side-bar",{
             page : null,
             checkedDrives : [],
             type : [],
-            checkedVM : [],
+            checkedCore : [],
+            checkedRam : [],
+            checkedGpu : [],
             role : null
         }
     },
@@ -62,39 +64,39 @@ Vue.component("side-bar",{
                     <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">Broj jezgara</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu3">
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id="4core" value="4core" v-model="checkedVM">4</li>
+                            <input type="checkbox" id="4core" value="4core" v-model="checkedCore">4</li>
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="8core" value="8core" v-model="checkedVM">8</li>
+                            <input type="checkbox" id ="8core" value="8core" v-model="checkedCore">8</li>
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="16core" value="16core" v-model="checkedVM">16</li>
+                            <input type="checkbox" id ="16core" value="16core" v-model="checkedCore">16</li>
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="32core" value="32core" v-model="checkedVM">32</li>
+                            <input type="checkbox" id ="32core" value="32core" v-model="checkedCore">32</li>
                     </ul>
                 </li>
                 <li v-if="page=='HOMEPAGE'" class="nav-item">
                     <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">RAM</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu4">
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id="4GB" value="4gb" v-model="checkedVM">4GB</li>
+                            <input type="checkbox" id="4GB" value="4gb" v-model="checkedRam">4GB</li>
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="8GB" value="8gb" v-model="checkedVM">8GB</li>
+                            <input type="checkbox" id ="8GB" value="8gb" v-model="checkedRam">8GB</li>
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="16GB" value="16bg" v-model="checkedVM">16GB</li>
+                            <input type="checkbox" id ="16GB" value="16bg" v-model="checkedRam">16GB</li>
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="32GB" value="32gb" v-model="checkedVM">32GB</li>
+                            <input type="checkbox" id ="32GB" value="32gb" v-model="checkedRam">32GB</li>
                     </ul>
                 </li>
                 <li v-if="page=='HOMEPAGE'" class="nav-item">
                     <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">Broj GPU</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu5">
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id="4GPU" value="4gpu" v-model="checkedVM">4</li>
+                            <input type="checkbox" id="4GPU" value="4gpu" v-model="checkedGpu">4</li>
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="8GPU" value="8gpu" v-model="checkedVM">8</li>
+                            <input type="checkbox" id ="8GPU" value="8gpu" v-model="checkedGpu">8</li>
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="16GPU" value="16gpu" v-model="checkedVM">16</li>
+                            <input type="checkbox" id ="16GPU" value="16gpu" v-model="checkedGpu">16</li>
                         <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="32GPU" value="32gpu" v-model="checkedVM">32</li>
+                            <input type="checkbox" id ="32GPU" value="32gpu" v-model="checkedGpu">32</li>
                     </ul>
                 </li>
                 &nbsp;
@@ -123,7 +125,7 @@ Vue.component("side-bar",{
             EventBus.$emit("filterCapacity",this.checkedDrives,this.type);  
         },
         filterVM : function(){
-            EventBus.$emit("filterVM",this.checkedVM);  
+            EventBus.$emit("filterVM",this.checkedCore,this.checkedRam,this.checkedGpu);  
         }
     },
     mounted(){

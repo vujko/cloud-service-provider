@@ -25,7 +25,12 @@ public class MachineController {
 		public String categoryName;
 		public ArrayList<String> disks;
 	}
-
+	public class Filter{
+		public Set<String> core;
+		public Set<String> ram;
+		public Set<String> gpu;
+	}
+	
 	public static Route getAllMachines = (Request request, Response response) ->{
 		response.type("application/json");
 		return App.g.toJson(App.machineService.getMachines());
@@ -83,8 +88,9 @@ public class MachineController {
 	};
 	public static Route filter = (Request req, Response res)->{
 		res.type("application/json");
-		String[] checked = App.g.fromJson(req.body(), String[].class);
-		Set<VirtualMachine> filtered = MachineService.filterVM(checked);
+		Filter checked = App.g.fromJson(req.body(), Filter.class);
+		String email = req.session(false).attribute("email");
+		Set<VirtualMachine> filtered = MachineService.filterVM(checked,email);
 		
 		if(filtered.size() != 0) {
 			res.status(200);

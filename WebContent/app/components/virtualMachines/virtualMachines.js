@@ -85,12 +85,12 @@ Vue.component("vm", {
                 alert("Nema rezultata pretrage");
             })
         },
-        filter : function(filterArg){
-            if(!filterArg.length) 
-                filterArg = ["prazna"];
+        filter : function(filterCore,filterRam,filterGpu){
+            // if(!filterArg.length) 
+            //     filterArg = ["prazna"];
             var self = this; 
             axios
-            .post("/VMfilter",filterArg)
+            .post("/VMfilter",{"core" : filterCore, "ram": filterRam, "gpu":filterGpu})
             .then(function(response){
                 self.machines = response.data;
             })

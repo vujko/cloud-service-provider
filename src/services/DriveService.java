@@ -23,11 +23,11 @@ import model.VirtualMachine;
 
 
 public class DriveService {
-	private static final String Path = "./data/drives.json";
+	private static final String path = "./data/drives.json";
 	private static Gson g = new Gson();
-	private static Set<Drive> drives = loadDrives(Path);
+	private static Set<Drive> drives = loadDrives();
 		
-	public static Set<Drive> loadDrives(String path){
+	public static Set<Drive> loadDrives(){
 		Set<Drive> drivess = new HashSet<Drive>();
 		
 		try {
@@ -83,7 +83,7 @@ public class DriveService {
 
 			}
 			drives.add(drive);
-			saveDrives(Path);
+			saveDrives();
 			return drive;
 		}
 		return null;
@@ -96,7 +96,7 @@ public class DriveService {
 			removeDriveFromMachines(name);
 			OrganizationService.saveOrganizations();
 			MachineService.saveMachines();		
-			saveDrives(Path);
+			saveDrives();
 			return true;
 		}
 		return false;
@@ -138,7 +138,7 @@ public class DriveService {
 		VirtualMachine vm = MachineService.getMachine(update.vm);
 		drive.setVm(vm);
 		vm.addDrive(drive);
-		saveDrives(Path);
+		saveDrives();
 		return true;
 	}
 	
@@ -211,7 +211,7 @@ public class DriveService {
 		return filteredType;
 	}
 	
-	public static void saveDrives(String path) {
+	public static void saveDrives() {
 		try {
 			FileWriter writer = new FileWriter(path);
 			String json = g.toJson(drives);
