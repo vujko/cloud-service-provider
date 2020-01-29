@@ -15,6 +15,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import controllers.MachineController.Act;
 import controllers.MachineController.Filter;
 import controllers.MachineController.MachineToAdd;
 import controllers.MachineController.MachineToUpdate;
@@ -125,7 +126,23 @@ public class MachineService {
 		saveMachines();
 		return true;
 	}
-
+	public static VirtualMachine changeActivity(Act vm) {
+		VirtualMachine virtual_machine = getMachine(vm.name);
+		if(vm.activity != virtual_machine.isActivity()) {
+			virtual_machine.setActivity(vm.activity);
+			if(vm.activity) {
+				DateActivity dact = new DateActivity();
+				dact.setStartActivity(new Date());   //current time
+				virtual_machine.getListOfActivities().add(dact);
+			}else {
+				DateActivity dact = virtual_machine.getListOfActivities().get(virtual_machine.getListOfActivities().size() - 1);
+				dact.setEndActivity(new Date());
+			}
+		}
+		saveMachines();
+		return virtual_machine;
+	}
+	
 	public static boolean updateMachine(MachineToUpdate mtu) throws ParseException{
 		VirtualMachine vm = getMachine(mtu.oldName);
 		if(!mtu.oldName.equals(mtu.newName)){
@@ -135,17 +152,7 @@ public class MachineService {
 		}
 		vm.setName(mtu.newName);
 		//aktivnost
-		if(mtu.activity != vm.isActivity()) {
-			vm.setActivity(mtu.activity);
-			if(mtu.activity) {
-				DateActivity dact = new DateActivity();
-				dact.setStartActivity(new Date());   //current time
-				vm.getListOfActivities().add(dact);
-			}else {
-				DateActivity dact = vm.getListOfActivities().get(vm.getListOfActivities().size() - 1);
-				dact.setEndActivity(new Date());
-			}
-		}
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy hh:mm:ss a");
 		if(mtu.deletedItems.size() != 0) {
 			for(String del : mtu.deletedItems) {

@@ -100,12 +100,19 @@ Vue.component("side-bar",{
                     </ul>
                 </li>
                 &nbsp;
-                <li v-if="page=='DRIVES' || page=='HOMEPAGE'"> 
-                    <button type="button" v-if="page=='DRIVES'" class="btn btn-dark float-right" v-on:click="filterDrive()">Filtriraj</button>
-                    <button type="button" v-if="page=='HOMEPAGE'" class="btn btn-dark float-right" v-on:click="filterVM()">Filtriraj</button>
-                </li>
             </ul>
-
+            
+            <ul class="navbar-nav mr-auto">
+            <li v-if="page=='DRIVES' || page=='HOMEPAGE'" class="nav-item active">
+                <input class="form-control form-control-dark w-100" type="text" 
+                    placeholder="Search"  aria-label="Search">
+            </li>
+            &nbsp;
+            <li v-if="page=='DRIVES' || page=='HOMEPAGE'" class="nav-item active">
+                <button type="button" v-if="page=='DRIVES'" class="btn btn-dark float-right btn-sm" @click="filterDrive()"> Pretrazi </button>
+                <button type="button" v-if="page=='HOMEPAGE'" class="btn btn-dark float-right btn-sm" v-on:click="filterVM()"> Pretrazi </button>
+            </li>
+            </ul>
         </div>
     </nav>
     `,

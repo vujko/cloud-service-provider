@@ -119,8 +119,9 @@ Vue.component("vm-form", {
                     </div>
                 </form>              
                 <div v-if="modal == 'edit'" class="form-group" style="margin-top : 20px" >
-                    <input type="checkbox" id="activity" v-model="dict[modal].activity">
-                    <label for="activity">On</label>
+                    <switch-button v-model="dict[modal].activity" @toggle="toggleEmit">
+                    {{dict[modal].activity ? "Turned on" : "Turned off"}}
+                    </switch-button>
                 </div>
                 <div>
                     <label>Lista aktivnosti:</label>
@@ -291,7 +292,7 @@ Vue.component("vm-form", {
                 axios
                 .post("/updateMachine", {"oldName" : '' + self.backup.name, "newName" : '' + self.dict.edit.name, 
                         "categoryName" : '' + self.dict.edit.category.name, "disks" : selectedDisks,
-                        "activity" : self.dict.edit.activity,"deletedItems" : self.deleteItems})
+                        "deletedItems" : self.deleteItems})
                 .then(response => {
                     $("#vmModal").modal('hide');
                     self.resetNameField();
@@ -333,6 +334,14 @@ Vue.component("vm-form", {
             .get("/getOrganizations")
             .then(response => {
                 this.organizations = response.data;
+            })
+        },
+        toggleEmit : function(){
+            var self = this;
+            axios
+            .post("/changeActivity", {"name" : '' + self.backup.name, "activity" : ''+ self.dict.edit.activity})
+            .then(response =>{
+                self.dict.edit.listOfActivities = response.data;
             })
         }
     },

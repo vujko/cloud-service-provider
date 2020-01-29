@@ -24,8 +24,11 @@ public class MachineController {
 		public String newName;
 		public String categoryName;
 		public ArrayList<String> disks;
-		public boolean activity;
 		public ArrayList<String> deletedItems;
+	}
+	public class Act{
+		public String name;
+		public boolean activity;
 	}
 	public class Filter{
 		public Set<String> core;
@@ -70,7 +73,14 @@ public class MachineController {
 		res.status(400);
 		return false;
 	};
-
+	
+	public static Route changeActivity = (Request req, Response res) ->{
+		Act vm = App.g.fromJson(req.body(), Act.class);
+		res.type("application/json");
+		VirtualMachine virtual_machine = App.machineService.changeActivity(vm);
+		res.status(200);
+		return App.g.toJson(virtual_machine.getListOfActivities());
+	};
 
 	public static Route deleteMachine = (Request req, Response res) -> {
 		res.type("application/json");

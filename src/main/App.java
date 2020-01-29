@@ -92,6 +92,7 @@ public class App {
 		get("/getSelectedDisks/:machineName", MachineController.getSelectedDisks);
 		post("/updateMachine", MachineController.updateMachine);
 		post("/deleteMachine", MachineController.deleteMachine);
+		post("/changeActivity",MachineController.changeActivity);
 		
 		get("/getSelectedMachines/:orgName", OrganizationControlller.getSelectedMachines);
 		post("/searchVM", MachineController.search);
