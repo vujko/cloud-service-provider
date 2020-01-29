@@ -174,8 +174,10 @@ Vue.component("vm-form", {
         setEditedMachine : function(selectedMachine){
             this.backup = {...selectedMachine};
             this.dict.edit = selectedMachine;
-            var e = document.getElementById("categorySelect");
-            e.value = selectedMachine.category.name;
+            var categorySelect = document.getElementById("categorySelect");
+            categorySelect.value = selectedMachine.category.name;
+            var orgSelect = document.getElementById("organizationSelect");
+            orgSelect.value = selectedMachine.organization.name;
             this.setCategoryParams();
             if('organization' in selectedMachine){
                 this.getDrivesWithoutVM(selectedMachine.organization.name);
