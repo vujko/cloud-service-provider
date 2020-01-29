@@ -143,6 +143,20 @@ public class MachineService {
 		return true;
 	}
 
+	public boolean deleteMachine(String name){
+		if(machineExsists(name)){
+			VirtualMachine vm = getMachine(name);
+			vm.clearDisks();
+			DriveService.saveDrives();
+			vm.getOrganization().getVirtualMachines().remove(vm);
+			OrganizationService.saveOrganizations();
+			machines.remove(vm);
+			saveMachines();
+			return true;
+		}
+		return false;
+	}
+
 	public static Set<VirtualMachine> searchMachine(String arg){
 		HashSet<VirtualMachine> searched = new HashSet<VirtualMachine>();
 		if(arg == null)

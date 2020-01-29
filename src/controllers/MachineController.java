@@ -69,6 +69,17 @@ public class MachineController {
 		return false;
 	};
 
+
+	public static Route deleteMachine = (Request req, Response res) -> {
+		res.type("application/json");
+		if(App.machineService.deleteMachine(req.body())){
+			res.status(200);
+			return true;
+		}
+		res.status(400);
+		return false;
+	};
+
 	public static Route getAvilableMachines = (Request req, Response res) ->{
 		res.type("application/json");
 		return App.g.toJson(App.machineService.getAvilableMachines());
