@@ -6,6 +6,7 @@ import java.util.Set;
 import main.App;
 import model.Drive;
 import model.Drive.DriveType;
+import services.DriveService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -78,7 +79,7 @@ public class DriveController {
 		//ArrayList<Boolean> checked = (ArrayList<Boolean>)App.g.fromJson(req.body(),new TypeToken<ArrayList<Boolean>>(){}.getType());
 		String email = req.session(false).attribute("email");
 		Filter checked = App.g.fromJson(req.body(),Filter.class);
-		Set<Drive> filtered = App.driveService.filterCapacity(checked,email);
+		Set<Drive> filtered = DriveService.filterCapacity(checked,email);
 		if(filtered.size() != 0) {
 			res.status(200);
 			return App.g.toJson(filtered);

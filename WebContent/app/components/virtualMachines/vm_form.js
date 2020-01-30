@@ -196,6 +196,7 @@ Vue.component("vm-form", {
                 this.getDrivesWithoutVM(selectedMachine.organization.name);
             }
             this.getSelectedDrives(selectedMachine.name);
+            this.deleteItems = [];
             
         },
 

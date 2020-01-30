@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +17,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import controllers.MachineController.Act;
-import controllers.MachineController.Filter;
 import controllers.MachineController.FilterVM;
 import controllers.MachineController.MachineToAdd;
 import controllers.MachineController.MachineToUpdate;
@@ -158,7 +158,10 @@ public class MachineService {
 		if(mtu.deletedItems.size() != 0) {
 			for(String del : mtu.deletedItems) {
 				Date date = sdf.parse(del);
-				vm.getListOfActivities().removeIf(dact -> dact.getStartActivity().equals(date));			
+				vm.getListOfActivities().removeIf(dact -> (
+					sdf.format(dact.getStartActivity()).equals(sdf.format(date))
+				));							
+				
 			}
 		}
 			
