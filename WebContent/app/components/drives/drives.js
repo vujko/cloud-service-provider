@@ -36,13 +36,17 @@ Vue.component("drives",{
         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" v-on:click="driveAdd" v-if="role!='USER'">
             Add drive
         </button>
-        <button type="button" class="btn btn-primary btn-sm" v-on:click="editDrive" v-bind:disabled="selectedDrive==null">
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="editDrive" v-bind:disabled="selectedDrive==null" v-if="role!='USER'">
             Edit Drive
         </button>
         <button type="button" v-if="role!='USER'"
          class="btn btn-primary btn-sm" v-on:click="deleteDrive" v-bind:disabled="selectedDrive==null">
             Delete
-            </button>
+        </button>
+
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="showDrive()" v-bind:disabled="selectedDrive==null" v-if="role == 'USER'">
+            Show details
+        </button>
         <!-- Modal -->
         <add-drive-form @driveAdded="addDrive($event)" ref="addDriveForm"></add-drive-form>
     </div>
@@ -96,6 +100,16 @@ Vue.component("drives",{
             })
             this.$refs.addDriveForm.setEditedDrive(this.selectedDrive);
             this.openDriveModal('edit');
+        },
+
+        showDrive : function(){
+            axios
+            .get("getSelectedMachines/" + this.selectedDrive.organization.name)
+            .then(response =>{
+                this.$refs.addDriveForm.virtualMachines = response.data;
+            })
+            this.$refs.addDriveForm.setUpForShowing(this.selectedDrive);
+            this.openDriveModal("show");
         },
         deleteDrive : function(){
             var self = this;

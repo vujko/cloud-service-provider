@@ -44,10 +44,6 @@ public class ReferenceController {
                 if(vm.getOrganization().getName().equals(org.getName())){
                     vm.setOrganization(org);
                     org.addMachine(vm);
-                    // vm.getDrives().forEach((d) -> {
-                    //     org.addDrive(d);
-                    //     d.setOrganization(org);
-                    // });
 
                 }
             }

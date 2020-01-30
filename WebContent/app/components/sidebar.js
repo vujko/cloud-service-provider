@@ -34,13 +34,13 @@ Vue.component("side-bar",{
                         Users
                 </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#/organizations"><span data-feather="shopping-cart"></span>
+                <li class="nav-item" v-if="role != 'USER'">
+                    <a class="nav-link" href="#/organizations" ><span data-feather="shopping-cart"></span>
                         Organizations
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#/categories"><span data-feather="categories"></span>
+                <li class="nav-item" v-if="role == 'SUPER_ADMIN'">
+                    <a class="nav-link" href="#/categories" ><span data-feather="categories"  ></span>
                         Categories
                     </a>
                 </li>

@@ -15,6 +15,13 @@ Vue.component("add-drive-form",{
                     capacity : "",
                     vm : {name : ""},
                     organization : {name : ""}
+                },
+                show : {
+                    name : "",
+                    type : "",
+                    capacity : "",
+                    vm : {name : ""},
+                    organization : {name : ""}
                 }
             },
             backup : {
@@ -38,8 +45,8 @@ Vue.component("add-drive-form",{
         <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="driveModalLabel" v-if="modal=='add'">Add a new Drive</h5>
-            <h5 class="modal-title" id="driveModalLabel" v-if="modal=='edit'">Edit   Drive</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <h5 class="modal-title" id="driveModalLabel" v-if="modal=='edit'">Edit Drive</h5>
+            <h5 class="modal-title" id="driveModalLabel" v-if="modal=='show'">Drive preview</h5>
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -68,7 +75,7 @@ Vue.component("add-drive-form",{
 
             <div class="form-group" v-bind:hidden="modal == 'edit' || role == 'ADMIN'">
                 <label for="masina">Organizacija:</label>
-                <select class="mdb-select md-form form-control" id="organizationSelect" style="width:450px" v-on:change="setUpMachines()">
+                <select class="mdb-select md-form form-control" id="organizationSelect" style="width:450px" v-on:change="setUpMachines()" v-bind:disabled="modal == 'show'" >
                     <option v-for="o in organizations" :value="o.name">{{o.name}}</option>
                 </select>
             </div>
@@ -94,7 +101,8 @@ Vue.component("add-drive-form",{
         <div class="modal-footer">
             <button type="button" v-if="modal=='add'" class="btn btn-primary" v-on:click="addDrive()">Add</button>
             <button type="button" v-if="modal=='edit' & role!='USER'" class="btn btn-primary" v-on:click="editDrive()">Save changes</button>
-            <button type="button" class="btn btn-secondary" v-on:click="cancel(modal)">Cancel</button>
+            <button type="button" v-if="modal != 'show'" class="btn btn-secondary" v-on:click="cancel(modal)">Cancel</button>
+            <button type="button" v-if="modal=='show'" class="btn btn-primary" v-on:click="closeModal()">Close</button>
         </div>
     </div>
     </div>
@@ -112,7 +120,16 @@ Vue.component("add-drive-form",{
             }
 
         },
-
+        
+        setUpForShowing : function(selectedDrive){
+            this.dict.show = selectedDrive;
+            if('vm' in this.dict.show){
+                this.dict.show.vm.name = selectedDrive.vm.name;
+            }
+            else{
+                this.dict.show.vm = {name : ""};
+            }
+        },
         setUpForAdding : function(){
             if(this.role == 'SUPER_ADMIN'){
                 this.setUpMachines();
@@ -120,6 +137,9 @@ Vue.component("add-drive-form",{
             else{
                 this.getAdminMachines();
             }
+        },
+        closeModal : function(){           
+            $("#driveModal").modal('hide');
         },
         getAdminMachines : function(){
             axios

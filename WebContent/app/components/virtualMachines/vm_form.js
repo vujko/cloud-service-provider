@@ -35,6 +35,16 @@ Vue.component("vm-form", {
                     listOfActivities : [],
                     organization : null
                 },
+                show : {
+                    name : "",
+                    category : {    
+                        name : "", 
+                        cores : null,
+                        ram : null,
+                        gpus : null,
+                    },
+                    organization : null
+                }
 
             },
             categories : null,
@@ -57,11 +67,16 @@ Vue.component("vm-form", {
         <div class="modal-header">
             <h5 class="modal-title" id="vmModalLabel" v-if="modal=='add'">Add a new Virtual Machine</h5>
             <h5 class="modal-title" id="vmModalLabel" v-if="modal=='edit'">Edit a Virtual Machine</h5>
+            <h5 class="modal-title" id="vmModalLabel" v-if="modal=='show'">Virtual Machine Preview</h5>
             <button type="button" class="close" v-on:click="clearFields()" v-if="modal=='add'" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
 
             <button type="button" class="close" v-on:click="cancelUpdate()" v-if="modal=='edit'" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+
+            <button type="button" class="close" v-on:click="closeModal()" v-if="modal=='show'" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -71,10 +86,10 @@ Vue.component("vm-form", {
             <fieldset>  
                 <div class="form-group">
                     <label>Name:</label>
-                    <input class="form-control" id="vm_name" name="name" type="name" v-model="dict[modal].name   " required><p id="name_err"></p>
+                    <input class="form-control" id="vm_name" name="name" type="name" v-model="dict[modal].name   "   v-bind:disabled="modal == 'show'" required><p id="name_err"></p>
                 </div>
 
-                <div class="form-group" v-if="role == 'SUPER_ADMIN'">
+                <div class="form-group" v-bind:hidden="!(role == 'SUPER_ADMIN')">
                     <label>Organization:</label>
                     <div>
                     <select class="mdb-select md-form form-control" id="organizationSelect" style="width:450px" v-on:change="setUpDisks()" v-bind:disabled="modal == 'edit'">
@@ -83,15 +98,15 @@ Vue.component("vm-form", {
                     </div>
                 </div>
 
-                <div >
+                <div >  
                     <label>Avilable Disks From Organization:</label>
                     <div>
                     <select class="mdb-select md-form form-control" id="diskSelect" multiple  style="width:450px" v-if="modal=='add'">
                         <option v-for="d in orgDrives">{{d.name}}</option>
                     </select>
 
-                    <select class="mdb-select md-form form-control" id="diskEditSelect" multiple  style="width:450px" v-else>
-                        <option :id="sd.name" v-for="sd in selectedDrives" selected>{{sd.name}}</option>
+                    <select class="mdb-select md-form form-control" id="diskEditSelect" multiple  style="width:450px" v-else   v-bind:disabled="modal == 'show'">
+                        <option :id="sd.name" v-for="sd in selectedDrives" v-bind:selected="modal != 'show'">{{sd.name}}</option>
                         <option :id="od.name" v-for="od in orgDrives">{{od.name}}</option>
                     </select>
                     </div>
@@ -100,7 +115,7 @@ Vue.component("vm-form", {
                 <div class="form-group">
                     <label>Category:</label>
                     <div>
-                    <select class="mdb-select md-form form-control" id="categorySelect" style="width:450px" v-on:change="setCategoryParams()">
+                    <select class="mdb-select md-form form-control" id="categorySelect" style="width:450px" v-on:change="setCategoryParams()"   v-bind:disabled="modal == 'show'">
                         <option v-for="c in categories" :value="c.name">{{c.name}}</option>
                     </select>
                     </div>
@@ -145,6 +160,7 @@ Vue.component("vm-form", {
             <button type="button" class="btn btn-secondary" v-if=" modal == 'add'" v-on:click="clearFields()" > Cancel </button>
             <button type="button" class="btn btn-primary" v-on:click="updateVm()" v-if="modal == 'edit'">Save changes</button>
             <button type="button" class="btn btn-secondary" v-on:click="cancelUpdate()" v-if="modal =='edit'">Cancel</button>
+            <button type="button" class="btn btn-secondary" v-on:click="closeModal()" v-if="modal =='show'">Close</button>
         </div>
         </div>
     </div>
@@ -181,6 +197,18 @@ Vue.component("vm-form", {
             }
             this.getSelectedDrives(selectedMachine.name);
             
+        },
+
+        closeModal : function(){
+            $("#vmModal").modal('hide');
+        },
+
+        setUpForShowing : function(selectedMachine){
+            this.dict.show = selectedMachine;
+            var categorySelect = document.getElementById("categorySelect");
+            categorySelect.value = selectedMachine.category.name;
+            this.setCategoryParams();
+            this.getSelectedDrives(selectedMachine.name);
         },
 
         getSelectedDrives : function(machineName){
@@ -236,6 +264,9 @@ Vue.component("vm-form", {
             this.dict.edit.listOfActivities = this.backup.listOfActivities;
             this.selectedDrives.forEach(element => {
                 document.getElementById(element.name).selected = true;
+            })
+            this.orgDrives.forEach(element => {
+                document.getElementById(element.name).selected = false;
             })
 
             $("#vmModal").modal('hide');

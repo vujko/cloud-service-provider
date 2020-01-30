@@ -1,12 +1,16 @@
 package controllers;
 
-import spark.Request;
-import spark.Response;
-
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import main.App;
 import model.Organization;
+import model.User;
+import model.User.Role;
+import services.UserService;
+import spark.Request;
+import spark.Response;
 import spark.Route;
 
 public class OrganizationControlller {
@@ -30,7 +34,15 @@ public class OrganizationControlller {
 
     public static Route getOrganizations = (Request req, Response res) -> {
         res.type("application/json");
-        return App.g.toJson(App.orgService.getOrganizations());
+        User user = UserService.getUser(req.session(false).attribute("email"));
+        if(user.getRole() == Role.ADMIN){
+            Set<Organization> result = new HashSet<Organization>();
+            result.add(user.getOrganization());
+            return App.g.toJson(result);
+        }
+        else{
+            return App.g.toJson(App.orgService.getOrganizations());
+        }
     };
 
     public static Route getSelectedMachines = (Request req, Response res) -> {
