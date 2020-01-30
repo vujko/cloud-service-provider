@@ -322,6 +322,7 @@ Vue.component("vm-form", {
                         "deletedItems" : self.deleteItems})
                 .then(response => {
                     $("#vmModal").modal('hide');
+                    self.deleteItems = []
                     self.resetNameField();
                     self.$parent.getMachines();
                     self.$parent.selectedMachine = null;

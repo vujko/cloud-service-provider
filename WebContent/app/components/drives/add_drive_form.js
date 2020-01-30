@@ -68,8 +68,8 @@ Vue.component("add-drive-form",{
             </div>
             <div class="form-group">
                 <label for="capacity"> Kapacitet: </label>
-                <input class="form-control" id="capacity" placeholder="" name="capacity" type="text" 
-                   v-bind:disabled="role=='USER'"  v-model="dict[modal].capacity" required>
+                <input class="form-control" id="capacity" placeholder="" name="capacity" type="number" min="0" 
+                   v-bind:disabled="role=='USER'"  v-model="dict[modal].capacity" @keydown="validate" required>
                 <p id="cap_err"> </p>
             </div>
 
@@ -258,8 +258,12 @@ Vue.component("add-drive-form",{
             .then(response => {
                 this.organizations = response.data
             });
+        },
+        validate(event) {
+            if (event.keyCode == 189 || event.keyCode == 190) {
+                event.preventDefault();
+            }
         }
-        
     },
     mounted(){
         
