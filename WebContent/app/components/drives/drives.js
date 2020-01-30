@@ -11,7 +11,7 @@ Vue.component("drives",{
     template : 
     `<div>
         <table class="table table-striped">
-            <thead class="thead-dark">
+            <thead class="thead-light">
                 <tr>
 
                 <th>Ime</th>

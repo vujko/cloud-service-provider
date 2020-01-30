@@ -153,7 +153,7 @@ public class DriveService {
 		
 		if(user.getRole() == User.Role.SUPER_ADMIN)
 			users_drives = new HashSet<Drive>(drives);
-		else if(user.getRole() == User.Role.ADMIN)
+		else
 			users_drives = new HashSet<Drive> (user.getOrganization().getDrives());
 		
 		if(filter.searchArg != null)

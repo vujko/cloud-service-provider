@@ -13,7 +13,7 @@ Vue.component("vm", {
     },
     template : `<div>
     <table class="table table-striped col px-md-2">
-        <thead class="thead-dark">
+        <thead class="thead-light">
         <tr>
             <th scope="col">Ime</th><th scope="col">Br. jezgara</th><th scope="col">RAM (GB)</th><th scope="col">GPU</th><th scope="col" v-if="role == 'SUPER_ADMIN'" >Organizacija</th></tr></thead>
             <tbody>

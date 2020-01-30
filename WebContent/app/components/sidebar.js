@@ -63,15 +63,16 @@ Vue.component("side-bar",{
                     </ul>
                 </li>&nbsp;
                 <li v-if="page=='DRIVES'" class="nav-item">
-                    <div class="form-inline row">
-                    <div class="col-md-3">
-                        <label>Kapacitet</label>
+                 <div class="" >
+                        <label style="margin-left: 15px;">Kapacitet</label>
                     </div>
-                    <div class="col-md-4">
-                        <input type="number" min="0" class="form-control" style="width:70px; height : 35px;" v-model="filterDrive.capFrom" placeholder="Min">
+                    <div class="form-inline row ">
+                   
+                    <div class="col-md-4" style="margin-left: 15px;">
+                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filterDrive.capFrom" placeholder="Min">
                     </div>
                     <div class="col-md-3">
-                        <input type="number" min="0" class="form-control" style="width:70px; height : 35px;" v-model="filterDrive.capTo" placeholder="Max">
+                        <input type="number" min="0" class="form-control" style="width:85px; height : 35px;" v-model="filterDrive.capTo" placeholder="Max">
                     </div>
                     </div>&nbsp;
                 </li>
@@ -79,7 +80,7 @@ Vue.component("side-bar",{
             </ul>
             
             <ul class="navbar-nav mr-auto">
-            <li v-if="page=='DRIVES' || page=='HOMEPAGE'" class="nav-item active">
+            <li v-if="page=='DRIVES' || page=='HOMEPAGE'" class="nav-item active" style="margin-left: 15px;">
                 <input class="form-control form-control-dark w-100" type="text" 
                     placeholder="Search" v-model="filter.searchArg"  aria-label="Search">
             </li>

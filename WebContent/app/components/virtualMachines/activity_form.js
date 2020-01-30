@@ -21,7 +21,7 @@ Vue.component("activity-form",{
             <fieldset>  
                 <div class="form-group">
                     <label>Stavka aktivnosti:</label>
-                    <input class="form-control" id="vm_name" name="name" type="name" v-model="stavkaAktivnosti" disabled>
+                    <input class="form-control" id="act_name" name="name" type="name" v-model="stavkaAktivnosti" disabled>
                 </div>
                 <div class="container">
                     <div class='col-md-5'>

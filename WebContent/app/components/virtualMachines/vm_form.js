@@ -136,7 +136,7 @@ Vue.component("vm-form", {
                     {{dict[modal].activity ? "Turned on" : "Turned off"}}
                     </switch-button>
                 </div>
-                <div>
+                <div v-if="role!='USER' && modal=='edit'">
                     <label>Lista aktivnosti:</label>
                     <div>
                     <select class="custom-select" id="selectAct" v-model="selectedActivity">
@@ -146,7 +146,7 @@ Vue.component("vm-form", {
                     </select>
                     </div>
                 </div>
-                <div v-if="role=='SUPER_ADMIN'" class="modal-footer">
+                <div v-if="role=='SUPER_ADMIN' && modal=='edit'" class="modal-footer">
                     
                     <button type="button" class="btn btn-sm btn-primary" 
                     v-bind:disabled="selectedActivity==''" v-on:click="deleteAct()">
