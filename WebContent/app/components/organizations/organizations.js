@@ -22,16 +22,16 @@ Vue.component("organizations",{
                 </tbody>
         </table>
         <span>
-            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#orgModal">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#orgModal" v-if="role == 'SUPER_ADMIN'">
                 Add organization
             </button>
-            <button type="button" class="btn btn-primary btn-sm" v-on:click="editOrganization()" v-if="role == 'SUPER_ADMIN'" v-bind:disabled="selectedOrg==null">
+            <button type="button" class="btn btn-primary btn-sm" v-on:click="editOrganization()"  v-bind:disabled="selectedOrg==null">
 
                 Edit organization
             </button>
-            <button type="button" class="btn btn-primary btn-sm" v-on:click="deleteOrganization" v-bind:disabled="selectedOrg==null">
+            <!-- <button type="button" class="btn btn-primary btn-sm" v-on:click="deleteOrganization" v-bind:disabled="selectedOrg==null">
             Delete organization 
-            </button>
+            </button> -->
         </span>
         <!-- Modals -->
         <organization-form ref="addForm"></organization-form>
@@ -50,10 +50,14 @@ Vue.component("organizations",{
             this.selectedOrg = org;
         },
         getOrganizations : function(){
+            var self = this;
             axios
             .get("/getOrganizations")
             .then(response => {
-                this.organizations = response.data
+                self.organizations = response.data;
+                if(response.data.length == 1){
+                    self.selectedOrg = self.organizations[0];
+                }
             });
         },
         

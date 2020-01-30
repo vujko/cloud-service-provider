@@ -27,7 +27,7 @@ Vue.component("vm", {
             </tr>
             </tbody>
     </table>
-    <span>
+    <span v-if="role != 'USER'">
         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" v-on:click="addVM()">
             Add Virtual Machine
         </button>
@@ -38,6 +38,11 @@ Vue.component("vm", {
             Delete Virtual Machine 
         </button>
     </span>
+
+    <button type="button" class="btn btn-primary btn-sm" v-on:click="showVM()" v-bind:disabled="selectedMachine==null" v-if="role == 'USER'">
+        Show details
+    </button>
+
     <vm-form ref="vmForm"></vm-form>
 
     </div>
@@ -60,7 +65,13 @@ Vue.component("vm", {
 
         editVM : function(){
             this.openMachineModal("edit");
+
             this.$refs.vmForm.setEditedMachine(this.selectedMachine);
+        },
+
+        showVM : function(){
+            this.openMachineModal("show");
+            this.$refs.vmForm.setUpForShowing(this.selectedMachine);
         },
 
         deleteVM : function(){

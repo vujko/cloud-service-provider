@@ -10,14 +10,14 @@ const router = new VueRouter({
     mode : 'hash',
     routes : [
 
-        {path : "/", component : LoginPage},
-        {path : "/homepage", component : HomePage}, 
-        {path : "/users",component : Users},
-        {path : "/organizations", component : Organizations},
-        {path : "/profile", component : ProfilePage},
-        {path : "/categories", component : Categories},
-        {path : "/drives", component : Drives},
-        {path : "/VM"}
+        {path : "/", component : LoginPage, meta: {allow :['USER', 'ADMIN', 'SUPER_ADMIN']}},
+        {path : "/homepage", component : HomePage, meta: {allow :['USER', 'ADMIN', 'SUPER_ADMIN']}}, 
+        {path : "/users",component : Users, meta: {allow :['ADMIN', 'SUPER_ADMIN']}},
+        {path : "/organizations", component : Organizations, meta: {allow :['ADMIN', 'SUPER_ADMIN']}},
+        {path : "/profile", component : ProfilePage, meta: {allow :['USER', 'ADMIN', 'SUPER_ADMIN']}},
+        {path : "/categories", component : Categories, meta: {allow :['SUPER_ADMIN']}},
+        {path : "/drives", component : Drives, meta: {allow :['USER', 'ADMIN', 'SUPER_ADMIN']}},
+        {path : "/VM", meta: {allow :['USER', 'ADMIN', 'SUPER_ADMIN']}}
 
     ]
 });
@@ -30,16 +30,29 @@ router.beforeEach((to, from , next) => {
     .get("/ensureLogin")
     .then(response => {
         isLoggedIn = response.data.isLoggedIn;
-        if(!isLoggedIn && to.path !== "/"){
-            next("/");
+        if(!isLoggedIn){
+            if(to.path === "/"){
+                next();
+            }
+            else{
+                next("/");                
+            }
             
         }
-        else{
+        else if(to.path === "/"){
+            next("/homepage");
+        }
+        else if(to.meta.allow.includes(response.data.role)){
             localStorage.setItem("role", response.data.role);
             localStorage.setItem("email", response.data.email);
             localStorage.setItem("page", to.path);
             next();
         }
+        else{
+            next(from.path);
+        }
+
+
     })
 })
 var EventBus = new Vue();
