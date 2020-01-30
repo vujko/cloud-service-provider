@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import controllers.DriveController.DriveToAdd;
+import controllers.DriveController.Filter;
 import controllers.DriveController.Update;
 import main.App;
 import model.Drive;
@@ -142,73 +143,41 @@ public class DriveService {
 		return true;
 	}
 	
-	public Set<Drive> search(String argument){
-		HashSet<Drive> searched = new HashSet<Drive>();
-		if(argument == null) {
-			return drives;
-		}
-		for(Drive drive : drives) {
-			if(drive.getName().toLowerCase().contains(argument.toLowerCase()))
-				searched.add(drive);
-		}
-		return searched;
+	public static void search(String argument,HashSet<Drive> diskovi){
+		diskovi.removeIf(filter -> !filter.getName().toLowerCase().contains(argument.toLowerCase()));
 	}
 	
-	public Set<Drive> filterCapacity(Boolean[] checked,String email){
-		HashSet<Drive> filteredCap = new HashSet<Drive>();
-		HashSet<Drive> filteredType = new HashSet<Drive>();
-		Set<Drive> users_drives = new HashSet<Drive>();
+	public static Set<Drive> filterCapacity(Filter filter,String email){
+		HashSet<Drive> users_drives = new HashSet<Drive>();
 		User user = UserService.getUser(email);
 		
 		if(user.getRole() == User.Role.SUPER_ADMIN)
-			users_drives = drives;
+			users_drives = new HashSet<Drive>(drives);
 		else if(user.getRole() == User.Role.ADMIN)
 			users_drives = new HashSet<Drive> (user.getOrganization().getDrives());
 		
-		
-		if(checked[0]&&checked[1]&&checked[2]&&checked[3]&&checked[4])
-			return users_drives;
-		if(!checked[0]&&!checked[1]&&!checked[2]&&!checked[3]&&!checked[4])
-			return users_drives;
-		
-		for(Drive d : users_drives) {
-			if(checked[0]) {
-				if(d.getCapacity()>= 200 && d.getCapacity()<500)
-					filteredCap.add(d);
-			}if(checked[1]) {
-				if(d.getCapacity()>=500 && d.getCapacity()<1000)
-					filteredCap.add(d);
-			}
-			if(checked[2]) {
-				if(d.getCapacity()>= 1000)
-					filteredCap.add(d);
-			}
-		}
-		if(!checked[0]&&!checked[1]&&!checked[2]) {
-			for(Drive d : users_drives) {
-				if(checked[3] && d.getType().equals(Drive.DriveType.HDD))
-					filteredCap.add(d);
-				if(checked[4] && d.getType().equals(Drive.DriveType.SSD))
-					filteredCap.add(d);
-			}
-			return filteredCap;
-		}
-			
-		
-		for(Drive d : filteredCap) {
-			if(checked[3] && checked[4])
-				return filteredCap;
-			if(checked[3] || checked[4]) {
-				if(checked[3] && d.getType().equals(Drive.DriveType.HDD)) {
-					filteredType.add(d);
-				}
-				if(checked[4] && d.getType().equals(Drive.DriveType.SSD))
-					filteredType.add(d);
-			}
-		}
-		if(!checked[3] && !checked[4])
-			return filteredCap;
-		return filteredType;
+		if(filter.searchArg != null)
+			search(filter.searchArg,users_drives);
+		if(filter.capFrom != 0)
+			capFrom(filter.capFrom,users_drives);
+		if(filter.capTo != 0)
+			capTo(filter.capTo,users_drives);
+		if(filter.type.size() == 1)
+			diskType(filter.type.get(0),users_drives);
+
+		return users_drives;
+	}
+	
+	public static void capFrom(int from, HashSet<Drive> diskovi) {
+		diskovi.removeIf(filter -> filter.getCapacity() <= from);
+	}
+	
+	public static void capTo(int to, HashSet<Drive> diskovi) {
+		diskovi.removeIf(filter -> filter.getCapacity() > to);
+	}
+	
+	public static void diskType(String type, HashSet<Drive> diskovi) {
+		diskovi.removeIf(filter -> !filter.getType().name().equals(type));
 	}
 	
 	public static void saveDrives() {

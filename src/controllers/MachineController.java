@@ -98,22 +98,11 @@ public class MachineController {
 
 	};
 	
-	public static Route search = (Request req, Response res)->{
-		res.type("application/json");
-		String argument = App.g.fromJson(req.body(), String.class);
-		Set<VirtualMachine> searched = MachineService.searchMachine(argument);
-		if(searched.size() != 0) {
-			res.status(200);
-			return App.g.toJson(searched);
-		}
-		res.status(400);
-		return App.g.toJson(searched);
-	};
 	public static Route filter = (Request req, Response res)->{
 		res.type("application/json");
-		Filter checked = App.g.fromJson(req.body(), Filter.class);
+		FilterVM filterVM = App.g.fromJson(req.body(), FilterVM.class);
 		String email = req.session(false).attribute("email");
-		Set<VirtualMachine> filtered = MachineService.filterVM(checked,email);
+		Set<VirtualMachine> filtered = MachineService.filter(filterVM,email);
 		
 		if(filtered.size() != 0) {
 			res.status(200);
@@ -122,5 +111,14 @@ public class MachineController {
 		res.status(400);
 		return App.g.toJson(filtered);
 	};
-
+	
+	public class FilterVM {
+		public String searchArg;
+		public int coreFrom;
+		public int coreTo;
+		public int ramFrom;
+		public int ramTo;
+		public int gpuFrom;
+		public int gpuTo;	
+	}
 }	

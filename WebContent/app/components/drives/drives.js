@@ -16,6 +16,7 @@ Vue.component("drives",{
 
                 <th>Ime</th>
                 <th>Kapacitet(GB)</th>
+                <th>Tip diska</th>
                 <th>Organizacija</th>
                 <th>Virtuelna masina</th>
 
@@ -26,6 +27,7 @@ Vue.component("drives",{
                 v-on:click="selectDrive(drive)" v-bind:class="{selected : selectedDrive != null && selectedDrive.name===drive.name}">
                     <td>{{drive.name}}</td>
                     <td>{{drive.capacity}}</td>
+                    <td>{{drive.type}}</td>
                     <td v-if="'organization' in drive" > {{drive.organization.name}}</td>
                     <td v-if="'vm' in drive" >{{drive.vm.name}}</td>
                 </tr>
@@ -71,21 +73,8 @@ Vue.component("drives",{
             //this.drives.push(drive);
             this.getDrives();
         },
-        search : function(drive){           
+        filter : function(filter){
             var self = this;
-            axios
-            .post("/searchDrives",'' + drive)
-            .then(function(response){
-                self.drives = response.data;
-            })
-            .catch(function(response){
-                self.drives = response.data;
-                alert("Nema rezultata pretrage");
-            })
-        },
-        filter : function(capacity,type){
-            var self = this;
-            var filter = capacity.concat(type); 
             axios
             .post("/driveFilterCapacity",filter)
             .then(function(response){
@@ -94,6 +83,9 @@ Vue.component("drives",{
             .catch(function(response){
                 self.drives = response.data;
             })
+        },
+        refresh : function(){
+            this.getDrives();
         },
         editDrive : function(){
             
@@ -139,7 +131,7 @@ Vue.component("drives",{
         this.role = localStorage.getItem("role");
         this.getDrives(); 
         this.getVirtual();
-        EventBus.$on('searched', this.search);
         EventBus.$on('filterCapacity', this.filter);
+        EventBus.$on('refresh',this.refresh);
     }
 });

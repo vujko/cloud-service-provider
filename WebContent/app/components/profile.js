@@ -61,9 +61,6 @@ Vue.component("profile", {
             <button type="button" class="btn btn-primary" v-bind:disabled="JSON.stringify(backup) === JSON.stringify(user)" v-on:click="editProfile()" >Save changes</button>
         </div>
 
-
-
-
         <div class="modal fade" ref="pass-modal" id="passModal" tabindex="-1" role="dialog" aria-labelledby="passModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
