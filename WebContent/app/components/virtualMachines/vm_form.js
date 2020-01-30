@@ -96,9 +96,7 @@ Vue.component("vm-form", {
                     </select>
                     </div>
                 </div>
-
-                
-                
+                               
                 <div class="form-group">
                     <label>Category:</label>
                     <div>
