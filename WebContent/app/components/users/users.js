@@ -11,7 +11,7 @@ Vue.component("users", {
 	template: ` 
     <div>
         
-        <table v-if="noRes==false" class="table table-striped">
+        <table v-if="noRes==false" class="table table-striped"  border="2">
             <thead class="thead-dark"> 
             <tr>
                 <th>Ime</th><th >Prezime</th><th>Email</th><th v-if="role=='SUPER_ADMIN' ">Organization</th></tr></thead>

@@ -77,7 +77,7 @@ public class MachineController {
 	public static Route changeActivity = (Request req, Response res) ->{
 		Act vm = App.g.fromJson(req.body(), Act.class);
 		res.type("application/json");
-		VirtualMachine virtual_machine = App.machineService.changeActivity(vm);
+		VirtualMachine virtual_machine = MachineService.changeActivity(vm);
 		res.status(200);
 		return App.g.toJson(virtual_machine.getListOfActivities());
 	};

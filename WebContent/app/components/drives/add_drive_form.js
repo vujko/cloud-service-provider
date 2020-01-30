@@ -47,8 +47,8 @@ Vue.component("add-drive-form",{
             <h5 class="modal-title" id="driveModalLabel" v-if="modal=='add'">Add a new Drive</h5>
             <h5 class="modal-title" id="driveModalLabel" v-if="modal=='edit'">Edit Drive</h5>
             <h5 class="modal-title" id="driveModalLabel" v-if="modal=='show'">Drive preview</h5>
-            <span aria-hidden="true">&times;</span>
-            </button>
+           
+            
         </div>
         <div class="modal-body">
         <form id="driveForm" class="form-signin" role="form">

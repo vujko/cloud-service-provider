@@ -16,7 +16,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import controllers.MachineController.Act;
-import controllers.MachineController.Filter;
 import controllers.MachineController.FilterVM;
 import controllers.MachineController.MachineToAdd;
 import controllers.MachineController.MachineToUpdate;
@@ -120,7 +119,6 @@ public class MachineService {
 			Drive drive = DriveService.getDrive(diskName);
 			vm.addDrive(drive);
 			drive.setVm(vm);
-			// drive.setOrganization(org); TODO
 		}
 
 		machines.add(vm);
@@ -158,7 +156,10 @@ public class MachineService {
 		if(mtu.deletedItems.size() != 0) {
 			for(String del : mtu.deletedItems) {
 				Date date = sdf.parse(del);
-				vm.getListOfActivities().removeIf(dact -> dact.getStartActivity().equals(date));			
+				vm.getListOfActivities().removeIf(dact -> (
+					sdf.format(dact.getStartActivity()).equals(sdf.format(date))
+				));							
+				
 			}
 		}
 			
