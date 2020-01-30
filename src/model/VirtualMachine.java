@@ -1,5 +1,7 @@
 package model;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -8,6 +10,8 @@ public class VirtualMachine {
 	private CategoryVM category;
 	private transient Collection<Drive> drives;
 	private Organization organization;
+	private boolean activity;
+	private ArrayList<DateActivity> listOfActivities;
 	
 	public VirtualMachine(String name, CategoryVM category, Collection<Drive> drives, Organization organization) {
 		super();
@@ -15,10 +19,21 @@ public class VirtualMachine {
 		this.category = category;
 		this.drives = drives;
 		this.organization = organization;
+		this.activity = false;
+	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+	public boolean isActivity() {
+		return activity;
 	}
 
+	public void setActivity(boolean activity) {
+		this.activity = activity;
+	}
+
+	
 	public VirtualMachine() {
 		this.drives = new HashSet<Drive>();
+		this.listOfActivities = new ArrayList<DateActivity>();
+		this.activity = false;
 	}
 
 	public String getName() {
@@ -52,6 +67,14 @@ public class VirtualMachine {
 	public Organization getOrganization(){
 		return organization;
 	}
+	public ArrayList<DateActivity> getListOfActivities() {
+		return listOfActivities;
+	}
+
+	public void setListOfActivities(ArrayList<DateActivity> listOfActivities) {
+		this.listOfActivities = listOfActivities;
+	}
+
 
 	@Override
 	public int hashCode() {

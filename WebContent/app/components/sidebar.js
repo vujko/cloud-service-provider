@@ -2,12 +2,22 @@ Vue.component("side-bar",{
     data : function(){
         return {
             page : null,
-            checkedDrives : [],
-            type : [],
-            checkedCore : [],
-            checkedRam : [],
-            checkedGpu : [],
-            role : null
+            role : null,
+            filter : {
+                searchArg : "",
+                coreFrom : null,
+                coreTo : null,
+                ramFrom : null,
+                ramTo : null,
+                gpuFrom : null,
+                gpuTo : null
+            },
+            filterDrive : {
+                searchArg : "",
+                capFrom : null,
+                capTo : null,
+                type : []
+            }
         }
     },
     template : `    
@@ -46,86 +56,130 @@ Vue.component("side-bar",{
                 </li>
                 &nbsp;
                 <li v-if="page=='DRIVES'" class="nav-item">
-                    <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">Kapacitet</a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu1">
-                        <li><span class="fa fa-chevron-right mr-2"></span><input type="checkbox" id="Darg1"> Od 200 do 500GB</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span><input type="checkbox" id="Darg2"> Od 500GB do 1TB</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span><input type="checkbox" id ="Darg3"> Preko 1TB</li>
-                    </ul>
-                </li>
-                <li v-if="page=='DRIVES'" class="nav-item">
                     <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">Tip</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu2">
-                        <li><span class="fa fa-chevron-right mr-2"></span><input type="checkbox" id="HDD">HDD</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span><input type="checkbox" id ="SSD">SSD</li>
+                        <li><span class="fa fa-chevron-right mr-2"></span><input type="checkbox" id="HDD" value="HDD" v-model="filterDrive.type">HDD</li>
+                        <li><span class="fa fa-chevron-right mr-2"></span><input type="checkbox" id="SSD" value="SSD" v-model="filterDrive.type">SSD</li>
                     </ul>
+                </li>&nbsp;
+                <li v-if="page=='DRIVES'" class="nav-item">
+                    <div class="form-inline row">
+                    <div class="col-md-3">
+                        <label>Kapacitet</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" min="0" class="form-control" style="width:70px; height : 35px;" v-model="filterDrive.capFrom" placeholder="Min">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" min="0" class="form-control" style="width:70px; height : 35px;" v-model="filterDrive.capTo" placeholder="Max">
+                    </div>
+                    </div>&nbsp;
                 </li>
-                <li v-if="page=='HOMEPAGE'" class="nav-item">
-                    <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">Broj jezgara</a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu3">
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id="4core" value="4core" v-model="checkedCore">4</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="8core" value="8core" v-model="checkedCore">8</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="16core" value="16core" v-model="checkedCore">16</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="32core" value="32core" v-model="checkedCore">32</li>
-                    </ul>
-                </li>
-                <li v-if="page=='HOMEPAGE'" class="nav-item">
-                    <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">RAM</a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu4">
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id="4GB" value="4gb" v-model="checkedRam">4GB</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="8GB" value="8gb" v-model="checkedRam">8GB</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="16GB" value="16bg" v-model="checkedRam">16GB</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="32GB" value="32gb" v-model="checkedRam">32GB</li>
-                    </ul>
-                </li>
-                <li v-if="page=='HOMEPAGE'" class="nav-item">
-                    <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">Broj GPU</a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu5">
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id="4GPU" value="4gpu" v-model="checkedGpu">4</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="8GPU" value="8gpu" v-model="checkedGpu">8</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="16GPU" value="16gpu" v-model="checkedGpu">16</li>
-                        <li><span class="fa fa-chevron-right mr-2"></span>
-                            <input type="checkbox" id ="32GPU" value="32gpu" v-model="checkedGpu">32</li>
-                    </ul>
-                </li>
-                &nbsp;
-                <li v-if="page=='DRIVES' || page=='HOMEPAGE'"> 
-                    <button type="button" v-if="page=='DRIVES'" class="btn btn-dark float-right" v-on:click="filterDrive()">Filtriraj</button>
-                    <button type="button" v-if="page=='HOMEPAGE'" class="btn btn-dark float-right" v-on:click="filterVM()">Filtriraj</button>
-                </li>
+                
             </ul>
-
+            
+            <ul class="navbar-nav mr-auto">
+            <li v-if="page=='DRIVES' || page=='HOMEPAGE'" class="nav-item active">
+                <input class="form-control form-control-dark w-100" type="text" 
+                    placeholder="Search" v-model="filter.searchArg"  aria-label="Search">
+            </li>
+            &nbsp;
+            <li v-if="page=='HOMEPAGE'">
+                <form action="" class="form-horizontal">
+                <div class="form-inline row">
+                    <div class="col-md-3">
+                        <label>Jezgra</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.coreFrom" placeholder="Min">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.coreTo" placeholder="Max">
+                    </div>
+                </div>&nbsp;
+                <div class="form-inline row">
+                    <div class="col-md-3">
+                        <label>Ram</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.ramFrom" placeholder="Min">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.ramTo" placeholder="Max">
+                    </div>
+                </div>&nbsp;
+                <div class="form-inline row">
+                    <div class="col-md-3">
+                        <label>Gpus</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.gpuFrom" placeholder="Min">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.gpuTo" placeholder="Max">
+                    </div>
+                </div>
+                </form>
+            </li>
+            &nbsp;
+            <li v-if="page=='DRIVES' || page=='HOMEPAGE'" class="nav-item active">
+                <button type="button" v-if="page=='DRIVES'" class="btn btn-dark float-right btn-sm" @click="filterDriveMethod()"> Pretrazi </button>
+                <button type="button" v-if="page=='DRIVES'" class="btn btn-danger float-right btn-sm" @click="ponistiDrive()"> Ponisti </button>
+                <button type="button" v-if="page=='HOMEPAGE'" class="btn btn-dark float-right btn-sm" v-on:click="filterVM()"> Pretrazi </button>
+                <button type="button" v-if="page=='HOMEPAGE'" class="btn btn-danger float-right btn-sm" v-on:click="ponistiVM()"> Ponisti </button>
+            </li>
+            </ul>
         </div>
     </nav>
     `,
     methods : {
         collectDriveCheck : function(){
-            var Darg1 = document.getElementById("Darg1").checked;
-            var Darg2 = document.getElementById("Darg2").checked;
-            var Darg3 = document.getElementById("Darg3").checked;
-            this.checkedDrives[0] = Darg1; 
-            this.checkedDrives[1] = Darg2; 
-            this.checkedDrives[2] = Darg3;
-            var hdd = document.getElementById("HDD").checked; this.type[0] = hdd;
-            var ssd = document.getElementById("SSD").checked; this.type[1] = ssd;
+            this.filterDrive.searchArg = this.filter.searchArg;
+            if(this.filterDrive.capFrom == "")
+                this.filterDrive.capFrom = null;
+            if(this.filterDrive.capTo == "")
+                this.filterDrive.capTo = null;
         },
-        filterDrive : function(){
+        filterDriveMethod : function(){
             this.collectDriveCheck();
-            EventBus.$emit("filterCapacity",this.checkedDrives,this.type);  
+            EventBus.$emit("filterCapacity",this.filterDrive);  
+        },
+        valitateFilterVm : function(){
+            if(this.filter.coreFrom == "")
+                this.filter.coreFrom = null;
+            if(this.filter.coreTo == "")
+                this.filter.coreTo = null;
+            if(this.filter.ramFrom == "")
+                this.filter.ramFrom = null;
+            if(this.filter.ramTo == "")
+                this.filter.ramTo = null;
+            if(this.filter.gpuFrom == "")
+                this.filter.gpuFrom = null;
+            if(this.filter.gpuTo == "")
+                this.filter.gpuTo = null;
         },
         filterVM : function(){
-            EventBus.$emit("filterVM",this.checkedCore,this.checkedRam,this.checkedGpu);  
+            this.valitateFilterVm();
+            EventBus.$emit("filterVM",this.filter);  
+        },
+        ponistiDrive : function(){
+            this.filterDrive.searchArg = "";
+            this.filter.searchArg = "";
+            this.filterDrive.capFrom = null;
+            this.filterDrive.capTo = null;
+            this.filterDrive.type.forEach(tip => document.getElementById(tip).checked = false);
+            this.filterDrive.type = [];
+            EventBus.$emit("refresh");
+        },
+        ponistiVM : function(){
+            this.filter.searchArg = "";
+            this.filter.coreFrom = null;
+            this.filter.coreTo = null;
+            this.filter.ramFrom = null;
+            this.filter.ramTo = null;
+            this.filter.gpuFrom = null;
+            this.filter.ramTo = null;
+            EventBus.$emit("refreshVM");
         }
     },
     mounted(){

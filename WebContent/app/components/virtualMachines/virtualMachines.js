@@ -74,6 +74,9 @@ Vue.component("vm", {
             this.$refs.vmForm.setUpForShowing(this.selectedMachine);
         },
 
+        refresh : function(){
+            this.getMachines();
+        },
         deleteVM : function(){
             var self = this;
             axios
@@ -94,24 +97,10 @@ Vue.component("vm", {
                 this.machines = response.data;
             })
         },
-        search : function(SearchArgument){
-            var self = this;
-            axios
-            .post("/searchVM",'' + SearchArgument)
-            .then(function(response){
-                self.machines = response.data;
-            })
-            .catch(function(response){
-                self.machines = response.data;
-                alert("Nema rezultata pretrage");
-            })
-        },
-        filter : function(filterCore,filterRam,filterGpu){
-            // if(!filterArg.length) 
-            //     filterArg = ["prazna"];
+        filter : function(filter){
             var self = this; 
             axios
-            .post("/VMfilter",{"core" : filterCore, "ram": filterRam, "gpu":filterGpu})
+            .post("/VMfilter", filter)
             .then(function(response){
                 self.machines = response.data;
             })
@@ -124,7 +113,8 @@ Vue.component("vm", {
     mounted(){
         this.getMachines();
         this.role = localStorage.getItem("role");
-        EventBus.$on('searchedVM', this.search);
+        EventBus.$on('refreshVM', this.refresh);
         EventBus.$on('filterVM', this.filter);
+
     }
 })

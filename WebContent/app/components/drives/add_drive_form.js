@@ -55,7 +55,7 @@ Vue.component("add-drive-form",{
         <fieldset>  
             <div class="form-group">
                 <label for="naziv">Naziv:</label>
-                <input class="form-control" id="naziv" placeholder="Name" name="naziv" type="text" 
+                <input class="form-control" id="naziv" name="naziv" type="text" 
                    v-bind:disabled="role=='USER'"  v-model="dict[modal].name" required><p id="name_err"></p>
             </div>
             <div class="form-group">
@@ -68,7 +68,7 @@ Vue.component("add-drive-form",{
             </div>
             <div class="form-group">
                 <label for="capacity"> Kapacitet: </label>
-                <input class="form-control" id="capacity" placeholder="Kapcitet" name="capacity" type="text" 
+                <input class="form-control" id="capacity" placeholder="" name="capacity" type="text" 
                    v-bind:disabled="role=='USER'"  v-model="dict[modal].capacity" required>
                 <p id="cap_err"> </p>
             </div>

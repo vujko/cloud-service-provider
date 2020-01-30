@@ -4,6 +4,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,10 +15,12 @@ import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import controllers.MachineController.Act;
 import controllers.MachineController.Filter;
+import controllers.MachineController.FilterVM;
 import controllers.MachineController.MachineToAdd;
 import controllers.MachineController.MachineToUpdate;
-
+import model.DateActivity;
 import model.Drive;
 import model.Organization;
 import model.User;
@@ -122,8 +127,24 @@ public class MachineService {
 		saveMachines();
 		return true;
 	}
-
-	public static boolean updateMachine(MachineToUpdate mtu){
+	public static VirtualMachine changeActivity(Act vm) {
+		VirtualMachine virtual_machine = getMachine(vm.name);
+		if(vm.activity != virtual_machine.isActivity()) {
+			virtual_machine.setActivity(vm.activity);
+			if(vm.activity) {
+				DateActivity dact = new DateActivity();
+				dact.setStartActivity(new Date());   //current time
+				virtual_machine.getListOfActivities().add(dact);
+			}else {
+				DateActivity dact = virtual_machine.getListOfActivities().get(virtual_machine.getListOfActivities().size() - 1);
+				dact.setEndActivity(new Date());
+			}
+		}
+		saveMachines();
+		return virtual_machine;
+	}
+	
+	public static boolean updateMachine(MachineToUpdate mtu) throws ParseException{
 		VirtualMachine vm = getMachine(mtu.oldName);
 		if(!mtu.oldName.equals(mtu.newName)){
 			if(machineExsists(mtu.newName)){
@@ -131,6 +152,17 @@ public class MachineService {
 			}
 		}
 		vm.setName(mtu.newName);
+		//aktivnost
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy hh:mm:ss a");
+		if(mtu.deletedItems.size() != 0) {
+			for(String del : mtu.deletedItems) {
+				Date date = sdf.parse(del);
+				System.out.println(del);
+				vm.getListOfActivities().removeIf(dact -> dact.getStartActivity().equals(date));			
+			}
+		}
+			
 		vm.setCategory(CategoryService.getCategory(mtu.categoryName));
 		vm.clearDisks();
 		for(String diskName : mtu.disks){
@@ -157,201 +189,56 @@ public class MachineService {
 		return false;
 	}
 
-	public static Set<VirtualMachine> searchMachine(String arg){
-		HashSet<VirtualMachine> searched = new HashSet<VirtualMachine>();
-		if(arg == null)
-			return machines;
-		for(VirtualMachine vm : machines) {
-			if(vm.getName().toLowerCase().contains(arg.toLowerCase()))
-				searched.add(vm);
-		}
-		return searched;
+	public static void searchMachine(String arg,HashSet<VirtualMachine> machines){
+		machines.removeIf(filter -> !filter.getName().toLowerCase().contains(arg.toLowerCase()));
 	}
-	public static Set<VirtualMachine> filterVM(Filter checked,String email){
-		HashSet<VirtualMachine> filteredCore = new HashSet<VirtualMachine>();
-		HashSet<VirtualMachine> filteredRam = new HashSet<VirtualMachine>();
-		HashSet<VirtualMachine> filteredGpu = new HashSet<VirtualMachine>();
-		User user = UserService.getUser(email);
+	public static Set<VirtualMachine> filter(FilterVM filter,String email){
+		HashSet<VirtualMachine> forFilter;
+		User user= UserService.getUser(email);
+		if(user.getRole()==User.Role.SUPER_ADMIN)
+			forFilter = new HashSet<VirtualMachine>(machines);
+		else 
+			forFilter = new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
 		
-		if(checked.core.size() == 3 && checked.ram.size() == 3 && checked.gpu.size() == 3) {
-			if(user.getRole()==User.Role.SUPER_ADMIN)
-				return machines;
-			else {
-				return new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
-			}
-		}	
-		if(checked.core.size() == 0 && checked.ram.size() == 0 && checked.gpu.size() == 0) {
-			if(user.getRole()==User.Role.SUPER_ADMIN)
-				return machines;
-			else {
-				return new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
-		}
-		}
-		for(String arg : checked.core) {
-			if(arg.equals("4core")) {
-				HashSet<VirtualMachine> vm = getMachineCore(4,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredCore.add(v);
-				}
-			}
-			else if(arg.equals("8core")) {
-				HashSet<VirtualMachine> vm = getMachineCore(8,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredCore.add(v);
-				}
-			}
-			else if(arg.equals("16core")) {
-				HashSet<VirtualMachine> vm = getMachineCore(16,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredCore.add(v);
-				}
-			}
-			else if(arg.equals("32core")) {
-				HashSet<VirtualMachine> vm = getMachineCore(32,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredCore.add(v);
-				}
-			}
-		}
-		for(String arg: checked.ram) {
-			if(arg.equals("4gb")) {
-				HashSet<VirtualMachine> vm = getMachineRam(4,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredRam.add(v);
-				}
-					
-			}
-			else if(arg.equals("8gb")) {
-				HashSet<VirtualMachine> vm = getMachineRam(8,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredRam.add(v);
-				}
-			}
-			else if(arg.equals("16gb")) {
-				HashSet<VirtualMachine> vm = getMachineRam(16,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredRam.add(v);
-				}
-			}
-			else if(arg.equals("32gb")) {
-				HashSet<VirtualMachine> vm = getMachineRam(32,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredRam.add(v);
-				}
-			}
-		}
-		for(String arg : checked.gpu) {
-			if(arg.equals("4gpu")) {
-				HashSet<VirtualMachine> vm = getMachineGpu(4,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredGpu.add(v);
-				}
-					
-			}
-			else if(arg.equals("8gpu")) {
-				HashSet<VirtualMachine> vm = getMachineGpu(8,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredGpu.add(v);
-				}
-			}
-			else if(arg.equals("16gpu")) {
-				HashSet<VirtualMachine> vm = getMachineGpu(16,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredGpu.add(v);
-				}
-			}
-			else if(arg.equals("32gpu")) {
-				HashSet<VirtualMachine> vm = getMachineGpu(32,user);
-				if(vm.size() != 0) {
-					for(VirtualMachine v : vm)
-						filteredGpu.add(v);
-				}
-			}
-		}
-		if(checked.core.size() != 0 && checked.ram.size() != 0 && checked.gpu.size()!=0) {
-			filteredCore.retainAll(filteredRam);
-			if(filteredCore.size()!=0)
-				filteredCore.retainAll(filteredGpu);
-			return filteredCore;
-		}
-		if(checked.core.size() != 0 && checked.ram.size() != 0) {
-			filteredCore.retainAll(filteredRam);
-			return filteredCore;
-		}
-		if(checked.core.size() != 0 && checked.gpu.size() != 0) {
-			filteredCore.retainAll(filteredGpu);
-			return filteredCore;
-		}
-		if(checked.ram.size() != 0 && checked.gpu.size() != 0) {
-			filteredRam.retainAll(filteredGpu);
-			return filteredRam;
-		}
+		if(filter.searchArg != null)
+			searchMachine(filter.searchArg, forFilter);
+		if(filter.coreFrom != 0)
+			filterCoreFrom(filter.coreFrom, forFilter);
+		if(filter.coreTo != 0)
+			filterCoreTo(filter.coreTo, forFilter);
+		if(filter.ramFrom != 0)
+			filterRamFrom(filter.ramFrom, forFilter);
+		if(filter.ramTo != 0)
+			filterRamTo(filter.ramTo, forFilter);
+		if(filter.gpuFrom != 0)
+			filterGpuFrom(filter.gpuFrom, forFilter);
+		if(filter.gpuTo != 0)
+			filterGpuTo(filter.gpuTo, forFilter);
 		
-		if(filteredRam.size() != 0 && checked.core.size() == 0 && checked.gpu.size() == 0)
-			return filteredRam;
-		if(filteredGpu.size() != 0 && checked.core.size() == 0 && checked.ram.size() == 0)
-			return filteredGpu;
-		if(filteredCore.size() != 0 && checked.ram.size()==0 && checked.gpu.size() == 0)
-			return filteredCore;
-		
-		return new HashSet<VirtualMachine>();
+		return forFilter;
+	}
+	public static void filterCoreFrom(int from, HashSet<VirtualMachine> machines) {
+		machines.removeIf(filter -> from >= filter.getCategory().getCores());
 	}
 	
-	public static HashSet<VirtualMachine> getMachineCore(int cores,User user) {
-		HashSet<VirtualMachine> vms = new HashSet<VirtualMachine>();
-		Set<VirtualMachine> machiness = new HashSet<VirtualMachine>();
-		if(user.getRole() == User.Role.SUPER_ADMIN) {
-			machiness = machines;
-		}else {
-			machiness = new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
-		}
-		for(VirtualMachine vm : machiness) {
-			if(vm.getCategory().getCores() == cores) {
-				vms.add(vm);
-			}
-		}
-		return vms;
+	public static void filterCoreTo(int to, HashSet<VirtualMachine> machines) {
+		machines.removeIf(filter ->filter.getCategory().getCores() > to);
 	}
-	public static HashSet<VirtualMachine> getMachineRam(int rams,User user) {
-		HashSet<VirtualMachine> vms = new HashSet<VirtualMachine>();
-		Set<VirtualMachine> machiness = new HashSet<VirtualMachine>();
-		if(user.getRole() == User.Role.SUPER_ADMIN) {
-			machiness = machines;
-		}else {
-			machiness = new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
-		}
-		for(VirtualMachine vm : machiness) {
-			if(vm.getCategory().getRam() == rams) {
-				vms.add(vm);
-			}
-		}
-		return vms;
+	
+	public static void filterRamFrom(int from, HashSet<VirtualMachine> machines) {
+		machines.removeIf(filter -> from >= filter.getCategory().getRam());
 	}
-	public static HashSet<VirtualMachine> getMachineGpu(int gpu,User user) {
-		HashSet<VirtualMachine> vms = new HashSet<VirtualMachine>();
-		Set<VirtualMachine> machiness = new HashSet<VirtualMachine>();
-		if(user.getRole() == User.Role.SUPER_ADMIN) {
-			machiness = machines;
-		}else {
-			machiness = new HashSet<VirtualMachine>(user.getOrganization().getVirtualMachines());
-		}
-		for(VirtualMachine vm : machiness) {
-			if(vm.getCategory().getGpus() == gpu) {
-				vms.add(vm);
-			}
-		}
-		return vms;
+	
+	public static void filterRamTo(int to, HashSet<VirtualMachine> machines) {
+		machines.removeIf(filter -> filter.getCategory().getRam() > to);
+	}
+	
+	public static void filterGpuFrom(int from, HashSet<VirtualMachine> machines) {
+		machines.removeIf(filter -> from >= filter.getCategory().getGpus());
+	}
+	
+	public static void filterGpuTo(int to, HashSet<VirtualMachine> machines) {
+		machines.removeIf(filter -> filter.getCategory().getGpus() > to);
 	}
 	
 	public static boolean machineExsists(String name){

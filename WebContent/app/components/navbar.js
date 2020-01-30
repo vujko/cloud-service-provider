@@ -10,28 +10,12 @@ Vue.component("nav-bar",{
       <p class="navbar-brand col-sm-3 col-md-2 mr-3">Cloud service provider</p>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li v-if="page=='DRIVES' || page=='HOMEPAGE'" class="nav-item active">
-              <input class="form-control form-control-dark w-100" type="text" 
-                  placeholder="Search" v-model="input" aria-label="Search">
-          </li>
-          &nbsp;
-          <li v-if="page=='DRIVES' || page=='HOMEPAGE'" class="nav-item active">
-              <button type="button" v-if="page=='DRIVES'" class="btn btn-light" v-on:click="searchDrive()"> Pretrazi </button>
-              <button type="button" v-if="page=='HOMEPAGE'" class="btn btn-light" v-on:click="searchVM()"> Pretrazi </button>
-          </li>
-        </ul>
-        <ul class="navbar-nav px-3">
+      </button>     
+        <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex px-3">
           <li class="nav-item">
               <a class="nav-link" v-on:click="logout()">Logout</a>
           </li>
         </ul>
-
-      </div>
-
     </nav>
     `,
     methods : {	

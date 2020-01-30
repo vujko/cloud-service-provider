@@ -69,7 +69,7 @@ public class App {
 		post("/addDrive", DriveController.addDrive);
 		post("/deleteDrive",DriveController.deleteDrive);
 		post("/updateDrive",DriveController.updateDrive);
-		post("/searchDrives",DriveController.searchDrive);
+//		post("/searchDrives",DriveController.searchDrive);
 		post("/driveFilterCapacity",DriveController.filterCapacity);
 		get("/getAvilableDisks", DriveController.getAvilableDisks);
 
@@ -92,9 +92,10 @@ public class App {
 		get("/getSelectedDisks/:machineName", MachineController.getSelectedDisks);
 		post("/updateMachine", MachineController.updateMachine);
 		post("/deleteMachine", MachineController.deleteMachine);
+		post("/changeActivity",MachineController.changeActivity);
 		
 		get("/getSelectedMachines/:orgName", OrganizationControlller.getSelectedMachines);
-		post("/searchVM", MachineController.search);
+		//post("/searchVM", MachineController.search);
 		post("/VMfilter",MachineController.filter);
 	}	
 }
