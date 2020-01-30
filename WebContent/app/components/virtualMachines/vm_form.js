@@ -132,9 +132,7 @@ Vue.component("vm-form", {
                     </div>
                 </div>
                 <div v-if="role=='SUPER_ADMIN'" class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-primary" 
-                        v-bind:disabled="selectedActivity==''" v-on:click="editAct()">
-                        Edit this activity</button>
+                    
                     <button type="button" class="btn btn-sm btn-primary" 
                     v-bind:disabled="selectedActivity==''" v-on:click="deleteAct()">
                     Delete this activity</button>

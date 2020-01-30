@@ -69,7 +69,6 @@ public class App {
 		post("/addDrive", DriveController.addDrive);
 		post("/deleteDrive",DriveController.deleteDrive);
 		post("/updateDrive",DriveController.updateDrive);
-//		post("/searchDrives",DriveController.searchDrive);
 		post("/driveFilterCapacity",DriveController.filterCapacity);
 		get("/getAvilableDisks", DriveController.getAvilableDisks);
 
@@ -95,7 +94,6 @@ public class App {
 		post("/changeActivity",MachineController.changeActivity);
 		
 		get("/getSelectedMachines/:orgName", OrganizationControlller.getSelectedMachines);
-		//post("/searchVM", MachineController.search);
 		post("/VMfilter",MachineController.filter);
 	}	
 }
