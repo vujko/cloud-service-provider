@@ -158,7 +158,6 @@ public class MachineService {
 		if(mtu.deletedItems.size() != 0) {
 			for(String del : mtu.deletedItems) {
 				Date date = sdf.parse(del);
-				System.out.println(del);
 				vm.getListOfActivities().removeIf(dact -> dact.getStartActivity().equals(date));			
 			}
 		}

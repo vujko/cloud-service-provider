@@ -131,7 +131,7 @@ Vue.component("vm-form", {
                     </select>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div v-if="role=='SUPER_ADMIN'" class="modal-footer">
                     <button type="button" class="btn btn-sm btn-primary" 
                         v-bind:disabled="selectedActivity==''" v-on:click="editAct()">
                         Edit this activity</button>
@@ -340,6 +340,7 @@ Vue.component("vm-form", {
             .post("/changeActivity", {"name" : '' + self.backup.name, "activity" : ''+ self.dict.edit.activity})
             .then(response =>{
                 self.dict.edit.listOfActivities = response.data;
+                self.$parent.getMachines();
             })
         }
     },
