@@ -10,7 +10,7 @@ Vue.component("drives",{
     },
     template : 
     `<div>
-        <table class="table table-striped">
+        <table class="table table-striped"  border="2">
             <thead class="thead-light">
                 <tr>
 

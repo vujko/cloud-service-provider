@@ -7,7 +7,7 @@ Vue.component("categories", {
     },
     template : `
     <div>
-        <table class="table table-striped">
+        <table class="table table-striped"  border="2">
             <thead class="thead-dark"> 
             <tr>
                 <th>Ime</th><th >Br. jezgara</th><th>RAM (GB)</th><th>Br. GPU jezgara</th></tr></thead>

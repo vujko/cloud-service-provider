@@ -12,17 +12,19 @@ Vue.component("vm", {
         
     },
     template : `<div>
-    <table class="table table-striped col px-md-2">
+    <table class="table table-striped col px-md-2" border="2">
         <thead class="thead-light">
         <tr>
-            <th scope="col">Ime</th><th scope="col">Br. jezgara</th><th scope="col">RAM (GB)</th><th scope="col">GPU</th><th scope="col" v-if="role == 'SUPER_ADMIN'" >Organizacija</th></tr></thead>
+            <th scope="col">Ime</th><th scope="col">Br. jezgara</th><th scope="col">RAM (GB)</th><th scope="col">GPU</th><th scope="col">Active</th><th scope="col" v-if="role == 'SUPER_ADMIN'" >Organizacija</th></tr></thead>
             <tbody>
             <tr v-for="m in machines" :key="m.name" v-on:click="selectMachine(m)" v-bind:class="{selected : selectedMachine != null && selectedMachine.name===m.name}">
                 <td>{{ m.name }}</td>
                 <td>{{ m.category.cores }}</td>
                 <td>{{ m.category.ram }}</td>
                 <td>{{ m.category.gpus }}</td>
+                <td>{{ m.activity ? "On" : "Off" }}</td>
                 <td v-if="'organization' in m && role == 'SUPER_ADMIN'">{{ m.organization.name}} </td>
+
 
             </tr>
             </tbody>

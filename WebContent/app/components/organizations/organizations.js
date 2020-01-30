@@ -9,7 +9,7 @@ Vue.component("organizations",{
     },
     template : `
     <div>
-        <table class="table table-striped col px-md-2">
+        <table class="table table-striped col px-md-2"  border="2">
             <thead class="thead-dark">
             <tr>
                 <th scope="col">Ime</th><th scope="col">Opis</th><th scope="col">Logo</th></tr></thead>

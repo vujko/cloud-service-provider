@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -120,7 +119,6 @@ public class MachineService {
 			Drive drive = DriveService.getDrive(diskName);
 			vm.addDrive(drive);
 			drive.setVm(vm);
-			// drive.setOrganization(org); TODO
 		}
 
 		machines.add(vm);
