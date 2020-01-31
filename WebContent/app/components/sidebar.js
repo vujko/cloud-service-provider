@@ -69,10 +69,10 @@ Vue.component("side-bar",{
                     <div class="form-inline row ">
                    
                     <div class="col-md-4" style="margin-left: 15px;">
-                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filterDrive.capFrom" placeholder="Min">
+                        <input type="number" min="0" @keydown="validate" class="form-control" style="width:75px; height : 35px;" v-model="filterDrive.capFrom" placeholder="Min">
                     </div>
                     <div class="col-md-3">
-                        <input type="number" min="0" class="form-control" style="width:85px; height : 35px;" v-model="filterDrive.capTo" placeholder="Max">
+                        <input type="number" min="0" @keydown="validate" class="form-control" style="width:85px; height : 35px;" v-model="filterDrive.capTo" placeholder="Max">
                     </div>
                     </div>&nbsp;
                 </li>
@@ -92,10 +92,10 @@ Vue.component("side-bar",{
                         <label>Jezgra</label>
                     </div>
                     <div class="col-md-4">
-                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.coreFrom" placeholder="Min">
+                        <input type="number" min="0" @keydown="validate" class="form-control" style="width:75px; height : 35px;" v-model="filter.coreFrom" placeholder="Min">
                     </div>
                     <div class="col-md-3">
-                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.coreTo" placeholder="Max">
+                        <input type="number" min="0" @keydown="validate" class="form-control" style="width:75px; height : 35px;" v-model="filter.coreTo" placeholder="Max">
                     </div>
                 </div>&nbsp;
                 <div class="form-inline row">
@@ -103,10 +103,10 @@ Vue.component("side-bar",{
                         <label>Ram</label>
                     </div>
                     <div class="col-md-4">
-                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.ramFrom" placeholder="Min">
+                        <input type="number" min="0" @keydown="validate" class="form-control" style="width:75px; height : 35px;" v-model="filter.ramFrom" placeholder="Min">
                     </div>
                     <div class="col-md-3">
-                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.ramTo" placeholder="Max">
+                        <input type="number" min="0" @keydown="validate" class="form-control" style="width:75px; height : 35px;" v-model="filter.ramTo" placeholder="Max">
                     </div>
                 </div>&nbsp;
                 <div class="form-inline row">
@@ -114,10 +114,10 @@ Vue.component("side-bar",{
                         <label>Gpus</label>
                     </div>
                     <div class="col-md-4">
-                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.gpuFrom" placeholder="Min">
+                        <input type="number" min="0" @keydown="validate" class="form-control" style="width:75px; height : 35px;" v-model="filter.gpuFrom" placeholder="Min">
                     </div>
                     <div class="col-md-3">
-                        <input type="number" min="0" class="form-control" style="width:75px; height : 35px;" v-model="filter.gpuTo" placeholder="Max">
+                        <input type="number" min="0" @keydown="validate" class="form-control" style="width:75px; height : 35px;" v-model="filter.gpuTo" placeholder="Max">
                     </div>
                 </div>
                 </form>
@@ -181,6 +181,11 @@ Vue.component("side-bar",{
             this.filter.gpuFrom = null;
             this.filter.ramTo = null;
             EventBus.$emit("refreshVM");
+        },
+        validate(event) {
+            if (event.keyCode == 189 || event.keyCode == 190) {
+                event.preventDefault();
+            }
         }
     },
     mounted(){

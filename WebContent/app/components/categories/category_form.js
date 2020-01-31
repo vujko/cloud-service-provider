@@ -47,13 +47,13 @@ Vue.component("category-form",{
                     <input class="form-control" id="cat_name" placeholder="Name" name="name" type="name" v-model="dict[modal].name   " required><p id="name_err"></p>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" id="cat_cores" placeholder="Number of cores" type="number" v-model="dict[modal].cores" required>
+                    <input class="form-control" id="cat_cores" placeholder="Number of cores" min="0" type="number" @keydown="validate" v-model="dict[modal].cores" required>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" id="cat_ram" placeholder="RAM in GB" type="number" v-model="dict[modal].ram" required>
+                    <input class="form-control" id="cat_ram" placeholder="RAM in GB" min="0" type="number" @keydown="validate" v-model="dict[modal].ram" required>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" id="cat_gpus" placeholder="Number of GPU cores" type="number" v-model="dict[modal].gpus" required>
+                    <input class="form-control" id="cat_gpus" placeholder="Number of GPU cores" min="0" @keydown="validate" type="number" v-model="dict[modal].gpus" required>
                 </div>
                 
                 
@@ -127,7 +127,11 @@ Vue.component("category-form",{
                 })
             }
         },
-
+        validate(event) {
+            if (event.keyCode == 189 || event.keyCode == 190) {
+                event.preventDefault();
+            }
+        },
 
         updateCategory(){
             var self = this;
