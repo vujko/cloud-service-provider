@@ -35,7 +35,13 @@ public class MachineController {
 		public Set<String> ram;
 		public Set<String> gpu;
 	}
-	
+
+	private static boolean verifyUserRole(Request req, String forbiddenRole){
+		if(req.session(false).attribute("user_role").equals(forbiddenRole)){
+            return false;
+		}
+		return true;
+	}
 	public static Route getAllMachines = (Request request, Response response) ->{
 		response.type("application/json");
 		return App.g.toJson(App.machineService.getMachines());
@@ -52,6 +58,10 @@ public class MachineController {
 	};
 
 	public static Route addMachine = (Request req, Response res) ->{
+		if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
 		MachineToAdd vma = App.g.fromJson(req.body(), MachineToAdd.class);
 		res.type("application/json");
 		String email = req.session(false).attribute("email");
@@ -64,6 +74,10 @@ public class MachineController {
 	};
 
 	public static Route updateMachine = (Request req, Response res) -> {
+		if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
 		MachineToUpdate updateMachine = App.g.fromJson(req.body(), MachineToUpdate.class);
 		res.type("application/json");
 		if(MachineService.updateMachine(updateMachine)){
@@ -75,6 +89,10 @@ public class MachineController {
 	};
 	
 	public static Route changeActivity = (Request req, Response res) ->{
+		if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
 		Act vm = App.g.fromJson(req.body(), Act.class);
 		res.type("application/json");
 		VirtualMachine virtual_machine = MachineService.changeActivity(vm);
@@ -83,6 +101,10 @@ public class MachineController {
 	};
 
 	public static Route deleteMachine = (Request req, Response res) -> {
+		if(!verifyUserRole(req, "USER") || !verifyUserRole(req, "ADMIN")){
+            res.status(403);
+            return "Forbidden";
+        }
 		res.type("application/json");
 		if(App.machineService.deleteMachine(req.body())){
 			res.status(200);

@@ -32,6 +32,13 @@ public class OrganizationControlller {
     	public String name;
     }
 
+    private static boolean verifyUserRole(Request req, String forbiddenRole){
+		if(req.session(false).attribute("user_role").equals(forbiddenRole)){
+            return false;
+		}
+		return true;
+	}
+
     public static Route getOrganizations = (Request req, Response res) -> {
         res.type("application/json");
         User user = UserService.getUser(req.session(false).attribute("email"));
@@ -66,6 +73,10 @@ public class OrganizationControlller {
     };
 
     public static Route addOrganization = (Request req, Response res) -> {
+        if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
         OrganizationToAdd org = App.g.fromJson(req.body(), OrganizationToAdd.class);
         res.type("application/json");
 
@@ -79,6 +90,10 @@ public class OrganizationControlller {
     };
 
    public static Route updateOrganization = (Request req, Response res)->{
+        if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
        OrganizationToUpdate updateOrg = App.g.fromJson(req.body(), OrganizationToUpdate.class);
        res.type("application/json");
        Organization newOrg = new Organization();
@@ -95,14 +110,18 @@ public class OrganizationControlller {
 
    };
 
-   public static Route deleteOrganization = (Request req, Response res)->{
-	   OrganizationToDelete org = App.g.fromJson(req.body(), OrganizationToDelete.class);
-	   res.type("application/json");
-	   if(App.orgService.deleteOrganization(org.name)) {
-		   res.status(200);
-		   return true;
-	   }
-	   res.status(400);
-	   return false;
-   };
+    public static Route deleteOrganization = (Request req, Response res)->{
+        if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
+        OrganizationToDelete org = App.g.fromJson(req.body(), OrganizationToDelete.class);
+        res.type("application/json");
+        if(App.orgService.deleteOrganization(org.name)) {
+            res.status(200);
+            return true;
+        }
+        res.status(400);
+        return false;
+     };
 }

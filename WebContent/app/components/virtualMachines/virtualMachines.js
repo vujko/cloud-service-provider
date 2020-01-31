@@ -36,7 +36,7 @@ Vue.component("vm", {
         <button type="button" class="btn btn-primary btn-sm" v-on:click="editVM()" v-bind:disabled="selectedMachine==null">
             Edit Virtual Machine
         </button>
-        <button type="button" class="btn btn-primary btn-sm" v-on:click="deleteVM()" v-bind:disabled="selectedMachine==null">
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="deleteVM()" v-bind:disabled="selectedMachine==null" v-if="role == 'SUPER_ADMIN'">
             Delete Virtual Machine 
         </button>
     </span>

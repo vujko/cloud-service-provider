@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 public class VirtualMachine {
@@ -72,6 +73,21 @@ public class VirtualMachine {
 
 	public void setListOfActivities(ArrayList<DateActivity> listOfActivities) {
 		this.listOfActivities = listOfActivities;
+	}
+
+	public void getBill(Date startDate, Date endDate){
+		ArrayList<DateActivity> validActivities = new ArrayList<DateActivity>();
+		for(DateActivity d : listOfActivities){
+			if(d.getStartActivity().before(startDate) && d.getEndActivity().after(startDate)){
+				validActivities.add(new DateActivity(d.getStartActivity(), endDate));
+			}
+
+			if(d.getStartActivity().before(endDate) && d.getEndActivity().after(endDate)){
+				validActivities.add(new DateActivity(endDate, d.getEndActivity()));
+
+				
+			}
+		}
 	}
 
 

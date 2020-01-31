@@ -26,7 +26,6 @@ Vue.component("profile", {
     },
     template : `
     <div>
-        <h4 style="margin-left: 0.5rem;">Edit profile</h4>
         <div class="input-group" >
             
             <form id="userForm"  class="form-horizontal " role="form">
