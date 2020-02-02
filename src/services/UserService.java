@@ -137,6 +137,7 @@ public class UserService {
     	user1.setName(newUser.getName());
     	user1.setSurname(newUser.getSurname());
         user1.setPassword(newUser.getPassword());
+        user1.setRole(newUser.getRole());
         saveUsers(path);
     	return true;
     }

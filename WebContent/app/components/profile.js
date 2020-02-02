@@ -26,38 +26,49 @@ Vue.component("profile", {
     },
     template : `
     <div>
-        <div class="input-group" >
-            
-            <form id="userForm"  class="form-horizontal " role="form">
-            <fieldset>  
-                <div class="form-group form-inline">
-                    <label class="control-label col-sm-4" for="email">Email:</label>
+        <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+            <form class="form-horizontal" id="userForm" role="form">
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Email:</label>
+                    <div class="col-lg-8">
                     <input class="form-control" id="user_email" placeholder="Email" name="email" type="email" v-model="user.email" required><p id="name_err" style="margin-left: 4rem;">                                                       </p>
+                    </div>
                 </div>
-                <div class="form-group  form-inline">
-                    <label class="control-label col-sm-4" for="email">Name:</label>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Name:</label>
+                    <div class="col-lg-8">
                     <input class="form-control" id="user_name" placeholder="Name" name="name" type="text" v-model="user.name" required>
+                    </div>
                 </div>
-                <div class="form-group  form-inline">
-                    <label class="control-label col-sm-4" for="email">Surname:</label>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Surname:</label>
+                    <div class="col-lg-8">
                     <input class="form-control" id="user_surname" placeholder="Surname" name="surname" type="text" v-model="user.surname" required>
+                    </div>
                 </div>
                 
                 <div class="form-group  form-inline">
-                    <label class="control-label col-sm-4" for="email">Password:</label>
-                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#passModal"> Change password</button>
+                    <label class="col-lg-2 control-label">Password:</label>
+                    <div class="col-lg-8">
+                    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#passModal"> Change password</button>
+                    </div>
                 </div>
 
                 <div class="form-group  form-inline">
-                    <label class="control-label col-sm-4" for="email">Organization:</label>
+                    <label class="col-lg-2 control-label">Organization:</label>
+                    <div class="col-lg-8">
                     <input class="form-control" id="user_organization" placeholder="No organization" name="organization" type="text" v-model="user.organization.name" disabled>
+                    </div>
                 </div>
-            </fieldset>
+          
             </form>
-        </div>
-        <div style="margin-left: 0.5rem;">
-            <button type="button" class="btn btn-secondary" v-bind:disabled="JSON.stringify(backup) === JSON.stringify(user)" v-on:click="cancel()" >Cancel</button>
-            <button type="button" class="btn btn-primary" v-bind:disabled="JSON.stringify(backup) === JSON.stringify(user)" v-on:click="editProfile()" >Save changes</button>
+        
+            <div class="form-group  form-inline">
+                <div class="col-lg-8">
+                    <button type="button" class="btn btn-secondary" v-bind:disabled="JSON.stringify(backup) === JSON.stringify(user)" v-on:click="cancel()" >Cancel</button>
+                    <button type="button" class="btn btn-success" v-bind:disabled="JSON.stringify(backup) === JSON.stringify(user)" v-on:click="editProfile()" >Save changes</button>
+                </div>
+            </div>
         </div>
 
         <div class="modal fade" ref="pass-modal" id="passModal" tabindex="-1" role="dialog" aria-labelledby="passModalLabel" aria-hidden="true">
@@ -87,7 +98,7 @@ Vue.component("profile", {
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" v-on:click="cancelPassword()" >Cancel</button>
-                <button type="button" class="btn btn-primary" v-on:click="changePassword()" >Change password</button>
+                <button type="button" class="btn btn-success" v-on:click="changePassword()" >Change password</button>
             </div>
             </div>
         </div>
