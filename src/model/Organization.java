@@ -32,6 +32,8 @@ public class Organization {
 		this.users = new HashSet<User>();
 		this.virtualMachines = new HashSet<VirtualMachine>();
 		this.drives = new HashSet<Drive>();
+		this.description = "";
+		this.logo = "";
 	}
 
 

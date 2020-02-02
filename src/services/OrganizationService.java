@@ -4,6 +4,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +16,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import controllers.OrganizationControlller.BillDates;
 import controllers.OrganizationControlller.OrganizationToAdd;
 import controllers.OrganizationControlller.OrganizationToUpdate;
 import main.App;
@@ -26,6 +31,10 @@ public class OrganizationService {
     private static final String path = "./data/organizations.json";
     private static Set<Organization> organizations = loadOrganizations(path);
 
+    public class ResourceBill{
+		public String resourceName;
+		public String price;
+	}
     public static Set<Organization> loadOrganizations(String path){
 
         try{
@@ -56,6 +65,29 @@ public class OrganizationService {
     public Set<Organization> getOrganizations(){
         return organizations;
     }
+
+    public Set<ResourceBill> getBills(Organization org, BillDates bd) throws ParseException {
+        Set<ResourceBill> result = new HashSet<ResourceBill>();
+        DecimalFormat f = new DecimalFormat("##.00");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = sdf.parse(bd.startDate);
+        Date endDate = sdf.parse(bd.endDate);
+		for (VirtualMachine vm : org.getVirtualMachines()) {
+			ResourceBill bill = new ResourceBill();
+			bill.resourceName = vm.getName();
+			bill.price = f.format(vm.getBill(startDate, endDate));
+			result.add(bill);
+        }
+        for (Drive d: org.getDrives()){
+            ResourceBill bill = new ResourceBill();
+            bill.resourceName = d.getName();
+            bill.price = f.format(d.getBill(startDate, endDate));
+            result.add(bill);
+
+
+        }
+		return result;
+	}
 
     public Set<VirtualMachine> getSelectedMachines(String orgName){
         for (Organization org : organizations) {

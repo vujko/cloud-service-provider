@@ -49,6 +49,11 @@ Vue.component("side-bar",{
                         Drives
                     </a>
                 </li>
+                <li class="nav-item" v-if="role == 'ADMIN'">
+                    <a class="nav-link" href="#/bills"><span data-feather="bar-chart-2"></span>
+                        Bills
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#/profile"><span data-feather="layers"></span>
                         Edit profile

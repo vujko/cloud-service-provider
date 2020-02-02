@@ -5,6 +5,7 @@ const Organizations = { template : "<organization-page></organization-page>"}
 const ProfilePage = { template : "<profile-page></profile-page>"}
 const Categories = {template : "<category-page></category-page>"}
 const Drives = {template : "<drive-page ></drive-page>"}
+const Bills = {template : "<bills-page></bills-page>"}
 
 const router = new VueRouter({
     mode : 'hash',
@@ -17,7 +18,8 @@ const router = new VueRouter({
         {path : "/profile", component : ProfilePage, meta: {allow :['USER', 'ADMIN', 'SUPER_ADMIN']}},
         {path : "/categories", component : Categories, meta: {allow :['SUPER_ADMIN']}},
         {path : "/drives", component : Drives, meta: {allow :['USER', 'ADMIN', 'SUPER_ADMIN']}},
-        {path : "/VM", meta: {allow :['USER', 'ADMIN', 'SUPER_ADMIN']}}
+        {path : "/VM", meta: {allow :['USER', 'ADMIN', 'SUPER_ADMIN']}},
+        {path : "/bills", component : Bills, meta : {allow : ["ADMIN"]}}
 
     ]
 });

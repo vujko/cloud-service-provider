@@ -36,6 +36,7 @@ public class MachineController {
 		public Set<String> gpu;
 	}
 
+
 	private static boolean verifyUserRole(Request req, String forbiddenRole){
 		if(req.session(false).attribute("user_role").equals(forbiddenRole)){
             return false;
@@ -46,6 +47,8 @@ public class MachineController {
 		response.type("application/json");
 		return App.g.toJson(App.machineService.getMachines());
 	};
+
+
 
 	public static Route getMachines = (Request req, Response res) ->{
 		res.type("application/json");

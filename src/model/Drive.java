@@ -1,5 +1,8 @@
 package model;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 public class Drive {
 	public enum DriveType{SSD, HDD;}
 	private String name;
@@ -58,6 +61,22 @@ public class Drive {
 	}
 	public void setOrganization(Organization org){
 		this.organization = org;
+	}
+
+	public double getBill(Date startDate, Date endDate){
+		long hours = TimeUnit.HOURS.convert(endDate.getTime()- startDate.getTime(), TimeUnit.MILLISECONDS);
+		
+		double result = 0.0;
+		if(type == DriveType.HDD){
+			result += 0.1 * capacity;
+		}
+		else{
+			result += 0.3 * capacity;
+		}
+
+		return hours * result /( 30 * 24 );
+	
+
 	}
 	@Override
 	public int hashCode() {

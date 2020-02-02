@@ -32,6 +32,13 @@ public class OrganizationControlller {
     	public String name;
     }
 
+    
+	public class BillDates{
+		public String startDate;
+		public String endDate;
+	}
+
+
     private static boolean verifyUserRole(Request req, String forbiddenRole){
 		if(req.session(false).attribute("user_role").equals(forbiddenRole)){
             return false;
@@ -88,7 +95,11 @@ public class OrganizationControlller {
 
         return false; 
     };
-
+	public static Route getBills = (Request req, Response res) -> {
+		BillDates bd = App.g.fromJson(req.body(), BillDates.class);
+		User user = UserService.getUser(req.session(false).attribute("email"));
+		return App.g.toJson(App.orgService.getBills(user.getOrganization(), bd));
+	};
    public static Route updateOrganization = (Request req, Response res)->{
         if(!verifyUserRole(req, "USER")){
             res.status(403);

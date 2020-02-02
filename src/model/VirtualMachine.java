@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
+
 
 public class VirtualMachine {
 	private String name;
@@ -75,19 +77,47 @@ public class VirtualMachine {
 		this.listOfActivities = listOfActivities;
 	}
 
-	public void getBill(Date startDate, Date endDate){
-		ArrayList<DateActivity> validActivities = new ArrayList<DateActivity>();
+	public double getBill(Date startDate, Date endDate){
+		long validTimeMilli = 0;
 		for(DateActivity d : listOfActivities){
-			if(d.getStartActivity().before(startDate) && d.getEndActivity().after(startDate)){
-				validActivities.add(new DateActivity(d.getStartActivity(), endDate));
+			
+			if(d.getEndActivity() == null){
+				if(d.getStartActivity().after(startDate)){			
+					validTimeMilli += Math.abs(new Date().getTime() - d.getStartActivity().getTime());
+				}
+			}
+			else if(d.getStartActivity().before(startDate) && d.getEndActivity().before(endDate) && d.getEndActivity().after(startDate)){
+				validTimeMilli += Math.abs(d.getEndActivity().getTime() - startDate.getTime());
 			}
 
-			if(d.getStartActivity().before(endDate) && d.getEndActivity().after(endDate)){
-				validActivities.add(new DateActivity(endDate, d.getEndActivity()));
+			else if(d.getStartActivity().after(startDate) && d.getEndActivity().after(endDate) && d.getStartActivity().before(endDate)){
+				validTimeMilli += Math.abs(new Date().getTime() - d.getStartActivity().getTime());
+			}
 
-				
+			else if(d.getStartActivity().after(startDate) && d.getEndActivity().before(endDate)){
+				validTimeMilli += Math.abs(d.getEndActivity().getTime() - d.getStartActivity().getTime());
 			}
 		}
+		long hours = TimeUnit.HOURS.convert(validTimeMilli, TimeUnit.MILLISECONDS);
+		double result = hours * getMonthlyBill() /( 30 * 24 );
+		return result;
+	}
+
+	private double getMonthlyBill(){
+		double result = 0.0;
+		result += category.getCores() * 25;
+		result += category.getRam() * 15;
+		result += category.getGpus();
+
+		// for(Drive d : drives){
+		// 	if(d.getType() == DriveType.HDD){
+		// 		result += 0.1 * d.getCapacity();
+		// 	}
+		// 	else{
+		// 		result += 0.3 * d.getCapacity();
+		// 	}
+		// }
+		return result;
 	}
 
 

@@ -47,7 +47,7 @@ Vue.component("organization-form", {
                     <div class="form-group text-center">
                         
                         <div v-if="!logo">
-                            <input id="org_logo" placeholder="Organization logo" name="logo" @change="onFileChange" type="file" required>
+                            <input id="org_logo" placeholder="Organization logo" name="logo" @change="onFileChange" type="file">
                         </div>
                         <div v-else>
                             <img :src="logo" style="width:100px;height:120px;">

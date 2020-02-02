@@ -55,9 +55,9 @@ Vue.component("edit-org-form",{
                 <div class="form-group text-center">
                     
                     <div>
-                        <input id="edit_org_logo" v-bind:hidden="editedOrg.logo" @change="onFileChange" type="file">
+                        <input id="edit_org_logo" v-if="editedOrg.logo != ''" @change="onFileChange" type="file">
                     </div>
-                    <div v-bind:hidden="!editedOrg.logo">
+                    <div v-if="editedOrg.logo == ''">
                         <img :src="editedOrg.logo" style="width:100px;height:120px;">
                         <div>
                             <button type="button" @click="removeLogo">Remove logo</button>

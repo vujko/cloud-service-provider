@@ -92,6 +92,7 @@ public class App {
 		post("/updateMachine", MachineController.updateMachine);
 		post("/deleteMachine", MachineController.deleteMachine);
 		post("/changeActivity",MachineController.changeActivity);
+		post("/getBills", OrganizationControlller.getBills);
 		
 		get("/getSelectedMachines/:orgName", OrganizationControlller.getSelectedMachines);
 		post("/VMfilter",MachineController.filter);
