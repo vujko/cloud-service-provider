@@ -139,6 +139,10 @@ Vue.component("user-form", {
                    
                 })
                 .catch(error =>{
+                    if(error.response.data != true && error.response.data != false){
+                        alert(error.response.data)
+                        return;
+                    }
                     axios
                     .post("/checkEmail",{"email" : '' + this.user_input.email})
                     .then(response =>{

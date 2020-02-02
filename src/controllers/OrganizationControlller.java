@@ -66,7 +66,18 @@ public class OrganizationControlller {
     };
 
     public static Route addOrganization = (Request req, Response res) -> {
-        OrganizationToAdd org = App.g.fromJson(req.body(), OrganizationToAdd.class);
+    	OrganizationToAdd org;
+        try {	
+        	org = App.g.fromJson(req.body(), OrganizationToAdd.class);
+        }catch(Exception e) {
+        	res.status(400);
+        	return "Los format zahteva";
+        }
+        if(org.name == null || org.name.equals("")) {
+        	res.status(400);
+        	return "Ime je obavezno polje";
+        }
+        
         res.type("application/json");
 
         if(App.orgService.addOrganization(org)){
@@ -79,7 +90,18 @@ public class OrganizationControlller {
     };
 
    public static Route updateOrganization = (Request req, Response res)->{
-       OrganizationToUpdate updateOrg = App.g.fromJson(req.body(), OrganizationToUpdate.class);
+	   OrganizationToUpdate updateOrg;
+       try {
+    	   updateOrg = App.g.fromJson(req.body(), OrganizationToUpdate.class);
+       }catch(Exception e) {
+    	   res.status(400);
+    	   return "Nevalidan format zahteva";
+       }
+       if(updateOrg.newName == null || updateOrg.newName.equals("")) {
+          	res.status(400);
+          	return "Ime je obavezno polje";
+          }
+       
        res.type("application/json");
        Organization newOrg = new Organization();
        newOrg.setName(updateOrg.newName);
@@ -96,7 +118,18 @@ public class OrganizationControlller {
    };
 
    public static Route deleteOrganization = (Request req, Response res)->{
-	   OrganizationToDelete org = App.g.fromJson(req.body(), OrganizationToDelete.class);
+	   OrganizationToDelete org;
+	   try {
+	   		org = App.g.fromJson(req.body(), OrganizationToDelete.class);
+	   }catch(Exception e) {
+		   res.status(400);
+		   return "Nevalidan format zahteva";
+	   }
+	   if(org.name == null || org.name.equals("")) {
+       	res.status(400);
+       	return "Ime je obavezno polje";
+       }
+	   
 	   res.type("application/json");
 	   if(App.orgService.deleteOrganization(org.name)) {
 		   res.status(200);

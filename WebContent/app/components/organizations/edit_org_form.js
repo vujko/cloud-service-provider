@@ -157,6 +157,10 @@ Vue.component("edit-org-form",{
                     }
                 })
                 .catch(error => {
+                    if(error.response.data != true && error.response.data != false){
+                        alert(error.response.data)
+                        return;
+                    }
                     self.highlightNameField();
                 })
                 

@@ -52,9 +52,22 @@ public class MachineController {
 	};
 
 	public static Route addMachine = (Request req, Response res) ->{
-		MachineToAdd vma = App.g.fromJson(req.body(), MachineToAdd.class);
+		MachineToAdd vma;
+		try{
+			vma = App.g.fromJson(req.body(), MachineToAdd.class);
+		}catch(Exception e) {
+			res.status(400);
+			return "Nevalidan zahtev";
+		}
 		res.type("application/json");
 		String email = req.session(false).attribute("email");
+		
+		String validation = validate(vma);
+		if(validation != null) {
+			res.status(200);
+			return validation;
+		}
+		
 		if(MachineService.addMachine(email, vma)){
 			res.status(200);
 			return true;
@@ -64,7 +77,19 @@ public class MachineController {
 	};
 
 	public static Route updateMachine = (Request req, Response res) -> {
-		MachineToUpdate updateMachine = App.g.fromJson(req.body(), MachineToUpdate.class);
+		MachineToUpdate updateMachine;
+		try{
+			updateMachine = App.g.fromJson(req.body(), MachineToUpdate.class);
+		}catch(Exception e) {
+			res.status(200);
+			return "Nevalidan zahtev";
+		}
+		String validation = validateUpdate(updateMachine);
+		if(validation != null) {
+			res.status(400);
+			return validation;
+		}
+		
 		res.type("application/json");
 		if(MachineService.updateMachine(updateMachine)){
 			res.status(200);
@@ -84,9 +109,14 @@ public class MachineController {
 
 	public static Route deleteMachine = (Request req, Response res) -> {
 		res.type("application/json");
-		if(App.machineService.deleteMachine(req.body())){
-			res.status(200);
-			return true;
+		try {
+			if(App.machineService.deleteMachine(req.body())){
+				res.status(200);
+				return true;
+			}
+		}catch(Exception e) {
+			res.status(400);
+			return "Nevalidan zahtev";
 		}
 		res.status(400);
 		return false;
@@ -120,5 +150,29 @@ public class MachineController {
 		public int ramTo;
 		public int gpuFrom;
 		public int gpuTo;	
+	}
+	
+	public static String validate(MachineToAdd machine) {
+		
+		if(machine.name == null) return "Ime je obavezno polje";
+		
+		if(machine.orgName == null) return "Organizacija je obavezno polje";
+		
+		if(machine.categoryName == null) return "Kategorija je obavezno polje";
+		
+		if(machine.disks == null) return "Diskovi su obavezno polje";
+		
+		return null;
+	}
+	public static String validateUpdate(MachineToUpdate machine) {
+
+		if(machine.newName == null) return "Ime je obavezno polje";
+		
+		if(machine.categoryName == null) return "Kategorija je obavezno polje";
+		
+		if(machine.disks == null) return "Diskovi su obavezno polje";
+		
+		return null;
+
 	}
 }	

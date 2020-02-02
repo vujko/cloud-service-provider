@@ -184,6 +184,10 @@ Vue.component("add-drive-form",{
                     self.clearForm();
                 })
                 .catch(error =>{
+                    if(error.response.data != true && error.response.data != false){
+                        alert(error.response.data)
+                        return;
+                    }
                     self.highlightNameFields();                                     
                 })
             }
@@ -208,6 +212,10 @@ Vue.component("add-drive-form",{
                     self.$parent.selectedDrive = null;
                 })
                 .catch(error =>{
+                    if(error.response.data != true && error.response.data != false){
+                        alert(error.response.data)
+                        return;
+                    }
                     self.highlightNameFields();
                 })
             }

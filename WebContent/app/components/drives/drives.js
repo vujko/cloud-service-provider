@@ -48,7 +48,7 @@ Vue.component("drives",{
             Show details
         </button>
         <!-- Modal -->
-        <add-drive-form @driveAdded="addDrive($event)" ref="addDriveForm"></add-drive-form>
+        <add-drive-form @driveAdded="onDriveAdded($event)" ref="addDriveForm"></add-drive-form>
     </div>
     `,
 
@@ -73,7 +73,7 @@ Vue.component("drives",{
             this.$refs.addDriveForm.setUpForAdding();
 
         },
-        addDrive : function(drive){
+        onDriveAdded : function(drive){
             //this.drives.push(drive);
             this.getDrives();
         },

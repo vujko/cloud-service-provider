@@ -92,7 +92,7 @@ Vue.component("users", {
                 }      
             })
             .catch(error =>{
-                alert("You can't delete yourself.")
+                alert(error.response.data)
             })           
         }
     },

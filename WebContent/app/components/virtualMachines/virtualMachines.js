@@ -25,7 +25,6 @@ Vue.component("vm", {
                 <td>{{ m.activity ? "On" : "Off" }}</td>
                 <td v-if="'organization' in m && role == 'SUPER_ADMIN'">{{ m.organization.name}} </td>
 
-
             </tr>
             </tbody>
     </table>

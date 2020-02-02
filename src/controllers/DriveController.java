@@ -38,7 +38,19 @@ public class DriveController {
 	
 	public static Route addDrive = (Request request, Response response)->{
 		response.type("application/json");
-		DriveToAdd drive = App.g.fromJson(request.body(), DriveToAdd.class);
+		DriveToAdd drive;
+		try {
+			drive = App.g.fromJson(request.body(), DriveToAdd.class);
+		}catch(Exception e) {
+			response.status(400);
+			return "Nevalidan zahtev";
+		}
+		String validation = validate(drive);
+		if(validation != null) {
+			response.status(400);
+			return validation;
+		}
+		
 		String userEmail = request.session(false).attribute("email");
 		Drive d = App.driveService.addDrive(userEmail,drive);
 		if(d != null) {
@@ -50,7 +62,13 @@ public class DriveController {
 		return App.g.toJson(null);
 	};
 	public static Route deleteDrive = (Request request, Response res)->{
-		Delete name = App.g.fromJson(request.body(), Delete.class);
+		Delete name;
+		try {
+			name = App.g.fromJson(request.body(), Delete.class);
+		}catch(Exception e) {
+			res.status(400);
+			return "Nevalidan zahtev";
+		}
 		res.type("application/json");
 		if(App.driveService.deleteDrive(name.name)) {
 			res.status(200);
@@ -65,7 +83,19 @@ public class DriveController {
 	};
 	public static Route updateDrive = (Request req, Response res)->{
 		res.type("application/json");
-		Update update = App.g.fromJson(req.body(), Update.class);
+		Update update;
+		try {
+			update = App.g.fromJson(req.body(), Update.class);
+		}catch(Exception e) {
+			res.status(400);
+			return "Nevalidan zahtev";
+		}
+		String validation = validateUpdate(update);
+		if(validation != null) {
+			res.status(400);
+			return validation;
+		}
+		
 		if(App.driveService.updateDrive(update)) {
 			res.status(200);
 			return true;
@@ -93,6 +123,34 @@ public class DriveController {
 		public int capFrom;
 		public int capTo;
 		public ArrayList<String> type;
+	}
+	public static String validate(DriveToAdd drive) {
+		
+		if(drive.name == null) return "Ime je obavezno polje";
+		if(drive.name.equals("")) return "Ime je obavezno polje";
+		
+		if(drive.type == null) return "Tip je obavezno polje";
+		if(drive.type.equals("")) return "Tip je obavezno polje";
+		
+		if(drive.capacity == 0) return "Kapacitet je obavezno polje";
+		
+		if(drive.organization == null) return "Organizacija je obavezno polje";
+		if(drive.organization.equals("")) return "Organizacije je obaveznno polje";
+		
+		return null;
+	}
+	public static String validateUpdate(Update update) {
+		
+		if(update.newName == null) return "Ime je obavezno polje";
+		if(update.newName.equals("")) return "Ime je obavezno polje";
+		
+		if(update.type == null) return "Tip je obavezno polje";
+		if(update.type.equals("")) return "Tip je obavezno polje";
+		
+		if(update.capacity == 0) return "Kapacitet je obavezno polje";
+		
+		return null;
+		
 	}
 }
 

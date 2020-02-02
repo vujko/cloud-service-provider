@@ -299,6 +299,10 @@ Vue.component("vm-form", {
                     self.clearFields();
                 })
                 .catch(error => {
+                    if(error.response.data != true && error.response.data != false){
+                        alert(error.response.data);
+                        return;
+                    }
                     self.highlightNameField();
                 })
             }
@@ -330,6 +334,10 @@ Vue.component("vm-form", {
                     toast("Successfully updated virtual machine");
                 })
                 .catch(error => {
+                    if(error.response.data != true && error.response.data != false){
+                        alert(error.response.data);
+                        return;
+                    }
                     self.highlightNameField();
                 })
             }

@@ -42,7 +42,20 @@ public class UserController {
 
 
     public static Route addUser = (Request req, Response res) ->{
-        User user = App.g.fromJson(req.body(), User.class);
+    	User user;
+    	try {
+    		user = App.g.fromJson(req.body(), User.class);
+    	}
+        catch(Exception e) {
+        	res.status(400);
+        	return "Los format zahteva";
+        }
+    	String validation = validate(user);
+    	if(validation != null) {
+    		res.status(400);
+    		return validation;
+    	}
+    	
         res.type("aplication/json");
         String email = req.session(false).attribute("email");
         //User.Role role = (Role)req.session(false).attribute("user_role");
@@ -63,7 +76,15 @@ public class UserController {
     	return true;
     };
     public static Route updateUser = (Request req, Response res) ->{
-    	UserToUpdate user = App.g.fromJson(req.body(),UserToUpdate.class);
+    	UserToUpdate user;
+    	try {
+    		user = App.g.fromJson(req.body(),UserToUpdate.class);
+    	}
+    	catch(Exception e) {
+    		res.status(400);
+        	return "Los format zahteva";
+    	}
+    	
     	res.type("aplication/json");
     	User newUser = new User();
     	newUser.setEmail(user.newEmail);
@@ -79,17 +100,49 @@ public class UserController {
         return false;
     };
     public static Route deleteUser = (Request req, Response res) ->{
-    	UserEmail user = App.g.fromJson(req.body(),UserEmail.class);
+    	UserEmail user;
+    	try {
+    		user = App.g.fromJson(req.body(),UserEmail.class);
+    	}
+    	catch(Exception e) {	
+    		res.status(400);
+        	return "Los format zahteva";
+    	}
     	res.type("aplication/json");
     	if(req.session(false).attribute("email").equals(user.email)) {
     		res.status(400);
-        	return false;
+        	return "Pogresan email";
     	}
     	if(App.userService.deleteUser(user.email)) {
     		res.status(200);
     		return true;
     	}
-    	res.status(400);
-    	return false;
+    	
+    	return false;	
     };
+    public static String validate(User user) {
+    	
+    	if(user.getEmail() == null)
+    		return "Email je obavezno polje";
+    	if(user.getEmail().equals("")) return "Email je obavezno polje";
+    	
+    	if(user.getName() == null)
+    		return "Ime je obavezno polje";
+    	if(user.getName().equals("")) return "Ime je obavezno polje";
+    	
+    	if(user.getSurname() == null)
+    		return "Prezime je obavezno polje";
+    	if(user.getSurname().equals("")) return "Prezime je obavezno polje";
+    	
+    	if(user.getOrganization() == null)
+    		return "Organizacija je obavezno polje";
+
+    	if(user.getPassword() == null) return "Lozinka je obavezno polje";
+    	if(user.getPassword().equals("")) return "Lozinka je obavezno polje";
+    	
+    	if(user.getRole() == null) return "Uloga je obavezno polje";
+    	if(!(user.getRole().equals(User.Role.ADMIN) || user.getRole().equals(User.Role.USER))) return "Pogresna uloga.";
+    	
+    	return null;
+    }
 }

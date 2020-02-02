@@ -127,6 +127,10 @@ Vue.component("organization-form", {
                     self.clearFields();          
                 })
                 .catch(error =>{
+                    if(error.response.data != true && error.response.data != false){
+                        alert(error.response.data)
+                        return;
+                    }
                     self.highlightNameField();
                 })
             }
