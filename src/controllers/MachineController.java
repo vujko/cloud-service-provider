@@ -72,7 +72,7 @@ public class MachineController {
             res.status(403);
             return "Forbidden";
         }
-		MachineToAdd vma = App.g.fromJson(req.body(), MachineToAdd.class);
+		
 		res.type("application/json");
 		String email = req.session(false).attribute("email");
 		

@@ -97,7 +97,6 @@ public class OrganizationControlller {
         	return "Ime je obavezno polje";
         }
         
-        OrganizationToAdd org = App.g.fromJson(req.body(), OrganizationToAdd.class);
         res.type("application/json");
 
         if(App.orgService.addOrganization(org)){

@@ -44,7 +44,6 @@ public class CategoryController{
             res.status(403);
             return "Forbidden";
         }
-        CategoryVM cat = App.g.fromJson(req.body(), CategoryVM.class);
         res.type("application/json");
 
         String validation = validate(cat);

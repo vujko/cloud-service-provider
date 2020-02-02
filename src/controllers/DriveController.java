@@ -84,7 +84,7 @@ public class DriveController {
             res.status(403);
             return "Forbidden";
         }
-		Delete name = App.g.fromJson(request.body(), Delete.class);
+
 		res.type("application/json");
 		if(App.driveService.deleteDrive(name.name)) {
 			res.status(200);
