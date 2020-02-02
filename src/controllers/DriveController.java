@@ -31,12 +31,23 @@ public class DriveController {
 	public class Delete{
 		public String name;
 	}
+
+	private static boolean verifyUserRole(Request req, String forbiddenRole){
+		if(req.session(false).attribute("user_role").equals(forbiddenRole)){
+            return false;
+		}
+		return true;
+	}
 	public static Route getDrives = (Request request, Response response) -> {
 		response.type("application/json");
 		return App.g.toJson(App.driveService.getDrives(request.params("email")));
 	};
 	
 	public static Route addDrive = (Request request, Response response)->{
+		if(!verifyUserRole(request, "USER")){
+            response.status(403);
+            return "Forbidden";
+        }
 		response.type("application/json");
 		DriveToAdd drive;
 		try {
@@ -69,6 +80,11 @@ public class DriveController {
 			res.status(400);
 			return "Nevalidan zahtev";
 		}
+		if(!verifyUserRole(request, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
+		Delete name = App.g.fromJson(request.body(), Delete.class);
 		res.type("application/json");
 		if(App.driveService.deleteDrive(name.name)) {
 			res.status(200);
@@ -82,6 +98,10 @@ public class DriveController {
 		return App.g.toJson(App.driveService.getAvilableDrives());
 	};
 	public static Route updateDrive = (Request req, Response res)->{
+		if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
 		res.type("application/json");
 		Update update;
 		try {

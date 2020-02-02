@@ -7,6 +7,13 @@ public class DateActivity {
 	
 	private Date startActivity;
 	private Date endActivity;
+
+	public DateActivity(){}
+
+	public DateActivity(Date start, Date end){
+		this.startActivity = start;
+		this.endActivity = end;
+	}
 	
 	public Date getStartActivity() {
 		return startActivity;

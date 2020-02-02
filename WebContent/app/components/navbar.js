@@ -7,7 +7,7 @@ Vue.component("nav-bar",{
     },
     template :`
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <p class="navbar-brand col-sm-3 col-md-2 mr-3">Cloud service provider</p>
+      <p class="navbar-brand col-sm-3 col-md-2 mr-3" style="margin-top:15px">Cloud service provider</p>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>     

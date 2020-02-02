@@ -20,6 +20,13 @@ public class CategoryController{
     public class Delete{
     	public String name;
     }
+
+    private static boolean verifyUserRole(Request req, String allowedRole){
+		if(req.session(false).attribute("user_role").equals(allowedRole)){
+            return false;
+		}
+		return true;
+	}
     public static Route getCategories = (Request req, Response res) ->{
         res.type("application/json");
         return App.g.toJson(App.categoryService.getCategories());
@@ -33,6 +40,11 @@ public class CategoryController{
     		res.status(400);
     		return "Nevalidan zahtev";
     	}
+        if(verifyUserRole(req, "SUPER_ADMIN")){
+            res.status(403);
+            return "Forbidden";
+        }
+        CategoryVM cat = App.g.fromJson(req.body(), CategoryVM.class);
         res.type("application/json");
 
         String validation = validate(cat);
@@ -67,6 +79,10 @@ public class CategoryController{
         	return validation;
         }
     	
+        if(verifyUserRole(req, "SUPER_ADMIN")){
+            res.status(403);
+            return "Forbidden";
+        }
         res.type("application/json");
         CategoryVM newCat = new CategoryVM(updateCat.newName,updateCat.cores,updateCat.ram,updateCat.gpus);
         if(App.categoryService.updateCategory(updateCat.oldName, newCat)){
@@ -79,6 +95,10 @@ public class CategoryController{
     };
 
     public static Route deleteCategory = (Request req, Response res) ->{
+        if(verifyUserRole(req, "SUPER_ADMIN")){
+            res.status(403);
+            return "Forbidden";
+        }
         Delete catName = App.g.fromJson(req.body(), Delete.class);
         res.type("application/json");
         if(App.categoryService.deleteCategory(catName.name)){

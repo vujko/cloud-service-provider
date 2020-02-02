@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +20,7 @@ import controllers.MachineController.Act;
 import controllers.MachineController.FilterVM;
 import controllers.MachineController.MachineToAdd;
 import controllers.MachineController.MachineToUpdate;
+import controllers.OrganizationControlller.BillDates;
 import model.DateActivity;
 import model.Drive;
 import model.Organization;
@@ -31,6 +33,12 @@ public class MachineService {
 	private static Gson g = new Gson();
 	private static Set<VirtualMachine> machines = loadMachines();
 	
+
+	public class MachineBill{
+		public String machineName;
+		public String price;
+	}
+
 	private static HashSet<VirtualMachine> loadMachines(){
 		HashSet<VirtualMachine> machiness = new HashSet<VirtualMachine>();
 		
@@ -76,6 +84,24 @@ public class MachineService {
 			if(vm.getOrganization() == null){
 				result.add(vm);
 			}
+		}
+		return result;
+	}
+
+	public Set<MachineBill> getBills(Set<VirtualMachine> machines, BillDates bd){
+		Set<MachineBill> result = new HashSet<MachineBill>();
+		for (VirtualMachine vm : machines) {
+			MachineBill bill = new MachineBill();
+			bill.machineName = vm.getName();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				DecimalFormat f = new DecimalFormat("##.00");
+				bill.price = f.format(vm.getBill(sdf.parse(bd.startDate), sdf.parse(bd.endDate)));
+				
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			result.add(bill);
 		}
 		return result;
 	}

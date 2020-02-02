@@ -23,14 +23,29 @@ public class UserController {
     public static boolean verify(String email, String password){
         User user = UserService.getUser(email, password);
         return user == null ? false : true;
-    }
+	}
+	
+	private static boolean verifyUserRole(Request req, String forbiddenRole){
+		if(req.session(false).attribute("user_role").equals(forbiddenRole)){
+            return false;
+		}
+		return true;
+	}
     public static Route getUsersSuper = (Request req, Response res) ->{
 		res.type("aplication/json");
+		if(!req.session(false).attribute("user_role").equals("SUPER_ADMIN")){
+            res.status(403);
+            return "Forbidden";
+        }
 		String email = req.session(false).attribute("email");
 		return App.g.toJson(App.userService.getUsersSuper(email));
     };
     public static Route getUsersAdmin = (Request req, Response res) ->{
 		res.type("aplication/json");
+		if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
 		String email = req.session(false).attribute("email");
 		return App.g.toJson(App.userService.getUsersAdmin(email));
     };
@@ -42,7 +57,12 @@ public class UserController {
 
 
     public static Route addUser = (Request req, Response res) ->{
-    	User user;
+    	if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
+
+		User user;
     	try {
     		user = App.g.fromJson(req.body(), User.class);
     	}
@@ -55,7 +75,7 @@ public class UserController {
     		res.status(400);
     		return validation;
     	}
-    	
+    			
         res.type("aplication/json");
         String email = req.session(false).attribute("email");
         //User.Role role = (Role)req.session(false).attribute("user_role");
@@ -100,7 +120,11 @@ public class UserController {
         return false;
     };
     public static Route deleteUser = (Request req, Response res) ->{
-    	UserEmail user;
+    	if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
+		UserEmail user;
     	try {
     		user = App.g.fromJson(req.body(),UserEmail.class);
     	}
@@ -108,6 +132,7 @@ public class UserController {
     		res.status(400);
         	return "Los format zahteva";
     	}
+		
     	res.type("aplication/json");
     	if(req.session(false).attribute("email").equals(user.email)) {
     		res.status(400);

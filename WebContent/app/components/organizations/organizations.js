@@ -17,7 +17,7 @@ Vue.component("organizations",{
                 <tr v-for="o in organizations" :key="o.name" v-on:click="selectOrganization(o)" v-bind:class="{selected : selectedOrg != null && selectedOrg.name===o.name}">
                     <td>{{ o.name }}</td>
                     <td>{{ o.description }}</td>
-                    <td><img :src="o.logo" style="width:50px;height:60px;"></td>
+                    <td><img v-if="o.logo != 'null' " :src="o.logo" style="width:50px;height:60px;"></td>
                 </tr>
                 </tbody>
         </table>

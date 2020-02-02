@@ -32,6 +32,20 @@ public class OrganizationControlller {
     	public String name;
     }
 
+    
+	public class BillDates{
+		public String startDate;
+		public String endDate;
+	}
+
+
+    private static boolean verifyUserRole(Request req, String forbiddenRole){
+		if(req.session(false).attribute("user_role").equals(forbiddenRole)){
+            return false;
+		}
+		return true;
+	}
+
     public static Route getOrganizations = (Request req, Response res) -> {
         res.type("application/json");
         User user = UserService.getUser(req.session(false).attribute("email"));
@@ -66,7 +80,12 @@ public class OrganizationControlller {
     };
 
     public static Route addOrganization = (Request req, Response res) -> {
-    	OrganizationToAdd org;
+    	if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
+
+        OrganizationToAdd org;
         try {	
         	org = App.g.fromJson(req.body(), OrganizationToAdd.class);
         }catch(Exception e) {
@@ -78,6 +97,7 @@ public class OrganizationControlller {
         	return "Ime je obavezno polje";
         }
         
+        OrganizationToAdd org = App.g.fromJson(req.body(), OrganizationToAdd.class);
         res.type("application/json");
 
         if(App.orgService.addOrganization(org)){
@@ -88,8 +108,16 @@ public class OrganizationControlller {
 
         return false; 
     };
-
+	public static Route getBills = (Request req, Response res) -> {
+		BillDates bd = App.g.fromJson(req.body(), BillDates.class);
+		User user = UserService.getUser(req.session(false).attribute("email"));
+		return App.g.toJson(App.orgService.getBills(user.getOrganization(), bd));
+	};
    public static Route updateOrganization = (Request req, Response res)->{
+        if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
 	   OrganizationToUpdate updateOrg;
        try {
     	   updateOrg = App.g.fromJson(req.body(), OrganizationToUpdate.class);
@@ -101,7 +129,7 @@ public class OrganizationControlller {
           	res.status(400);
           	return "Ime je obavezno polje";
           }
-       
+              
        res.type("application/json");
        Organization newOrg = new Organization();
        newOrg.setName(updateOrg.newName);
@@ -118,6 +146,10 @@ public class OrganizationControlller {
    };
 
    public static Route deleteOrganization = (Request req, Response res)->{
+       if(!verifyUserRole(req, "USER")){
+            res.status(403);
+            return "Forbidden";
+        }
 	   OrganizationToDelete org;
 	   try {
 	   		org = App.g.fromJson(req.body(), OrganizationToDelete.class);
@@ -138,4 +170,5 @@ public class OrganizationControlller {
 	   res.status(400);
 	   return false;
    };
+  
 }
