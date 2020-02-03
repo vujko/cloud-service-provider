@@ -15,6 +15,7 @@ public class UserController {
 		private String surname;
 		private String name;
 		private String pass;
+		private User.Role role;
 	}
 	private class UserEmail{
 		private String email;
@@ -111,6 +112,7 @@ public class UserController {
     	newUser.setName(user.name);
     	newUser.setSurname(user.surname);
     	newUser.setPassword(user.pass);
+    	newUser.setRole(user.role);
     	
     	if(App.userService.updateUser(newUser, user.oldEmail)) {
     		res.status(200);

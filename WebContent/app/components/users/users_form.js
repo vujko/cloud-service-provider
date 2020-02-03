@@ -164,7 +164,7 @@ Vue.component("user-form", {
             else {
                 axios
                 .post("/updateUser",{"oldEmail" : '' +this.backup.email, "newEmail" : '' + this.user_input.email,  "name" : '' + this.user_input.name, "surname" : '' + this.user_input.surname, 
-                 "pass" : '' + this.user_input.password})
+                 "pass" : '' + this.user_input.password, "role" : this.picked})
                 .then(response =>{
                     if(response.data){
                         $('#userModal').modal('hide');

@@ -154,7 +154,9 @@ Vue.component("profile", {
             else{
 
                 axios
-                .post("/updateUser", {"oldEmail" : '' +this.backup.email, "newEmail" : '' + this.user.email,  "name" : '' + this.user.name, "surname" : '' + this.user.surname, "pass" : '' + this.user.password})
+                .post("/updateUser", {"oldEmail" : '' +this.backup.email, "newEmail" : '' + this.user.email,
+                  "name" : '' + this.user.name, "surname" : '' + this.user.surname,
+                   "pass" : '' + this.user.password, "role" : this.backup.role})
                 .then(response => {
 
                     if(self.backup.email != self.user.email){
